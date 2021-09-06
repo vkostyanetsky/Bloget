@@ -1,0 +1,15 @@
+{% extends "wrapper.html" %}
+
+{% block content %}
+
+    <article>
+
+        {% if page_title != '' and page_path != '/' %}
+            <h1 class="f-subheadline lh-solid">{{ page_title }}</h1>
+        {% endif %}
+
+        <div class="f4 lh-copy black">{{ text['html'] }}</div>
+        
+    </article>
+
+{% endblock %}

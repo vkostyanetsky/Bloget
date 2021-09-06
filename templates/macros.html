@@ -1,0 +1,15 @@
+{% macro render_note(note, tags, selected_tag, config) %}
+    
+    <div class="f4 lh-copy black mb5">
+        {{ note['html'] }}
+        <p class="f6 mt4">
+            {{ note['date'] }}
+            {% for note_tag in note['metadata']['tags'] %}
+                <span class="pl2">
+                    <a class="link {% if note_tag == selected_tag %}orange{% else %}blue{% endif %} bb dim" href="{{ config['url'] }}/notes/tags/{{note_tag}}/">{{ tags[note_tag] }}</a>
+                </span>
+            {% endfor %}
+        </p>
+    </div>
+
+{% endmacro %}
