@@ -2,7 +2,7 @@
     <channel>    
         <title>{{ language['full_name'] }}</title>
         <description>{{ language['site_description'] }}</description>
-        <language>{{ language['language_code'] }}</language>
+        <language>{{ config['language_code'] }}</language>
         <link>{{ config['url'] }}</link>
         <lastBuildDate>{{ items[0]['pub_date'] }}</lastBuildDate>
         {% for item in items %}
