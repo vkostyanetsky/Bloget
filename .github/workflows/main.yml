@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
-          python-version: 3.9.1
+          python-version: 3.9
           
       - name: Install dependencies
         run: |
@@ -29,7 +29,3 @@ jobs:
           
       - name: Make output folder
         run: mkdir output
-        
-      - name: Clone master branch
-        run: git clone "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_ACTOR}/${GITHUB_ACTOR}.github.io.git" --branch master --single-branch ./output
-  
