@@ -6,5 +6,5 @@
 
     pip install beautifulsoup4
     pip install Pygments
-    pip install -U Jinja2
+    pip install Jinja2
     pip install markdown
