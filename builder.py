@@ -2,10 +2,7 @@ import os
 import sys
 import yaml
 import shutil
-import string
-import datetime
 
-from jinja2 import Template
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
