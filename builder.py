@@ -13,11 +13,11 @@ def get_paths():
     
     parent_dirpath = os.path.split(BUILDER_DIRPATH)[0]
 
-    content_dirpath         = config['content_dirpath']
+    content_dirpath         = get_parameter_value('--input')
     content_pages_dirpath   = os.path.join(content_dirpath, 'pages')
     content_notes_dirpath   = os.path.join(content_pages_dirpath, 'notes')
 
-    project_dirpath         = os.path.join(parent_dirpath, 'project', config['project_dirpath'])
+    project_dirpath         = get_parameter_value('--output')
     project_notes_dirpath   = os.path.join(project_dirpath, 'notes')
 
     return {            
@@ -33,27 +33,9 @@ def get_paths():
 
 def get_config():
 
-    def get_parameter_value(name: str, default_value: str = ''):
-                
-        result = default_value
+    config_filepath = get_parameter_value('--config')
 
-        for i, value in enumerate(sys.argv):
-
-            if value == name and len(sys.argv) > i:
-
-                result = sys.argv[i + 1]
-                break
-
-        return result
-
-    return {
-        'content_dirpath':      get_parameter_value('--content-dirpath'),
-        'project_dirpath':      get_parameter_value('--project-dirpath'),
-        'url':                  get_parameter_value('--url'),
-        'language_code':        get_parameter_value('--language-code'),
-        'mirror_url':           get_parameter_value('--mirror-url'),
-        'mirror_language_code': get_parameter_value('--mirror-language-code'),
-    }
+    return read_yaml_file(config_filepath)
 
 def clear_project():
 
@@ -775,6 +757,19 @@ def read_yaml_file(yaml_filepath):
 
     with open(yaml_filepath, encoding = 'utf-8-sig') as yaml_file:
         result = yaml.safe_load(yaml_file)
+
+    return result
+
+def get_parameter_value(name: str, default_value: str = ''):
+                
+    result = default_value
+
+    for i, value in enumerate(sys.argv):
+
+        if value == name and len(sys.argv) > i:
+
+            result = sys.argv[i + 1]
+            break
 
     return result
 
