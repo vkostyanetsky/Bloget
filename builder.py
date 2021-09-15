@@ -133,6 +133,21 @@ def build_project():
 
                 def replace_links_to_social_networks():
 
+                    def replace_github_gist_link():
+
+                        marker = 'https://gist.github.com/'
+                        
+                        if line.startswith(marker):
+
+                            gist = line.strip().replace(marker, '').split('/')
+
+                            gist_owner = gist[0]
+                            gist_id    = gist[1]
+
+                            template = '<script src="https://gist.github.com/{0}/{1}.js">{2}</script>'
+                                                        
+                            lines[index] = template.format(gist_owner, gist_id, language['gist'])
+
                     def replace_twitter_link():
 
                         marker = 'https://twitter.com/'
@@ -160,6 +175,7 @@ def build_project():
                     for (index, line) in enumerate(lines):
 
                         replace_twitter_link()
+                        replace_github_gist_link()
 
                         replace_youtube_link('https://www.youtube.com/watch?v=')
                         replace_youtube_link('https://youtu.be/')                    
