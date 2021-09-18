@@ -310,7 +310,9 @@ def build_project():
                 result = get_standard_template_parameters(
                     text['metadata']['title'],
                     text['metadata']['description'],
-                    text['path']
+                    text['path'],
+                    text['path'],
+                    True
                 )
 
                 result['text'] = text
@@ -356,7 +358,9 @@ def build_project():
                 result = get_standard_template_parameters(
                     language['notes'] if selected_tag == None else tags[selected_tag][:1].upper() + tags[selected_tag][1:],
                     language['notes_description'],
-                    path
+                    path,
+                    path,
+                    False
                 )
                 
                 result['notes'] = page_notes
@@ -443,7 +447,9 @@ def build_project():
                 result = get_standard_template_parameters(
                     note['metadata']['title'],
                     note['metadata']['description'],
-                    notes_parent_path + note['dirname'] + '/'
+                    notes_parent_path + note['dirname'] + '/',
+                    '/notes/{}/'.format(note['dirname']),
+                    True
                 )
 
                 result['tags']          = tags
@@ -559,7 +565,9 @@ def build_project():
             result = get_standard_template_parameters(
                 language['tags'],
                 language['tags_description'],
-                '/notes/tags/'
+                '/notes/tags/',
+                '/notes/tags/',
+                False
             )
                 
             result['statistic'] = get_statistic()
@@ -659,7 +667,7 @@ def build_project():
 
     def build_page_404():
 
-        template_parameters = get_standard_template_parameters(language['page_404_title'], language['page_404_text'], '')
+        template_parameters = get_standard_template_parameters(language['page_404_title'], language['page_404_text'], '', '', False)
         rendered_template   = get_rendered_template('404.html', template_parameters)
 
         filepath = os.path.join(paths['project_dirpath'], '404.html')
@@ -688,12 +696,32 @@ def build_project():
             else:
                 shutil.copy2(source_path, result_path)
 
-    def get_standard_template_parameters(page_title, page_description, page_path):
+    def get_standard_template_parameters(page_title, page_description, page_path, page_base_path, editable = True):
 
+        def get_page_edit_path(page_base_path, editable):
+
+            if editable:
+
+                if config['github_repository'] != '' and page_base_path != '/notes/':
+                    result = 'https://github.com/{}/edit/main/pages{}index.md'.format(config['github_repository'], page_base_path)
+                else:
+                    result = ''
+
+            else:
+
+                result = ''
+
+            return result
+
+        page_edit_path = get_page_edit_path(page_base_path, editable)
+
+        #print(page_path + ": " + page_edit_path)
+    
         return {
-            'page_title':        page_title,
-            'page_description':  page_description,
-            'page_path':         page_path,
+            'page_title':           page_title,
+            'page_description':     page_description,
+            'page_path':            page_path,
+            'page_edit_path':       page_edit_path,
         }
 
     def get_rendered_template(filename: str, parameters: dict = {}):
