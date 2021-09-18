@@ -119,10 +119,21 @@
         </div>
         
     </nav>
-
-    {% if config['mirror_url'] != '' %}
-        <nav class="dtc-l v-mid tc tr-l"><a href="{{ config['mirror_url'] }}{{ page_path }}" class="link f5 f5-ns dim blue bb">{{ config['mirror_language_code']|upper }}</a><div class="mt3"><a title="{{ language['edit_page'] }}" href="https://github.com/{{ config['github_repository'] }}/edit/main/pages{{ page_path }}index.md" class="f4 f4-ns dim blue no-underline">✎</a></div></nav>
-    {% endif %}
+    
+    <nav class="dtc-l v-mid tc tr-l">
+        {% if config['mirror_url'] != '' %}
+            <a href="{{ config['mirror_url'] }}{{ page_path }}" class="link f5 f5-ns dim blue bb">{{ config['mirror_language_code']|upper }}</a>
+        {% endif %}
+        {% if config['github_repository'] != '' %}
+            {% if config['mirror_url'] == '' %}
+            <div>
+            {% else %}
+            <div class="mt3">
+            {% endif %}            
+                <a title="{{ language['edit_page'] }}" href="https://github.com/{{ config['github_repository'] }}/edit/main/pages{{ page_path }}index.md" class="f4 f4-ns dim blue no-underline">✎</a>
+            </div>
+        {% endif %}
+    </nav>
 
 </header>
 
