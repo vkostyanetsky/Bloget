@@ -702,7 +702,7 @@ def build_project():
 
             if editable:
 
-                if config['github_repository'] != '' and page_base_path != '/notes/':
+                if config['github_repository'] != '':
                     result = 'https://github.com/{}/edit/main/pages{}index.md'.format(config['github_repository'], page_base_path)
                 else:
                     result = ''
