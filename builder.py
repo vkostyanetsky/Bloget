@@ -11,8 +11,6 @@ from bs4 import BeautifulSoup
 
 def get_paths():
     
-    parent_dirpath = os.path.split(BUILDER_DIRPATH)[0]
-
     content_dirpath         = get_parameter_value('--input')
     content_pages_dirpath   = os.path.join(content_dirpath, 'pages')
     content_notes_dirpath   = os.path.join(content_pages_dirpath, 'notes')
