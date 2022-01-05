@@ -2,6 +2,7 @@ import os
 import sys
 import yaml
 import shutil
+import argparse
 
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
@@ -9,13 +10,40 @@ from jinja2 import FileSystemLoader
 from markdown import markdown
 from bs4 import BeautifulSoup
 
+def get_args():
+
+    args_parser = argparse.ArgumentParser()
+
+    args_parser.add_argument(
+        '--input',
+        type = str,
+        help='input directory with source data',
+        required = True
+    )
+
+    args_parser.add_argument(
+        '--output',
+        type = str,
+        help='output directory with result data',
+        required = True
+    )
+
+    args_parser.add_argument(
+        '--config',
+        type = str,
+        help='configuration file for builder',
+        required = True
+    )
+
+    return args_parser.parse_args()
+
 def get_paths():
     
-    content_dirpath         = get_parameter_value('--input')
+    content_dirpath         = args.input
     content_pages_dirpath   = os.path.join(content_dirpath, 'pages')
     content_notes_dirpath   = os.path.join(content_pages_dirpath, 'notes')
 
-    project_dirpath         = get_parameter_value('--output')
+    project_dirpath         = args.output
     project_notes_dirpath   = os.path.join(project_dirpath, 'notes')
 
     return {            
@@ -31,7 +59,7 @@ def get_paths():
 
 def get_config():
 
-    config_filepath = get_parameter_value('--config')
+    config_filepath = args.config
 
     return read_yaml_file(config_filepath)
 
@@ -802,21 +830,9 @@ def read_yaml_file(yaml_filepath):
 
     return result
 
-def get_parameter_value(name: str, default_value: str = ''):
-                
-    result = default_value
-
-    for i, value in enumerate(sys.argv):
-
-        if value == name and len(sys.argv) > i:
-
-            result = sys.argv[i + 1]
-            break
-
-    return result
-
 BUILDER_DIRPATH = os.path.abspath(os.path.dirname(__file__))
 
+args    = get_args()
 config  = get_config()
 paths   = get_paths()
 
