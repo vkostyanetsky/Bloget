@@ -17,21 +17,21 @@ def get_args():
     args_parser.add_argument(
         '--input',
         type = str,
-        help='input directory with source data',
+        help = 'input directory with source data',
         required = True
     )
 
     args_parser.add_argument(
         '--output',
         type = str,
-        help='output directory with result data',
+        help = 'output directory with result data',
         required = True
     )
 
     args_parser.add_argument(
         '--config',
         type = str,
-        help='configuration file for builder',
+        help = 'configuration file for builder',
         required = True
     )
 
