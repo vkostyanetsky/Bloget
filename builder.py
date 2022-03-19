@@ -174,19 +174,6 @@ def build_project():
                                                         
                             lines[index] = template.format(gist_owner, gist_id, language['gist'])
 
-                    def replace_twitter_link():
-
-                        marker = 'https://twitter.com/'
-
-                        if line.startswith(marker):
-
-                            tweet_url   = line.strip()
-                            tweet_id    = tweet_url.split('/')[5]
-
-                            template = '<div class="blog-embedded-tweet" data-tweet-id="{1}"><a href="{0}" class="link blue dim bb">' + language['tweet'] + '</a></div>'
-
-                            lines[index] = template.format(tweet_url, tweet_id)
-
                     def replace_youtube_link(marker):
 
                         if line.startswith(marker):
@@ -200,7 +187,6 @@ def build_project():
 
                     for (index, line) in enumerate(lines):
 
-                        replace_twitter_link()
                         replace_github_gist_link()
 
                         replace_youtube_link('https://www.youtube.com/watch?v=')
