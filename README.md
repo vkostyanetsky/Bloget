@@ -1,5 +1,5 @@
-# BlogBuilder
+# Blog Builder
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Скрипт, который генерирует статику для моего [блога](https://kostyanetsky.ru) и его [зеркала](https://kostyanetsky.me) на английском языке.
+This script generates static files for my blogs in [Russian](https://kostyanetsky.ru) and [English](https://kostyanetsky.me).
