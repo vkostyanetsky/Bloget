@@ -227,7 +227,7 @@ def build_project():
 
                         tag['target'] = '_blank'
 
-                        if tag.find('img') == None:
+                        if tag.find('img') is None:
                             tag['class'] = "link blue dim bb"
 
                         tag['href'] = get_link(tag['href'])
@@ -288,7 +288,7 @@ def build_project():
 
             page = get_page()
 
-            if (page != None):
+            if page is not None:
 
                 is_note = page_content_dirpath.startswith(paths['content_notes_dirpath'])
 
@@ -343,7 +343,7 @@ def build_project():
 
                     result = config['url'] + '/notes/'
 
-                    if selected_tag != None:
+                    if selected_tag is not None:
                         result = result + 'tags/' + selected_tag + '/'
 
                     if page_number > 1:
@@ -459,13 +459,16 @@ def build_project():
 
                 result['note'] = note
 
-                result['note_after_url'] = '' if note_after == None else config['url'] + notes_parent_path + note_after[
+                result['note_after_url'] = '' if note_after is None else config['url'] + notes_parent_path + note_after[
                     'dirname'] + '/'
-                result['note_after_title'] = '' if note_after == None else note_after['metadata']['title']
+                result['note_after_title'] = '' if note_after is None else note_after['metadata']['title']
 
-                result['note_earlier_url'] = '' if note_earlier == None else config['url'] + notes_parent_path + \
-                                                                             note_earlier['dirname'] + '/'
-                result['note_earlier_title'] = '' if note_earlier == None else note_earlier['metadata']['title']
+                if note_earlier is None:
+                    result['note_earlier_url'] = ''
+                else:
+                    result['note_earlier_url'] = config['url'] + notes_parent_path + note_earlier['dirname'] + '/'
+
+                result['note_earlier_title'] = '' if note_earlier is None else note_earlier['metadata']['title']
 
                 result['hotkey_ctrl_right_url'] = result['note_after_url']
                 result['hotkey_ctrl_left_url'] = result['note_earlier_url']
@@ -633,7 +636,7 @@ def build_project():
 
                     options = note['metadata'].get('options')
 
-                    return True if options == None else 'no-rss' not in options
+                    return True if options is None else 'no-rss' not in options
 
                 items = []
 
@@ -765,12 +768,12 @@ def build_project():
 
     def write_file(filepath: str, content: str):
 
-        with open(filepath, "w+", encoding='utf-8-sig') as file:
+        with open(filepath, 'w+', encoding='utf-8-sig') as file:
             file.write(content)
 
     def make_dir(path):
 
-        if (not os.path.exists(path)):
+        if not os.path.exists(path):
             os.mkdir(path)
 
     templates = get_templates()
