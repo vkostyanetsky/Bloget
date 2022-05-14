@@ -357,7 +357,7 @@ def build_project():
                     path = path + page_dirname + '/'
 
                 result = get_standard_template_parameters(
-                    language['notes'] if selected_tag == None else tags[selected_tag][:1].upper() + tags[selected_tag][
+                    language['notes'] if selected_tag is None else tags[selected_tag][:1].upper() + tags[selected_tag][
                                                                                                     1:],
                     language['notes_description'],
                     path,
@@ -371,7 +371,7 @@ def build_project():
                 result['selected_tag'] = selected_tag
                 result['page_parent_path'] = page_parent_path
 
-                if page_number == None:
+                if page_number is None:
 
                     result['page_later_url'] = ''
                     result['page_earlier_url'] = '' if is_last_page else get_notes_page_url(2)
@@ -386,7 +386,7 @@ def build_project():
 
                 return result
 
-            if page_number == None:
+            if page_number is None:
 
                 page_dirname = ''
                 page_dirpath = page_parent_dirpath
@@ -403,7 +403,7 @@ def build_project():
 
             write_page(page_dirpath, rendered_template)
 
-        if selected_tag == None:
+        if selected_tag is None:
 
             notes = pages['notes']
 
@@ -478,7 +478,7 @@ def build_project():
             template_parameters = get_template_parameters()
             rendered_template = get_rendered_template('note.html', template_parameters)
 
-            if selected_tag == None:
+            if selected_tag is None:
                 note_filepath = note['project_dirpath']
             else:
                 note_filepath = os.path.join(paths['project_notes_dirpath'], 'tags', selected_tag, note['dirname'])
@@ -487,7 +487,7 @@ def build_project():
 
             write_page(note_filepath, rendered_template)
 
-        if selected_tag == None:
+        if selected_tag is None:
 
             notes = pages['notes']
             notes_parent_path = '/notes/'
@@ -507,7 +507,7 @@ def build_project():
 
             build_note()
 
-            if selected_tag == None:
+            if selected_tag is None:
                 copy_page_attachments(note)
 
             note_index += 1
@@ -526,7 +526,7 @@ def build_project():
 
                         for tag in note['metadata']['tags']:
 
-                            if result.get(tag) == None:
+                            if result.get(tag) is None:
                                 result[tag] = 0
 
                             result[tag] += 1
@@ -600,7 +600,7 @@ def build_project():
 
                     options = page['metadata'].get('options')
 
-                    return True if options == None else 'no-sitemap' not in options
+                    return True if options is None else 'no-sitemap' not in options
 
                 for page in pages:
 
