@@ -15,8 +15,14 @@ class Page404:
     @staticmethod
     def build(language, templates):
 
-        template_parameters = get_standard_template_parameters(language['page_404_title'], language['page_404_text'],
-                                                               '', '', False)
+        template_parameters = get_standard_template_parameters(
+            language['page_404_title'],
+            language['page_404_text'],
+            '',
+            '',
+            False
+        )
+
         rendered_template = get_rendered_template(language, templates, '404.html', template_parameters)
 
         filepath = os.path.join(paths['project_dirpath'], '404.html')
