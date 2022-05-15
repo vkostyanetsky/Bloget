@@ -116,7 +116,7 @@ def build_project():
                     filepath = os.path.join(page_content_dirpath, file)
 
                     is_file = os.path.isfile(filepath)
-                    is_not_predefined = not file in predefined_files
+                    is_not_predefined = file not in predefined_files
 
                     return is_file and is_not_predefined
 
@@ -256,7 +256,7 @@ def build_project():
 
             metadata_filepath = os.path.join(page_content_dirpath, 'index.yaml')
 
-            if (os.path.exists(metadata_filepath)):
+            if os.path.exists(metadata_filepath):
 
                 page = {
                     'path': get_path(),
@@ -292,7 +292,7 @@ def build_project():
 
                 is_note = page_content_dirpath.startswith(paths['content_notes_dirpath'])
 
-                if (is_note):
+                if is_note:
                     notes.append(page)
                 else:
                     texts.append(page)
@@ -432,7 +432,7 @@ def build_project():
 
                 is_last_page = notes_left == 0
 
-                if (page_number == 1):
+                if page_number == 1:
                     build_page(None)
 
                 build_page(page_number)
