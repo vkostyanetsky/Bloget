@@ -10,6 +10,66 @@ from markdown import markdown
 from bs4 import BeautifulSoup
 
 
+class Page404:
+
+    @staticmethod
+    def build(language, templates):
+
+        template_parameters = get_standard_template_parameters(language['page_404_title'], language['page_404_text'],
+                                                               '', '', False)
+        rendered_template = get_rendered_template(language, templates, '404.html', template_parameters)
+
+        filepath = os.path.join(paths['project_dirpath'], '404.html')
+
+        write_file(filepath, rendered_template)
+
+
+def write_file(filepath: str, content: str):
+
+    with open(filepath, 'w+', encoding='utf-8-sig') as file:
+        file.write(content)
+
+
+def get_rendered_template(language, templates, filename: str, parameters: dict = {}):
+
+    template = templates.get_template(filename)
+
+    parameters['language'] = language
+    parameters['config'] = config
+
+    return template.render(parameters)
+
+
+def get_standard_template_parameters(page_title, page_description, page_path, page_base_path, editable=True):
+
+    def get_page_edit_path(page_base_path, editable):
+
+        if editable:
+
+            if config['github_repository'] != '':
+                result = 'https://github.com/{}/edit/main/pages{}index.md'.format(config['github_repository'],
+                                                                                  page_base_path)
+            else:
+                result = ''
+
+        else:
+
+            result = ''
+
+        return result
+
+    page_edit_path = get_page_edit_path(page_base_path, editable)
+
+    # print(page_path + ": " + page_edit_path)
+
+    return {
+        'page_title': page_title,
+        'page_description': page_description,
+        'page_path': page_path,
+        'page_edit_path': page_edit_path,
+    }
+
+
 def get_args():
     args_parser = argparse.ArgumentParser()
 
@@ -324,7 +384,7 @@ def build_project():
             make_dir(text['project_dirpath'])
 
             template_parameters = get_template_parameters()
-            rendered_template = get_rendered_template('text.html', template_parameters)
+            rendered_template = get_rendered_template(language, templates, 'text.html', template_parameters)
 
             write_page(text['project_dirpath'], rendered_template)
 
@@ -399,7 +459,7 @@ def build_project():
             make_dir(page_dirpath)
 
             template_parameters = get_template_parameters()
-            rendered_template = get_rendered_template('notes.html', template_parameters)
+            rendered_template = get_rendered_template(language, templates, 'notes.html', template_parameters)
 
             write_page(page_dirpath, rendered_template)
 
@@ -476,7 +536,7 @@ def build_project():
                 return result
 
             template_parameters = get_template_parameters()
-            rendered_template = get_rendered_template('note.html', template_parameters)
+            rendered_template = get_rendered_template(language, templates, 'note.html', template_parameters)
 
             if selected_tag is None:
                 note_filepath = note['project_dirpath']
@@ -586,7 +646,7 @@ def build_project():
         make_dir(dirpath)
 
         template_parameters = get_template_parameters()
-        rendered_template = get_rendered_template('tags.html', template_parameters)
+        rendered_template = get_rendered_template(language, templates, 'tags.html', template_parameters)
 
         write_page(dirpath, rendered_template)
 
@@ -620,7 +680,7 @@ def build_project():
             return {'urls': urls}
 
         template_parameters = get_template_parameters()
-        rendered_template = get_rendered_template('sitemap.xml', template_parameters)
+        rendered_template = get_rendered_template(language, templates, 'sitemap.xml', template_parameters)
 
         filepath = os.path.join(paths['project_dirpath'], 'sitemap.xml')
 
@@ -664,25 +724,15 @@ def build_project():
             }
 
         template_parameters = get_template_parameters()
-        rendered_template = get_rendered_template('rss.xml', template_parameters)
+        rendered_template = get_rendered_template(language, templates, 'rss.xml', template_parameters)
 
         filepath = os.path.join(paths['project_dirpath'], 'rss.xml')
 
         write_file(filepath, rendered_template)
 
-    def build_page_404():
-
-        template_parameters = get_standard_template_parameters(language['page_404_title'], language['page_404_text'],
-                                                               '', '', False)
-        rendered_template = get_rendered_template('404.html', template_parameters)
-
-        filepath = os.path.join(paths['project_dirpath'], '404.html')
-
-        write_file(filepath, rendered_template)
-
     def build_robots():
 
-        rendered_template = get_rendered_template('robots.txt')
+        rendered_template = get_rendered_template(language, templates, 'robots.txt')
         filepath = os.path.join(paths['project_dirpath'], 'robots.txt')
 
         write_file(filepath, rendered_template)
@@ -701,44 +751,6 @@ def build_project():
                 shutil.copytree(source_path, result_path)
             else:
                 shutil.copy2(source_path, result_path)
-
-    def get_standard_template_parameters(page_title, page_description, page_path, page_base_path, editable=True):
-
-        def get_page_edit_path(page_base_path, editable):
-
-            if editable:
-
-                if config['github_repository'] != '':
-                    result = 'https://github.com/{}/edit/main/pages{}index.md'.format(config['github_repository'],
-                                                                                      page_base_path)
-                else:
-                    result = ''
-
-            else:
-
-                result = ''
-
-            return result
-
-        page_edit_path = get_page_edit_path(page_base_path, editable)
-
-        # print(page_path + ": " + page_edit_path)
-
-        return {
-            'page_title': page_title,
-            'page_description': page_description,
-            'page_path': page_path,
-            'page_edit_path': page_edit_path,
-        }
-
-    def get_rendered_template(filename: str, parameters: dict = {}):
-
-        template = templates.get_template(filename)
-
-        parameters['language'] = language
-        parameters['config'] = config
-
-        return template.render(parameters)
 
     def get_notes_by_tag(notes: list, tag: str):
 
@@ -764,11 +776,6 @@ def build_project():
         filepath = os.path.join(dirpath, 'index.html')
 
         with open(filepath, "w+", encoding='utf-8-sig') as file:
-            file.write(content)
-
-    def write_file(filepath: str, content: str):
-
-        with open(filepath, 'w+', encoding='utf-8-sig') as file:
             file.write(content)
 
     def make_dir(path):
@@ -797,7 +804,7 @@ def build_project():
     build_sitemap()
     build_rss()
 
-    build_page_404()
+    Page404.build(language, templates)
     build_robots()
 
     copy_assets()
