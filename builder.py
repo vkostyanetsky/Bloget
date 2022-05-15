@@ -10,6 +10,54 @@ from markdown import markdown
 from bs4 import BeautifulSoup
 
 
+class PageRSS:
+
+    @staticmethod
+    def build(language, templates, pages):
+
+        def get_template_parameters():
+
+            def get_items():
+
+                def is_in_rss():
+
+                    options = note['metadata'].get('options')
+
+                    return True if options is None else 'no-rss' not in options
+
+                items = []
+
+                for note in pages['notes']:
+
+                    if is_in_rss():
+
+                        item = {
+                            'title': note['metadata']['title'],
+                            'link': config['url'] + note['path'],
+                            'guid': 'note-' + note['dirname'],
+                            'pub_date': note['metadata']['created'].strftime('%a, %d %b %Y %H:%M:%S +0700'),
+                            'description': note['html']
+                        }
+
+                        items.append(item)
+
+                        if len(items) == 10:
+                            break
+
+                return items
+
+            return {
+                'items': get_items()
+            }
+
+        template_parameters = get_template_parameters()
+        rendered_template = get_rendered_template(language, templates, 'rss.xml', template_parameters)
+
+        filepath = os.path.join(paths['project_dirpath'], 'rss.xml')
+
+        write_file(filepath, rendered_template)
+
+
 class Page404:
 
     @staticmethod
@@ -692,50 +740,6 @@ def build_project():
 
         write_file(filepath, rendered_template)
 
-    def build_rss():
-
-        def get_template_parameters():
-
-            def get_items():
-
-                def is_in_rss():
-
-                    options = note['metadata'].get('options')
-
-                    return True if options is None else 'no-rss' not in options
-
-                items = []
-
-                for note in pages['notes']:
-
-                    if is_in_rss():
-
-                        item = {
-                            'title': note['metadata']['title'],
-                            'link': config['url'] + note['path'],
-                            'guid': 'note-' + note['dirname'],
-                            'pub_date': note['metadata']['created'].strftime('%a, %d %b %Y %H:%M:%S +0700'),
-                            'description': note['html']
-                        }
-
-                        items.append(item)
-
-                        if len(items) == 10:
-                            break
-
-                return items
-
-            return {
-                'items': get_items()
-            }
-
-        template_parameters = get_template_parameters()
-        rendered_template = get_rendered_template(language, templates, 'rss.xml', template_parameters)
-
-        filepath = os.path.join(paths['project_dirpath'], 'rss.xml')
-
-        write_file(filepath, rendered_template)
-
     def build_robots():
 
         rendered_template = get_rendered_template(language, templates, 'robots.txt')
@@ -808,9 +812,10 @@ def build_project():
         build_notes()
 
     build_sitemap()
-    build_rss()
 
+    PageRSS.build(language, templates, pages)
     Page404.build(language, templates)
+
     build_robots()
 
     copy_assets()
