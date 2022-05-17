@@ -21,8 +21,11 @@ class BuilderPaths:
     def get_input_pages_directory_path(self) -> str:
         return os.path.join(self.__input_directory_path, 'pages')
 
-    def get_input_notes_directory_path(self) -> str:
-        return os.path.join(self.__input_directory_path, 'notes')
+    def get_input_notes_pages_directory_path(self) -> str:
+        return os.path.join(
+            self.get_input_pages_directory_path(),
+            'notes'
+        )
 
     def get_input_tags_file_path(self) -> str:
         return os.path.join(self.__input_directory_path, 'tags.yaml')
@@ -49,6 +52,72 @@ class BuilderConfig:
         )
 
 
+class BlogPage:
+    __attachments: list = []
+    # directory_path: str
+    # directory_name: str
+    __input_directory_path: str = ''
+    __output_directory_path: str = ''
+
+    __paths: BuilderPaths = None
+    __config: BuilderConfig = None
+
+    __path: str
+    __date: str
+
+    __predefined_file_names: list = ['index.md', 'index.yaml']
+
+    def __init__(self, input_directory_path: str, paths: BuilderPaths, config: BuilderConfig):
+        self.__input_directory_path = input_directory_path
+
+        self.output_directory_path = input_directory_path.replace(
+            paths.get_input_pages_directory_path(),
+            paths.get_output_directory_path()
+        )
+
+        self.__paths = paths
+        self.__config = config
+
+        self.__set_path()
+        self.__set_attachments()
+
+    def __set_path(self):
+
+        self.__path = self.__input_directory_path
+
+        directories = []
+
+        while self.__path != self.__paths.get_input_pages_directory_path():
+            split_path = os.path.split(self.__path)
+            self.__path = split_path[0]
+
+            directories.append(split_path[1])
+
+        directories = list(reversed(directories))
+
+        if len(directories) > 0:
+            self.__path = '/{}/'.format('/'.join(directories))
+        else:
+            self.__path = '/'
+
+    def __set_attachments(self):
+
+        file_names = os.listdir(self.__input_directory_path)
+
+        for file_name in file_names:
+
+            file_path = os.path.join(self.__input_directory_path, file_name)
+
+            if os.path.isfile(file_path) and file_name not in self.__predefined_file_names:
+                self.__attachments.append(file_name)
+
+    @staticmethod
+    def is_page(page_directory_path) -> bool:
+        return os.path.exists(
+            os.path.join(page_directory_path, 'index.yaml')
+        )
+
+
 class Builder:
     __paths: BuilderPaths
     __config: BuilderConfig
@@ -57,8 +126,10 @@ class Builder:
     __language: dict
     __tags: dict
 
-    def __init__(self, config_path: str, input_directory_path: str, output_directory_path: str):
+    __notes: list = []
+    __texts: list = []
 
+    def __init__(self, config_path: str, input_directory_path: str, output_directory_path: str):
         self.__paths = BuilderPaths(
             input_directory_path=input_directory_path,
             output_directory_path=output_directory_path
@@ -69,6 +140,7 @@ class Builder:
         )
 
     def run(self):
+        self.__clear_output_directory()
 
         self.__templates = Environment(
             loader=FileSystemLoader(
@@ -84,12 +156,9 @@ class Builder:
             file_path=self.__paths.get_input_tags_file_path()
         )
 
-        icecream.ic(self.__config)
-        icecream.ic(self.__language)
-        icecream.ic(self.__templates)
+        self.__load_pages()
 
     def __clear_output_directory(self):
-
         output_directory = self.__paths.get_output_directory_path()
 
         for project_file in os.listdir(output_directory):
@@ -104,6 +173,40 @@ class Builder:
                     os.unlink(project_file_path)
                 elif os.path.isdir(project_file_path):
                     shutil.rmtree(project_file_path)
+
+    def __load_pages(self):
+
+        notes_directory_path = self.__paths.get_input_notes_pages_directory_path()
+
+        directories = os.walk(
+            self.__paths.get_input_pages_directory_path()
+        )
+
+        for directory in directories:
+
+            directory_path = directory[0]
+
+            if not BlogPage.is_page(directory_path):
+                continue
+
+            is_note = directory_path.startswith(notes_directory_path)
+
+            page = BlogPage(
+                input_directory_path=directory_path,
+                paths=self.__paths,
+                config=self.__config
+            )
+
+            if is_note:
+                self.__notes.append(page)
+            else:
+                self.__texts.append(page)
+
+        # self.__notes = sorted(
+        #     self.__notes,
+        #     key=lambda note: note['metadata']['created'],
+        #     reverse=True
+        # )
 
     @staticmethod
     def read_yaml_file(file_path):
