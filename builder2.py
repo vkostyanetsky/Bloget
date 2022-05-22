@@ -151,7 +151,7 @@ class BlogBuilderConfig:
 
             attribute_value = config.get(attribute_name)
 
-            return attribute_value if attribute_value is not None else ''
+            return attribute_value if type(attribute_value) is str else ''
 
         config = BlogBuilderApplication.read_yaml_file(config_path)
 
