@@ -137,8 +137,53 @@ class BlogBuilderPaths:
         return self.__output_notes_path
 
 
+class BlogBuilderConfig:
+
+    __url: str = ''
+    __language_code: str = ''
+    __mirror_url: str = ''
+    __mirror_language_code: str = ''
+    __github_repository: str = ''
+
+    def __init__(self, config_path):
+
+        def get_config_value(attribute_name):
+
+            attribute_value = config.get(attribute_name)
+
+            return attribute_value if attribute_value is not None else ''
+
+        config = BlogBuilderApplication.read_yaml_file(config_path)
+
+        self.__url = get_config_value('url')
+        self.__language_code = get_config_value('language_code')
+        self.__mirror_url = get_config_value('mirror_url')
+        self.__mirror_language_code = get_config_value('mirror_language_code')
+        self.__github_repository = get_config_value('github_repository')
+
+    @property
+    def url(self) -> str:
+        return self.__url
+
+    @property
+    def language_code(self) -> str:
+        return self.__language_code
+
+    @property
+    def mirror_url(self) -> str:
+        return self.__mirror_url
+
+    @property
+    def mirror_language_code(self) -> str:
+        return self.__mirror_language_code
+
+    @property
+    def github_repository(self) -> str:
+        return self.__github_repository
+
+
 class BlogBuilderApplication:
-    __config: dict = {}
+    __config: BlogBuilderConfig
     __paths: BlogBuilderPaths
     __language: dict = {}
     __tags: dict = {}
@@ -149,14 +194,11 @@ class BlogBuilderApplication:
     def __init__(self, input_path: str, output_path: str, config_path: str) -> None:
 
         self.__paths = BlogBuilderPaths(input_path=input_path, output_path=output_path)
+        self.__config = BlogBuilderConfig(config_path=config_path)
 
-        self.__set_config(config_path)
         self.__set_language()
         self.__set_tags()
         self.__set_templates()
-
-    def __set_config(self, config_path: str) -> None:
-        self.__config = self.read_yaml_file(file_path=config_path)
 
     def __set_language(self) -> None:
         self.__language = self.read_yaml_file(file_path=self.__paths.input_language_path)
@@ -222,7 +264,7 @@ class BlogBuilderApplication:
         # )
 
     @staticmethod
-    def read_yaml_file(file_path):
+    def read_yaml_file(file_path) -> dict:
         with open(file=file_path, encoding='utf-8-sig') as yaml_file:
             result = yaml.safe_load(yaml_file)
 
