@@ -725,7 +725,7 @@ def build_project():
                     if is_in_sitemap():
                         url = {
                             'loc': config['url'] + page['path'],
-                            'lastmod': page['metadata']['changed'].strftime('%Y-%m-%d')
+                            'lastmod': page['metadata']['created'].strftime('%Y-%m-%d')
                         }
 
                         urls.append(url)
