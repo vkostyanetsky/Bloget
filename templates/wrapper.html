@@ -63,6 +63,7 @@
 </head>
 
 <body class="w-100 bg-white">
+
 <div id="app">        
 <main>
 
@@ -80,16 +81,6 @@
                 <a class="dib f4 mr3 link dim bb blue" href="{{ config['url'] }}">{{ language['site_title'] }}</a>
             {% endif %}
 
-            {% if page_path == '/skills/' %}
-                <span class="black dib f4 mr3">{{ language.get('skills') }}</span>
-            {% elif page_path.startswith('/skills') %}
-                <a class="dib f4 mr3 link dim bb orange" href="{{ config['url'] }}/skills/">{{ language['skills'] }}</a>
-            {% else %}
-                <a class="dib f4 mr3 link dim bb blue" href="{{ config['url'] }}/skills/">{{ language['skills'] }}</a>
-            {% endif %}
-
-            <!--
-
             {% if page_path == '/projects/' %}
                 <span class="black dib f4 mr3">{{ language.get('projects') }}</span>
             {% elif page_path.startswith('/projects') %}
@@ -97,8 +88,6 @@
             {% else %}
                 <a class="dib f4 mr3 link dim bb blue" href="{{ config['url'] }}/projects/">{{ language['projects'] }}</a>
             {% endif %}            
-
-            -->
 
             {% if page_path == '/notes/' %}
                 <span class="black dib f4 mr3">{{ language.get('notes') }}</span>
@@ -123,7 +112,7 @@
             {% if config['mirror_url'] == '' %}<div>{% else %}<div class="mt3">{% endif %}
 
             {% if page_edit_path != '' %}
-                    <a title="{{ language['edit_page'] }}" href="{{ page_edit_path }}" class="f4 f4-ns dim blue no-underline">✎</a>                
+                    <a title="{{ language['edit_page'] }}" href="{{ page_edit_path }}" class="f4 f4-ns dim blue no-underline">✎</a>
             {% else %}
                     <span class="f4 f4-ns">✎</span>
             {% endif %}
