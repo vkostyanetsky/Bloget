@@ -1,0 +1,177 @@
+# ----------------------------------------------------- #
+# BUILDS                                                #
+# ----------------------------------------------------- #
+
+builds:
+
+  en:
+    url:                    https://kostyanetsky.me
+    language_code:          en
+    mirror_url:             https://kostyanetsky.ru
+    mirror_language_code:   ru
+    github_repository:      vkostyanetsky/kostyanetsky.me
+
+  en-dev:
+    url:                    http://localhost:8000
+    language_code:          en
+    mirror_url:             https://kostyanetsky.ru
+    mirror_language_code:   ru
+    github_repository:      vkostyanetsky/kostyanetsky.me    
+
+  ru:
+    url:                    https://kostyanetsky.ru
+    language_code:          ru
+    mirror_url:             https://kostyanetsky.me
+    mirror_language_code:   en
+    github_repository:      vkostyanetsky/kostyanetsky.ru
+
+  ru-dev:
+    url:                    http://localhost:8000
+    language_code:          ru
+    mirror_url:             https://kostyanetsky.me
+    mirror_language_code:   en
+    github_repository:      vkostyanetsky/kostyanetsky.ru
+
+# ----------------------------------------------------- #
+# INTERFACES                                            #
+# ----------------------------------------------------- #
+
+interfaces:
+
+  en:
+    full_name:          "Vlad Kostyanetsky"
+    site_title:         "Vlad's Site"
+    site_description:   "Hello! My name is Vlad, I'm business app developer."
+    notes:              "Notes"
+    projects:           "Projects"
+    notes_description:  "My notes about life, work and other fascinating things around me."
+    email:              "Email"
+    email_address:      "vlad@kostyanetsky.me"
+    telegram :          "Telegram"
+    github:             "GitHub"
+    hi:                 "Hi!"
+    gist:               "Gist"
+    tags:               "Tags"
+    tags_description:   "Tags statistic for my notes."
+    earlier:            "Earlier"
+    later:              "Later"
+    tweet:              "Tweet"
+    rss:                "RSS"
+    edit_page:          "Found a typo? Edit me!"
+    page_404_title:     "Page Not Found"
+    page_404_text:      "I could have deleted it, or something else could happen. You could have typed the link incorrectly, for example."
+    likely_tweet:       "Tweet"
+    likely_send:        "Send"
+    note_plural:
+        1: "note"
+        2: "notes"
+        5: "notes"  
+    months:
+        1:  "January"
+        2:  "February"
+        3:  "Marth"
+        4:  "April"
+        5:  "May"
+        6:  "June"
+        7:  "Jule"
+        8:  "August"
+        9:  "September"
+        10: "October"
+        11: "November"
+        12: "December"
+
+  ru:
+    full_name:          "Влад Костянецкий"
+    site_title:         "Сайт Влада"
+    site_description:   "Привет! Меня зовут Влад, я — разработчик приложений для бизнеса."
+    notes:              "Заметки"
+    projects:           "Проекты"
+    notes_description:  "Мои заметки о жизни, работе и других интересных штуках вокруг меня."
+    email:              "Эл. почта"
+    email_address:      "vlad@kostyanetsky.ru"
+    telegram :          "Телеграм"
+    github:             "Гитхаб"
+    hi:                 "Привет!"
+    gist:               "Суть"
+    tags:               "Теги"
+    tags_description:   "Статистика по тегам моих заметок."
+    earlier:            "Ранее"
+    later:              "Позднее"
+    tweet:              "Твит"
+    rss:                "РСС"
+    edit_page:          "Видите опечатку? Поправьте меня!"
+    page_404_title:     "Страница не найдена"
+    page_404_text:      "Возможно, я её удалил или переименовал. А может, вы ошиблись при наборе URL."
+    likely_tweet:       "Твитнуть"
+    likely_send:        "Отправить"
+    note_plural:
+        1: "заметка"
+        2: "заметки"
+        5: "заметок"
+    months:
+        1:  "января"
+        2:  "февраля"
+        3:  "марта"
+        4:  "апреля"
+        5:  "мая"
+        6:  "июня"
+        7:  "июля"
+        8:  "августа"
+        9:  "сентября"
+        10: "октября"
+        11: "ноября"
+        12: "декабря"
+
+# ----------------------------------------------------- #
+# TAGS                                                  #
+# ----------------------------------------------------- #
+
+tags:
+
+  en:
+    1c:           "1С"
+    work:         "work"
+    english:      "English"
+    meanwhile:    "meanwhile"
+    sport:        "sport"
+    books:        "books"
+    videogames:   "videogames"
+    mssql:        "MS SQL"
+    films:        "films"
+    webdev:       "webdev"
+    bash:         "bash"
+    family:       "family"
+    optimization: "optimization"
+    workplace:    "workplace"
+    code-smell:   "code smell"
+    powershell:   "PowerShell"
+    done:         "done"
+    pgsql:        "PostgreSQL"
+    python:       "Python"
+    blog:         "blog"
+    nodejs:       "Node.js"
+    bitrix:       "Bitrix"
+
+  ru:
+    1c:           "1С"
+    work:         "работа"
+    english:      "английский"
+    meanwhile:    "тем временем"
+    sport:        "спорт"
+    books:        "книги"
+    videogames:   "видеоигры"
+    mssql:        "MS SQL"
+    films:        "фильмы"
+    webdev:       "вебдев"
+    bash:         "bash"
+    family:       "семья"
+    optimization: "оптимизация"
+    workplace:    "рабочее место"
+    code-smell:   "код с запашком"
+    powershell:   "PowerShell"
+    done:         "готово"
+    pgsql:        "PostgreSQL"
+    python:       "Python"
+    blog:         "блог"
+    nodejs:       "Node.js"
+    bitrix:       "Битрикс"    
