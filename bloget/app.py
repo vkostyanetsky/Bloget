@@ -49,7 +49,7 @@ def __get_arguments() -> argparse.Namespace:
     base_parser = argparse.ArgumentParser(add_help=False)
 
     base_parser.add_argument(
-        "--debug", nargs='?', required=False, default=False, const=True
+        "--debug", nargs="?", required=False, default=False, const=True
     )
 
     subparsers = parser.add_subparsers(

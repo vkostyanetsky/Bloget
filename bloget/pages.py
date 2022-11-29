@@ -66,4 +66,3 @@ class BlogPage:
                 attachments.append(file_name)
 
         return attachments
-

@@ -1,11 +1,11 @@
 import argparse
+import logging
 import os
 import shutil
 
 import jinja2
-import logging
-from bloget import utils
-from bloget import pages, text_builder
+
+from bloget import pages, text_builder, utils
 
 
 def build_blog(arguments: argparse.Namespace) -> None:
