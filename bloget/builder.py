@@ -3,15 +3,17 @@ import os
 import shutil
 
 import jinja2
-
+import logging
 from bloget import utils
-from bloget.pages import BlogPage
+from bloget import pages, text_builder
 
 
 def build_blog(arguments: argparse.Namespace) -> None:
     """
     Initializes blog's data by arguments given, then builds it.
     """
+
+    logging.info("Blog building has started.")
 
     paths = __get_paths(arguments)
     settings = __get_settings(paths, arguments)
@@ -24,7 +26,7 @@ def build_blog(arguments: argparse.Namespace) -> None:
 
     texts, notes = __get_pages(paths, settings)
 
-    __build_texts(texts, paths)
+    text_builder.build_texts(texts, paths, settings, language, templates)
 
 
 def __build_texts(texts: list, paths: dict) -> None:
@@ -47,7 +49,7 @@ def __get_pages(paths: dict, settings: dict) -> tuple:
 
         if "index.yaml" in files:
 
-            page = BlogPage(directory)
+            page = pages.BlogPage(directory)
 
             is_note_page = directory.startswith(notes_path)
 

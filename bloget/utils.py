@@ -22,13 +22,19 @@ def raise_error(message: str) -> None:
     sys.exit("A critical error has occurred. Exiting...")
 
 
-def make_directory(path: str) -> None:
+def make_folder(path: str) -> None:
     """
     Makes a directory is it doesn't exist.
     """
 
+    logging.info(f'Making a folder "{path}"...')
+
     if not os.path.exists(path):
-        os.mkdir(path)
+
+        try:
+            os.makedirs(path)
+        except IOError:
+            raise_error(f"Unable to make a folder: {path}")
 
 
 def read_yaml_file(file_path: str) -> dict:
@@ -41,6 +47,6 @@ def read_yaml_file(file_path: str) -> dict:
             result = yaml.safe_load(yaml_file)
 
     except IOError:
-        raise_error(f"Unable to read a file by path: {file_path}")
+        raise_error(f"Unable to read a file: {file_path}")
 
     return result

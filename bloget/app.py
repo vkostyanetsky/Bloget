@@ -6,6 +6,7 @@ Logging, arguments parser & actions router implementations.
 
 import argparse
 import logging
+import os
 
 import coloredlogs
 
@@ -17,9 +18,9 @@ def main() -> None:
     Main entry point of the application.
     """
 
-    __setup_logging()
-
     arguments = __get_arguments()
+
+    __setup_logging(arguments)
 
     if arguments.command == "build":
         builder.build_blog(arguments)
@@ -27,15 +28,16 @@ def main() -> None:
         pass
 
 
-def __setup_logging() -> None:
+def __setup_logging(arguments: argparse.Namespace) -> None:
     """
     Sets up logging feature.
     """
 
     format_string = "%(asctime)s [%(levelname)s] %(message)s"
+    logging_level = logging.DEBUG if arguments.debug else logging.INFO
 
-    logging.basicConfig(level=logging.INFO, format=format_string)
-    coloredlogs.install(level=logging.INFO, fmt=format_string)
+    logging.basicConfig(level=logging_level, format=format_string)
+    coloredlogs.install(level=logging_level, fmt=format_string)
 
 
 def __get_arguments() -> argparse.Namespace:
@@ -45,6 +47,10 @@ def __get_arguments() -> argparse.Namespace:
 
     parser = argparse.ArgumentParser(description="BLOGET")
     base_parser = argparse.ArgumentParser(add_help=False)
+
+    base_parser.add_argument(
+        "--debug", nargs='?', required=False, default=False, const=True
+    )
 
     subparsers = parser.add_subparsers(
         dest="command", help="Action you want the app to do.", required=True
@@ -104,7 +110,7 @@ def __get_subparser_for_build_command() -> argparse.ArgumentParser:
         "--pages",
         type=str,
         help="input directory with pages (markdown files)",
-        default="",
+        default=os.getcwd(),
     )
 
     subparser.add_argument(

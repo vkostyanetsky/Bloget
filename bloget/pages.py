@@ -6,25 +6,22 @@ Implementation of the classes represent items of blog's data (texts & notes).
 
 import os
 
-import jinja2
-
 from bloget import utils
 
 
 class BlogPage:
     """
-    Basic implementation of blog's data item.
+    Basic implementation of blog's page (note or text).
     """
 
     folder_path: str
-    folder_name: str
     attachments: list
     metadata: dict
 
     def __init__(self, folder_path: str) -> None:
         self.folder_path = folder_path
-        self.attachments = self.__get_attachments()
         self.metadata = self.__get_metadata()
+        self.attachments = self.__get_attachments()
 
     def __repr__(self) -> str:
         return self.folder_path
@@ -70,19 +67,3 @@ class BlogPage:
 
         return attachments
 
-
-class BlogPageWriter:
-    pass
-
-
-class BlogTextWriter(BlogPageWriter):
-    def __init__(
-        self, paths: dict, settings: dict, language: dict, templates: jinja2.Environment
-    ):
-        self.paths = paths
-        self.settings = settings
-        self.language = language
-        self.templates = templates
-
-    def write(self):
-        pass
