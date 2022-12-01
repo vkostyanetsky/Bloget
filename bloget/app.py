@@ -142,7 +142,12 @@ def __get_subparser_for_build_command() -> argparse.ArgumentParser:
     )
 
     subparser.add_argument(
-        "--open", help="makes the app to open the built blog in a web browser", nargs="?", required=False, default=False, const=True
+        "--webserver",
+        help="starts a web server for a blog built",
+        nargs="?",
+        required=False,
+        default=False,
+        const=True,
     )
 
     return subparser

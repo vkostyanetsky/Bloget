@@ -2,10 +2,9 @@ import argparse
 import logging
 import os
 import shutil
-import webbrowser
 
-import asyncio
 import jinja2
+
 from bloget import pages, text_builder, utils, webserver
 
 
@@ -33,9 +32,10 @@ def build_blog(arguments: argparse.Namespace) -> None:
 
     __copy_assets(paths)
 
-    if arguments.open:
-        webbrowser.open(settings["url"], new=0, autoraise=True)
-        asyncio.run(webserver.start(paths, settings))
+    if arguments.webserver:
+        webserver.start(
+            url=settings["url"], title=language["site_title"], folder=paths["output"]
+        )
 
 
 def __copy_assets(paths: dict):

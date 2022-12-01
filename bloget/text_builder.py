@@ -54,17 +54,20 @@ def __build_text(
         "settings": settings,
     }
 
-    rendered_template = get_rendered_template(templates, 'text.html', template_parameters)
+    rendered_template = get_rendered_template(
+        templates, "text.html", template_parameters
+    )
 
     write_page(output_folder_path, rendered_template)
 
 
 def write_page(folder_path: str, content: str):
 
-    filepath = os.path.join(folder_path, 'index.html')
+    filepath = os.path.join(folder_path, "index.html")
 
-    with open(filepath, "w+", encoding='utf-8-sig') as file:
+    with open(filepath, "w+", encoding="utf-8-sig") as file:
         file.write(content)
+
 
 def get_rendered_template(templates, filename, parameters: dict):
 
@@ -102,6 +105,7 @@ def get_rendered_template(templates, filename, parameters: dict):
 #         'page_edit_path': page_edit_path,
 #     }
 
+
 def get_template_parameters():
     # result = get_standard_template_parameters(
     #     text['metadata']['title'],
@@ -111,7 +115,7 @@ def get_template_parameters():
     #     True
     # )
 
-    result['text'] = text
+    result["text"] = text
 
     return result
 

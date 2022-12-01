@@ -9,15 +9,13 @@ from urllib.parse import urlparse
 
 import flask
 
-from bloget import constants
 
-
-async def start(paths, settings):
+def start(url: str, title: str, folder: str) -> None:
     """
     Starts a web server.
     """
 
-    app = flask.Flask(constants.TITLE)
+    app = flask.Flask(title)
 
     @app.route("/")
     @app.route("/<path:resource_path>")
@@ -29,18 +27,18 @@ async def start(paths, settings):
         if resource_path is None:
             resource_path = ""
 
-        resource_path = os.path.join(paths["output"], resource_path)
+        resource_path = os.path.join(folder, resource_path)
 
         if os.path.isdir(resource_path):
-            resource_path = os.path.join("index.html")
+            resource_path = os.path.join(resource_path, "index.html")
 
         if not os.path.exists(resource_path):
             flask.abort(404)
 
         return flask.send_file(resource_path)
 
-    os.chdir(paths["output"])
+    os.chdir(folder)
 
-    parse_result = urlparse(settings["url"])
+    parse_result = urlparse(url)
 
     app.run(host=parse_result.hostname, port=parse_result.port)
