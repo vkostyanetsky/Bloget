@@ -48,6 +48,13 @@ class BlogPage:
 
         return utils.read_yaml_file(file_path)
 
+    def get_content(self) -> str:
+        """
+        Returns data from a content file.
+        """
+
+        return f"{self.folder_path}{self.__get_content_file_name()}"
+
     def __get_attachments(self) -> list:
         """
         Makes list of attachments in a page folder.

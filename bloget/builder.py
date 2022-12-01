@@ -2,10 +2,11 @@ import argparse
 import logging
 import os
 import shutil
+import webbrowser
 
+import asyncio
 import jinja2
-
-from bloget import pages, text_builder, utils
+from bloget import pages, text_builder, utils, webserver
 
 
 def build_blog(arguments: argparse.Namespace) -> None:
@@ -28,22 +29,39 @@ def build_blog(arguments: argparse.Namespace) -> None:
 
     text_builder.build_texts(texts, paths, settings, language, templates)
 
+    logging.info("Building is done!")
 
-def __build_texts(texts: list, paths: dict) -> None:
+    __copy_assets(paths)
 
-    for text in texts:
-        text.write(paths["output"])
+    if arguments.open:
+        webbrowser.open(settings["url"], new=0, autoraise=True)
+        asyncio.run(webserver.start(paths, settings))
+
+
+def __copy_assets(paths: dict):
+
+    assets_path = os.path.join(paths["skin"], "assets")
+
+    for item in os.listdir(assets_path):
+
+        source_path = os.path.join(assets_path, item)
+        result_path = os.path.join(paths["output"], item)
+
+        if os.path.isdir(source_path):
+            shutil.copytree(source_path, result_path)
+        else:
+            shutil.copy2(source_path, result_path)
 
 
 def __get_pages(paths: dict, settings: dict) -> tuple:
     """
-    Returns tuple with texts and notes lists, which contain paths to directories.
+    Returns tuple with lists of texts and notes.
     """
 
     notes_path = os.path.join(paths["pages"], settings["notes_directory"])
 
-    notes = []
     texts = []
+    notes = []
 
     for directory, _, files in os.walk(paths["pages"]):
 

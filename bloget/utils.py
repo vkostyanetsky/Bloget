@@ -27,7 +27,7 @@ def make_folder(path: str) -> None:
     Makes a directory is it doesn't exist.
     """
 
-    logging.info(f'Making a folder "{path}"...')
+    logging.debug(f'Making a folder "{path}"...')
 
     if not os.path.exists(path):
 

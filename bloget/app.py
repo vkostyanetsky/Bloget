@@ -24,6 +24,7 @@ def main() -> None:
 
     if arguments.command == "build":
         builder.build_blog(arguments)
+
     elif arguments.command == "add":
         pass
 
@@ -138,6 +139,10 @@ def __get_subparser_for_build_command() -> argparse.ArgumentParser:
         "--url",
         type=str,
         help="external url of the blog; overrides the 'url' metadata setting",
+    )
+
+    subparser.add_argument(
+        "--open", help="makes the app to open the built blog in a web browser", nargs="?", required=False, default=False, const=True
     )
 
     return subparser
