@@ -67,11 +67,7 @@ def __get_file_text(
     return metadata.templates.get_template("text.html").render(template_parameters)
 
 
-def __copy_attachments(
-    page: page_reader.BlogPage,
-    output_folder_path: str,
-    metadata: metadata_reader.BlogMetadata,
-) -> None:
+def __copy_attachments(page: page_reader.BlogPage, output_folder_path: str) -> None:
     """
     Copies page's attachments to the page build folder.
     """
