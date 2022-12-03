@@ -12,7 +12,7 @@ import shutil
 
 from bloget import utils, webserver
 from bloget.readers import metadata_reader, pages_reader
-from bloget.writers import page_404_writer, rss_feed_writer, sitemap_writer, text_writer
+from bloget.writers import page_404_writer, rss_feed_writer, sitemap_writer, text_writer, robots_writer
 
 
 def build_blog(arguments: argparse.Namespace) -> None:
@@ -31,6 +31,7 @@ def build_blog(arguments: argparse.Namespace) -> None:
     sitemap_writer.write_sitemap(pages, metadata)
     rss_feed_writer.write_rss_feed(pages, metadata)
     page_404_writer.write_page_404(metadata)
+    robots_writer.write_robots(metadata)
 
     __copy_skin_assets(metadata)
 
