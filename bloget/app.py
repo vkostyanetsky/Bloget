@@ -108,9 +108,9 @@ def __get_subparser_for_build_command() -> argparse.ArgumentParser:
     subparser = argparse.ArgumentParser(add_help=False)
 
     subparser.add_argument(
-        "--pages",
+        "--data",
         type=str,
-        help="input directory with pages (markdown files)",
+        help="input directory with data (markdown files)",
         default=os.getcwd(),
     )
 

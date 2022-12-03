@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: /notes/tags*
-
-Sitemap: {{config['url']}}/sitemap.xml

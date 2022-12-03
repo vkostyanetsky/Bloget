@@ -22,6 +22,23 @@ def raise_error(message: str) -> None:
     sys.exit("A critical error has occurred. Exiting...")
 
 
+def make_file(path: str, data: str) -> None:
+    """
+    Makes a file.
+    """
+
+    logging.debug(f'Making a file "{path}"...')
+
+    try:
+
+        with open(path, "w+", encoding=constants.ENCODING) as file:
+            file.write(data)
+
+    except IOError:
+
+        raise_error(f"Unable to make a file: {path}")
+
+
 def make_folder(path: str) -> None:
     """
     Makes a directory is it doesn't exist.

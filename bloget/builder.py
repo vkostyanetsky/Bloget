@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+
+
+"""
+Implementation of general build logic.
+"""
+
 import argparse
 import logging
 import os
@@ -5,7 +12,15 @@ import shutil
 
 import jinja2
 
-from bloget import pages, text_builder, utils, webserver
+from bloget import (
+    utils,
+    webserver
+)
+
+from bloget.readers.metadata_reader import BlogInfo
+from bloget.readers.pages_reader import BlogData
+
+from bloget.writers import sitemap_builder, text_builder, page_404_builder, rss_feed_builder
 
 
 def build_blog(arguments: argparse.Namespace) -> None:
@@ -13,24 +28,22 @@ def build_blog(arguments: argparse.Namespace) -> None:
     Initializes blog's data by arguments given, then builds it.
     """
 
-    logging.info("Blog building has started.")
+    logging.info("Building has started.")
 
-    paths = __get_paths(arguments)
-    settings = __get_settings(paths, arguments)
+    info = __get_info(arguments)
+    data = __get_data(info)
+    skin = __get_skin(info)
 
-    tags = __get_tags(paths)
-    language = __get_language(paths)
-    templates = __get_templates(paths)
+    __clear_output(info)
 
-    __clear_output(paths)
-
-    texts, notes = __get_pages(paths, settings)
-
-    text_builder.build_texts(texts, paths, settings, language, templates)
+    text_builder.build_texts(info, skin, data)
+    sitemap_builder.build_sitemap(info, skin, data)
+    rss_feed_builder.build_rss_feed(info, skin, data)
+    page_404_builder.build_page_404(info, skin, data)
 
     logging.info("Building is done!")
 
-    __copy_assets(paths)
+    __copy_assets(info)
 
     if arguments.webserver:
         webserver.start(
@@ -38,14 +51,43 @@ def build_blog(arguments: argparse.Namespace) -> None:
         )
 
 
-def __copy_assets(paths: dict):
+def __get_info(arguments: argparse.Namespace) -> BlogInfo:
 
-    assets_path = os.path.join(paths["skin"], "assets")
+    paths = __get_paths(arguments)
+    settings = __get_settings(paths, arguments)
 
-    for item in os.listdir(assets_path):
+    tags = __get_tags(paths)
+    language = __get_language(paths)
 
-        source_path = os.path.join(assets_path, item)
-        result_path = os.path.join(paths["output"], item)
+    return BlogInfo(settings, language, paths, tags)
+
+
+def __get_data(info: BlogInfo) -> BlogData:
+
+    return BlogData(info)
+
+def __get_skin(info: BlogInfo) -> jinja2.Environment:
+    """
+    Returns template of a blog.
+    """
+
+    skin_path = info.paths.get("skin")
+    skin_templates_path = os.path.join(skin_path, "templates")
+
+    return jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath=skin_templates_path))
+
+
+def __copy_assets(info: BlogInfo):
+
+    skin_path = info.paths.get("skin")
+    skin_assets_path = os.path.join(skin_path, "assets")
+
+    output_path = info.paths.get("output")
+
+    for item in os.listdir(skin_assets_path):
+
+        source_path = os.path.join(skin_assets_path, item)
+        result_path = os.path.join(output_path, item)
 
         if os.path.isdir(source_path):
             shutil.copytree(source_path, result_path)
@@ -53,103 +95,21 @@ def __copy_assets(paths: dict):
             shutil.copy2(source_path, result_path)
 
 
-def __get_pages(paths: dict, settings: dict) -> tuple:
-    """
-    Returns tuple with lists of texts and notes.
-    """
-
-    notes_path = os.path.join(paths["pages"], settings["notes_directory"])
-
-    texts = []
-    notes = []
-
-    for directory, _, files in os.walk(paths["pages"]):
-
-        if "index.yaml" in files:
-
-            page = pages.BlogPage(directory)
-
-            is_note_page = directory.startswith(notes_path)
-
-            if is_note_page:
-                notes.append(page)
-            else:
-                texts.append(page)
-
-    return texts, notes
-
-
-def __get_paths(arguments: argparse.Namespace) -> dict:
-    """
-    Returns paths to various directories required to generate.
-    """
-
-    return {
-        "metadata": arguments.metadata,
-        "pages": arguments.pages,
-        "skin": arguments.skin,
-        "output": arguments.output,
-    }
-
-
-def __get_settings(paths: dict, arguments: argparse.Namespace) -> dict:
-    """
-    Returns settings of a blog.
-    """
-
-    file_path = os.path.join(paths["metadata"], "settings.yaml")
-
-    settings = utils.read_yaml_file(file_path)
-
-    if arguments.url is not None:
-        settings["url"] = arguments.url
-
-    return settings
-
-
-def __get_tags(paths: dict) -> dict:
-    """
-    Returns tags of a blog.
-    """
-
-    file_path = os.path.join(paths["metadata"], "tags.yaml")
-
-    return utils.read_yaml_file(file_path)
-
-
-def __get_language(paths: dict) -> dict:
-    """
-    Returns language of a blog.
-    """
-
-    file_path = os.path.join(paths["metadata"], "language.yaml")
-
-    return utils.read_yaml_file(file_path)
-
-
-def __get_templates(paths: dict) -> jinja2.Environment:
-    """
-    Returns template of a blog.
-    """
-
-    directory_path = os.path.join(paths["skin"], "templates")
-
-    return jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath=directory_path))
-
-
-def __clear_output(paths: dict) -> None:
+def __clear_output(info: BlogInfo) -> None:
     """
     Removes all blog's files and directories which were previously generated.
     """
 
+    output_path = info.paths.get("output")
+
     try:
-        for item in os.listdir(paths["output"]):
+        for item in os.listdir(output_path):
 
             protected_files = [".git", "CNAME"]
 
             if item not in protected_files:
 
-                project_file_path = os.path.join(paths["output"], item)
+                project_file_path = os.path.join(output_path, item)
 
                 if os.path.isfile(project_file_path):
                     os.unlink(project_file_path)
@@ -157,7 +117,7 @@ def __clear_output(paths: dict) -> None:
                     shutil.rmtree(project_file_path)
 
     except IOError:
-        utils.raise_error(f"Unable to clear output directory: {paths['output']}")
+        utils.raise_error(f"Unable to clear output directory: {output_path}")
 
 
 # def get_page_edit_path(page_path: str, editable: bool, settings: dict):
