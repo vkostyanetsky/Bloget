@@ -2,7 +2,7 @@ import logging
 import os
 
 from bloget import utils
-from bloget.readers import metadata_reader, pages_reader, page_reader
+from bloget.readers import metadata_reader, page_reader, pages_reader
 
 
 def write_sitemap(

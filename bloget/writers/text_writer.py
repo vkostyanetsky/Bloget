@@ -4,6 +4,7 @@ Implementation of text pages building functionality.
 import logging
 import os
 import shutil
+
 from bloget import utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
 
@@ -46,6 +47,7 @@ def __write_text(
 
     __copy_attachments(page, output_folder_path, metadata)
 
+
 def __get_file_text(
     page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata
 ) -> str:
@@ -64,7 +66,12 @@ def __get_file_text(
 
     return metadata.templates.get_template("text.html").render(template_parameters)
 
-def __copy_attachments(page: page_reader.BlogPage, output_folder_path: str, metadata: metadata_reader.BlogMetadata) -> None:
+
+def __copy_attachments(
+    page: page_reader.BlogPage,
+    output_folder_path: str,
+    metadata: metadata_reader.BlogMetadata,
+) -> None:
     """
     Copies page's attachments to the page build folder.
     """
