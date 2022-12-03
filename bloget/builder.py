@@ -37,6 +37,8 @@ def build_blog(arguments: argparse.Namespace) -> None:
     logging.info("Blog building has been done!")
 
     if arguments.webserver:
+
+        logging.info("Starting a web server...")
         webserver.start(metadata)
 
 

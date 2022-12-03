@@ -35,13 +35,19 @@ def start(metadata: metadata_reader.BlogMetadata) -> None:
 
         resource_path = os.path.join(folder, resource_path)
 
+        http_code = 200
+
         if os.path.isdir(resource_path):
             resource_path = os.path.join(resource_path, "index.html")
 
         if not os.path.exists(resource_path):
+            resource_path = os.path.join(folder, "404.html")
+            http_code = 404
+
+        if not os.path.exists(resource_path):
             flask.abort(404)
 
-        return flask.send_file(resource_path)
+        return flask.send_file(resource_path), http_code
 
     os.chdir(folder)
 

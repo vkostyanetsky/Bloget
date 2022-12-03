@@ -3,7 +3,7 @@ Implementation of text pages building functionality.
 """
 import logging
 import os
-
+import shutil
 from bloget import utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
 
@@ -44,6 +44,7 @@ def __write_text(
     utils.make_folder(output_folder_path)
     utils.make_file(file_path, file_text)
 
+    __copy_attachments(page, output_folder_path, metadata)
 
 def __get_file_text(
     page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata
@@ -62,3 +63,24 @@ def __get_file_text(
     template_parameters["page_text"] = page.text
 
     return metadata.templates.get_template("text.html").render(template_parameters)
+
+def __copy_attachments(page: page_reader.BlogPage, output_folder_path: str, metadata: metadata_reader.BlogMetadata) -> None:
+    """
+    Copies page's attachments to the page build folder.
+    """
+
+    if page.attachments:
+
+        logging.info("Copying attachments...")
+
+        for attachment in page.attachments:
+
+            source_file_path = os.path.join(page.folder_path, attachment)
+            target_file_path = os.path.join(output_folder_path, attachment)
+
+            try:
+                shutil.copyfile(source_file_path, target_file_path)
+            except IOError:
+                utils.raise_error(f"Unable to copy file: {source_file_path}")
+
+        logging.info("Copying attachments has been done!")

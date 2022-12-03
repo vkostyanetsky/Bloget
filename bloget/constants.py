@@ -5,5 +5,5 @@
 TITLE = "Blog Builder"
 VERSION = "0.1.0"
 ENCODING = "utf-8"
-PAGE_CONTENT_FILE_NAME = "index.md"
-PAGE_METADATA_FILE_NAME = "index.yaml"
+PAGE_TEXT_FILE_NAME = "index.md"
+PAGE_INFO_FILE_NAME = "index.yaml"
