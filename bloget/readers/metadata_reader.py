@@ -5,10 +5,11 @@
 Implementation of a class to read blog's metadata.
 """
 
-
 import argparse
 import os
 from dataclasses import dataclass
+
+import jinja2
 
 from bloget import utils
 
@@ -23,6 +24,7 @@ class BlogMetadata:
     settings: dict[str, str]
     language: dict[str, str]
     tags: dict[str, str]
+    templates: jinja2.Environment
 
 
 def get_metadata(arguments: argparse.Namespace) -> BlogMetadata:
@@ -34,10 +36,24 @@ def get_metadata(arguments: argparse.Namespace) -> BlogMetadata:
 
     settings = __get_settings(arguments, paths)
     language = __get_language(paths)
-
     tags = __get_tags(paths)
 
-    return BlogMetadata(paths, settings, language, tags)
+    templates = __get_templates(paths)
+
+    return BlogMetadata(paths, settings, language, tags, templates)
+
+
+def __get_templates(paths: dict[str, str]) -> jinja2.Environment:
+    """
+    Returns template of a blog.
+    """
+
+    skin_path = paths.get("skin")
+    skin_templates_path = os.path.join(skin_path, "templates")
+
+    return jinja2.Environment(
+        loader=jinja2.FileSystemLoader(searchpath=skin_templates_path)
+    )
 
 
 def __get_paths(arguments: argparse.Namespace) -> dict[str, str]:
@@ -47,7 +63,7 @@ def __get_paths(arguments: argparse.Namespace) -> dict[str, str]:
 
     return {
         "metadata": arguments.metadata,
-        "data": arguments.data,
+        "pages": arguments.pages,
         "skin": arguments.skin,
         "output": arguments.output,
     }

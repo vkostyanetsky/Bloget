@@ -9,11 +9,17 @@ from urllib.parse import urlparse
 
 import flask
 
+from bloget.readers import metadata_reader
 
-def start(url: str, title: str, folder: str) -> None:
+
+def start(metadata: metadata_reader.BlogMetadata) -> None:
     """
     Starts a web server.
     """
+
+    url = metadata.settings.get("url")
+    title = metadata.language.get("site_title")
+    folder = metadata.paths.get("output")
 
     app = flask.Flask(title)
 
