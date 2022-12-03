@@ -45,7 +45,7 @@ def __write_text(
     utils.make_folder(output_folder_path)
     utils.make_file(file_path, file_text)
 
-    __copy_attachments(page, output_folder_path, metadata)
+    __copy_attachments(page, output_folder_path)
 
 
 def __get_file_text(
