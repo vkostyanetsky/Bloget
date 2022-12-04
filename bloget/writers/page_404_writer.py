@@ -3,6 +3,7 @@ import os
 
 from bloget import utils
 from bloget.readers import metadata_reader
+from bloget.writers import page_writer
 
 
 def write_page_404(metadata: metadata_reader.BlogMetadata) -> None:
@@ -22,7 +23,7 @@ def __get_file_text(metadata: metadata_reader.BlogMetadata) -> str:
     Returns content of the page 404 file.
     """
 
-    template_parameters = utils.get_html_template_parameters(
+    template_parameters = page_writer.get_html_template_parameters(
         metadata=metadata,
         page_title=metadata.language["page_404_title"],
         page_path="404.html",

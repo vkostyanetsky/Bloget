@@ -20,15 +20,11 @@ def write_robots(metadata: metadata_reader.BlogMetadata) -> None:
     logging.info("Robots building has been done!")
 
 
-def __get_file_text(
-    metadata: metadata_reader.BlogMetadata
-) -> str:
+def __get_file_text(metadata: metadata_reader.BlogMetadata) -> str:
     """
     Returns content of the robots.txt file.
     """
 
-    template_parameters = {
-        "settings": metadata.settings
-    }
+    template_parameters = {"settings": metadata.settings}
 
     return metadata.templates.get_template("robots.txt").render(template_parameters)

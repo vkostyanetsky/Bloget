@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+
 """
-Implementation of text pages building functionality.
+Implementation of note pages building functionality.
 """
+
 import logging
 import os
 
@@ -9,22 +12,22 @@ from bloget.readers import metadata_reader, page_reader, pages_reader
 from bloget.writers import page_writer
 
 
-def write_texts(
+def write_notes(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
 ) -> None:
     """
-    Builds given text pages.
+    Builds given note pages.
     """
 
-    logging.info("Texts building...")
+    logging.info("Notes building...")
 
-    for text in pages.texts:
-        __write_text(text, metadata)
+    for note in pages.notes:
+        __write_note(note, metadata)
 
-    logging.info("Texts building has been completed!")
+    logging.info("Notes building has been completed!")
 
 
-def __write_text(
+def __write_note(
     page: page_reader.BlogPage,
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
@@ -52,7 +55,7 @@ def __get_file_text(
     page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
-    Returns template parameters for the text.html file.
+    Returns template parameters for the note.html file.
     """
 
     template_parameters = page_writer.get_html_template_parameters(

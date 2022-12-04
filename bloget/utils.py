@@ -11,7 +11,6 @@ import sys
 import yaml
 
 from bloget import constants
-from bloget.readers import metadata_reader
 
 
 def raise_error(message: str) -> None:
@@ -66,51 +65,5 @@ def read_yaml_file(file_path: str) -> dict:
 
     except IOError:
         raise_error(f"Unable to read a file: {file_path}")
-
-    return result
-
-
-def get_html_template_parameters(
-    metadata: metadata_reader.BlogMetadata,
-    page_title: str,
-    page_path: str,
-    page_is_editable: bool,
-) -> dict[str, str | dict[str, str]]:
-    """
-    Returns common parameters for HTML templates.
-    """
-
-    page_edit_url = __get_page_edit_url(metadata, page_path, page_is_editable)
-
-    return {
-        "language": metadata.language,
-        "settings": metadata.settings,
-        "page_title": page_title,
-        "page_path": page_path,
-        "page_edit_url": page_edit_url,
-    }
-
-
-def __get_page_edit_url(
-    metadata: metadata_reader.BlogMetadata, page_path: str, page_is_editable: bool
-) -> str:
-    """
-    Determines if a page can be edited, then makes a link to GitHub.
-    """
-
-    result = ""
-
-    if page_is_editable and metadata.settings.get("github_repository"):
-
-        parts = [
-            f"https://github.com/{metadata.settings['github_repository']}/edit/main"
-        ]
-
-        if page_path:
-            parts.append(page_path)
-
-        parts.append("index.md")
-
-        result = "/".join(parts)
 
     return result
