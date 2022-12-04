@@ -8,6 +8,7 @@ Implementation of a class to read blog's data.
 
 import os
 from dataclasses import dataclass
+
 from bloget import constants
 from bloget.readers import metadata_reader, page_reader
 

@@ -150,7 +150,9 @@ def __get_page_info(folder_path: str) -> dict[str, str | list[str]]:
     return utils.read_yaml_file(file_path)
 
 
-def __get_page_text(folder_path: str, page_path: str, metadata: metadata_reader.BlogMetadata) -> str:
+def __get_page_text(
+    folder_path: str, page_path: str, metadata: metadata_reader.BlogMetadata
+) -> str:
     """
     Reads & converts page's content.
     """

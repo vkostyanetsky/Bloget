@@ -4,9 +4,9 @@
 Implementation of methods intended to be used by various files.
 """
 
-import shutil
 import logging
 import os
+import shutil
 import sys
 
 import yaml

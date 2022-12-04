@@ -75,13 +75,13 @@ def __replace_github_gist_link(
 def get_link(link: str, page_path, metadata):
 
     result = link
-    is_url = link.startswith('http://') or link.startswith('https://')
+    is_url = link.startswith("http://") or link.startswith("https://")
 
     if not is_url:
 
-        link_parts: list[str] = [metadata.settings['url']]
+        link_parts: list[str] = [metadata.settings["url"]]
 
-        is_relative_path = not link.startswith('/')
+        is_relative_path = not link.startswith("/")
 
         if is_relative_path:
             link_parts.append(page_path)
@@ -107,7 +107,7 @@ def update_html(content: str, page_path: str, metadata) -> str:
         tag["class"] = "measure-wide"
 
     for tag in soup.find_all("img"):
-        tag['src'] = get_link(tag['src'], page_path, metadata)
+        tag["src"] = get_link(tag["src"], page_path, metadata)
 
     for tag in soup.find_all("a"):
 
@@ -116,6 +116,6 @@ def update_html(content: str, page_path: str, metadata) -> str:
         if tag.find("img") is None:
             tag["class"] = "link blue dim bb"
 
-        tag['href'] = get_link(tag['href'], page_path, metadata)
+        tag["href"] = get_link(tag["href"], page_path, metadata)
 
     return str(soup)

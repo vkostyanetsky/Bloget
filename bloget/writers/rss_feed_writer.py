@@ -1,6 +1,6 @@
+import html
 import logging
 import os
-import html
 
 from bloget import utils
 from bloget.readers import metadata_reader, pages_reader
