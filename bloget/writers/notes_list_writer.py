@@ -156,7 +156,7 @@ def __get_notes_list_file_text(
         list_notes, list_number, selected_tag, metadata
     )
 
-    return metadata.templates.get_template("notes.html").render(template_parameters)
+    return metadata.templates.get_template("notes_list.html").render(template_parameters)
 
 
 def __get_note_list_page_title(
