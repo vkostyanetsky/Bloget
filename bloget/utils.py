@@ -4,6 +4,7 @@
 Implementation of methods intended to be used by various files.
 """
 
+import shutil
 import logging
 import os
 import sys
@@ -21,6 +22,23 @@ def raise_error(message: str) -> None:
     logging.critical(message)
     sys.exit("A critical error has occurred. Exiting...")
 
+
+def copy_file(source_path: str, target_path: str) -> None:
+    """
+    Copies file or folder.
+    """
+
+    logging.debug(f'Copying "{source_path}" to "{target_path}"...')
+
+    try:
+
+        if os.path.isdir(source_path):
+            shutil.copytree(source_path, target_path)
+        else:
+            shutil.copy2(source_path, target_path)
+
+    except IOError:
+        raise_error(f'Unable to copy "{source_path}" to: {target_path}')
 
 def make_file(path: str, data: str) -> None:
     """

@@ -19,21 +19,14 @@ def copy_page_attachments(page: page_reader.BlogPage, output_folder_path: str) -
 
     if page.attachments:
 
-        logging.info("Copying attachments...")
-
         for attachment in page.attachments:
+
+            logging.debug('Copying attachment from "%s"...', attachment)
 
             source_file_path = os.path.join(page.folder_path, attachment)
             target_file_path = os.path.join(output_folder_path, attachment)
 
-            logging.debug('Copying attachment from "%s"...', attachment)
-
-            try:
-                shutil.copyfile(source_file_path, target_file_path)
-            except IOError:
-                utils.raise_error(f"Unable to copy file: {source_file_path}")
-
-        logging.info("Copying attachments has been done!")
+            utils.copy_file(source_file_path, target_file_path)
 
 
 def get_html_template_parameters(

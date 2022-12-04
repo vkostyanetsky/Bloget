@@ -96,16 +96,8 @@ def __copy_skin_assets(metadata: metadata_reader.BlogMetadata):
     for item in os.listdir(skin_assets_path):
 
         source_path = os.path.join(skin_assets_path, item)
-        result_path = os.path.join(output_path, item)
+        target_path = os.path.join(output_path, item)
 
-        try:
-
-            if os.path.isdir(source_path):
-                shutil.copytree(source_path, result_path)
-            else:
-                shutil.copy2(source_path, result_path)
-
-        except IOError:
-            utils.raise_error(f"Unable to copy a file or a folder: {result_path}")
+        utils.copy_file(source_path, target_path)
 
     logging.info("Copying skin assets has been done!")
