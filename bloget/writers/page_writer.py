@@ -21,7 +21,7 @@ def copy_page_attachments(page: page_reader.BlogPage, output_folder_path: str) -
 
         for attachment in page.attachments:
 
-            logging.debug('Copying attachment from "%s"...', attachment)
+            logging.debug('Copying attachment from "%s"', attachment)
 
             source_file_path = os.path.join(page.folder_path, attachment)
             target_file_path = os.path.join(output_folder_path, attachment)

@@ -28,7 +28,7 @@ def build_blog(arguments: argparse.Namespace) -> None:
     Initializes blog's data by arguments given, then builds it.
     """
 
-    logging.info("Blog building...")
+    logging.info("Blog building")
 
     metadata = metadata_reader.get_metadata(arguments)
     pages = pages_reader.get_pages(metadata)
@@ -47,11 +47,9 @@ def build_blog(arguments: argparse.Namespace) -> None:
 
     __copy_skin_assets(metadata)
 
-    logging.info("Blog building has been done!")
-
     if arguments.webserver:
 
-        logging.info("Starting a web server...")
+        logging.info("Starting a web server")
         webserver.start(metadata)
 
 
@@ -60,7 +58,7 @@ def __clear_output(metadata: metadata_reader.BlogMetadata) -> None:
     Removes all blog's files and directories which were previously generated.
     """
 
-    logging.info("Clearing output directory...")
+    logging.info("Clearing output directory")
 
     output_path = metadata.paths.get("output")
 
@@ -81,15 +79,13 @@ def __clear_output(metadata: metadata_reader.BlogMetadata) -> None:
     except IOError:
         utils.raise_error(f"Unable to clear output directory: {output_path}")
 
-    logging.info("Clearing output directory has been done!")
-
 
 def __copy_skin_assets(metadata: metadata_reader.BlogMetadata):
     """
     Copies files from the skin's assets directory to the building output directory.
     """
 
-    logging.info("Copying skin assets...")
+    logging.info("Copying skin assets")
 
     skin_path = metadata.paths.get("skin")
     skin_assets_path = os.path.join(skin_path, "assets")
@@ -102,5 +98,3 @@ def __copy_skin_assets(metadata: metadata_reader.BlogMetadata):
         target_path = os.path.join(output_path, item)
 
         utils.copy_file(source_path, target_path)
-
-    logging.info("Copying skin assets has been done!")

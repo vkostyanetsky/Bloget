@@ -11,14 +11,12 @@ def write_rss_feed(
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
 
-    logging.info("RSS feed building...")
+    logging.info("RSS feed building")
 
     file_text = __get_file_text(pages, metadata)
     file_path = os.path.join(metadata.paths["output"], "rss.xml")
 
     utils.make_file(file_path, file_text)
-
-    logging.info("RSS feed building has been done!")
 
 
 def __get_file_text(

@@ -19,7 +19,7 @@ def write_note_lists(
     Builds note list pages.
     """
 
-    logging.info("Note lists building...")
+    logging.info("Note lists building")
 
     __write_note_lists_by_selected_tag(
         pages=pages, selected_tag=None, metadata=metadata
@@ -30,8 +30,6 @@ def write_note_lists(
         __write_note_lists_by_selected_tag(
             pages=pages, selected_tag=selected_tag, metadata=metadata
         )
-
-    logging.info("Note lists building has been completed!")
 
 
 def __get_notes_by_tag(

@@ -19,16 +19,12 @@ def write_notes(
     Builds given note pages.
     """
 
-    logging.info("Notes building...")
-
     __write_notes_by_selected_tag(pages=pages, selected_tag=None, metadata=metadata)
 
     for selected_tag in metadata.tags:
         __write_notes_by_selected_tag(
             pages=pages, selected_tag=selected_tag, metadata=metadata
         )
-
-    logging.info("Notes building has been completed!")
 
 
 def __write_notes_by_selected_tag(
@@ -37,9 +33,9 @@ def __write_notes_by_selected_tag(
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
 
-    selected_tag_comment = __get_selected_tag_comment(selected_tag)
+    tag_comment = "with no tag selected" if selected_tag is None else f'for "{selected_tag}" tag selected'
 
-    logging.info(f"Notes building ({selected_tag_comment})...")
+    logging.info(f"Notes building {tag_comment}")
 
     for page in pages.notes:
 
@@ -56,19 +52,21 @@ def __write_note(
     Builds a given text page.
     """
 
-    tag_comment = __get_selected_tag_comment(selected_tag)
-    logging.info('Building a note "%s" (%s)...', page.folder_name, tag_comment)
+    logging.info('Building a note from "%s"', page.folder_path)
 
-    output_folder_path = __get_output_folder_path(page, metadata, selected_tag)
-    logging.debug('Output folder path: "%s"', output_folder_path)
+    folder_path = __get_output_folder_path(page, metadata, selected_tag)
 
     file_text = __get_file_text(page, metadata, selected_tag)
-    file_path = os.path.join(output_folder_path, "index.html")
+    file_path = os.path.join(folder_path, "index.html")
 
-    utils.make_folder(output_folder_path)
+    utils.make_folder(folder_path)
     utils.make_file(file_path, file_text)
 
-    page_writer.copy_page_attachments(page, output_folder_path)
+    # No need to copy attachments to note slices for notes/tags/*/<note_name>;
+    # it must be done for notes/<note_name> only.
+
+    if selected_tag is None:
+        page_writer.copy_page_attachments(page, folder_path)
 
 
 def __get_file_text(
@@ -136,13 +134,3 @@ def __get_output_folder_path(
     return os.path.join(result, page.folder_name)
 
 
-def __get_selected_tag_comment(selected_tag: str | None) -> str:
-    """
-    Returns a comment for a tag selected.
-    """
-
-    return (
-        "no selected tag"
-        if selected_tag is None
-        else f'selected tag is "{selected_tag}"'
-    )

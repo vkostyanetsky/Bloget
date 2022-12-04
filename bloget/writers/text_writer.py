@@ -16,12 +16,10 @@ def write_texts(
     Builds given text pages.
     """
 
-    logging.info("Texts building...")
+    logging.info("Texts building")
 
     for text in pages.texts:
         __write_text(text, metadata)
-
-    logging.info("Texts building has been completed!")
 
 
 def __write_text(
@@ -32,7 +30,7 @@ def __write_text(
     Builds a given text page.
     """
 
-    logging.info('Building a text from "%s"...', page.folder_path)
+    logging.info('Building a text from "%s"', page.folder_path)
 
     output_folder_path = os.path.join(metadata.paths["output"], page.path)
 

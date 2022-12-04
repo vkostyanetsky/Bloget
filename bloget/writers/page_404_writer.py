@@ -8,14 +8,12 @@ from bloget.writers import page_writer
 
 def write_page_404(metadata: metadata_reader.BlogMetadata) -> None:
 
-    logging.info("Building page 404...")
+    logging.info("Building page 404")
 
     file_text = __get_file_text(metadata)
     file_path = os.path.join(metadata.paths["output"], "404.html")
 
     utils.make_file(file_path, file_text)
-
-    logging.info("Building page 404 has been done!")
 
 
 def __get_file_text(metadata: metadata_reader.BlogMetadata) -> str:
