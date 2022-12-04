@@ -7,7 +7,7 @@ Implementation of note pages building functionality.
 import logging
 import os
 
-from bloget import utils
+from bloget import utils, constants
 from bloget.readers import metadata_reader, page_reader, pages_reader
 from bloget.writers import page_writer
 
@@ -21,37 +21,24 @@ def write_notes(
 
     logging.info("Notes building...")
 
-    write_notes_by_selected_tag(pages=pages, selected_tag=None, metadata=metadata)
+    __write_notes_by_selected_tag(pages=pages, selected_tag=None, metadata=metadata)
 
     for selected_tag in metadata.tags:
-        write_notes_by_selected_tag(pages=pages, selected_tag=selected_tag, metadata=metadata)
+        __write_notes_by_selected_tag(pages=pages, selected_tag=selected_tag, metadata=metadata)
 
     logging.info("Notes building has been completed!")
 
 
-def write_notes_by_selected_tag(pages: pages_reader.BlogPages, selected_tag: str | None, metadata: metadata_reader.BlogMetadata) -> None:
+def __write_notes_by_selected_tag(pages: pages_reader.BlogPages, selected_tag: str | None, metadata: metadata_reader.BlogMetadata) -> None:
 
-    selected_tag_info = "no selected tag" if selected_tag is None else f'selected tag is "{selected_tag}"'
+    selected_tag_comment = __get_selected_tag_comment(selected_tag)
 
-    logging.info(f"Notes building ({selected_tag_info})...")
+    logging.info(f"Notes building ({selected_tag_comment})...")
 
-    for note in pages.notes:
-        __write_note(note, metadata, selected_tag)
+    for page in pages.notes:
 
-    logging.info(f"Notes building ({selected_tag_info}) has been completed!")
-
-
-def __get_output_folder_path(page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata, selected_tag: str) -> str:
-    """
-    Returns path to note's folder.
-    """
-
-    result = os.path.join(metadata.paths["output"], metadata.settings["notes_directory"])
-
-    if selected_tag is not None:
-        result = os.path.join(result, "tags", selected_tag)
-
-    return os.path.join(result, page.folder_name)
+        if selected_tag is None or selected_tag in page.tags:
+            __write_note(page, metadata, selected_tag)
 
 
 def __write_note(
@@ -62,11 +49,10 @@ def __write_note(
     Builds a given text page.
     """
 
-    logging.info('Building a note from "%s"...', page.folder_path)
+    tag_comment = __get_selected_tag_comment(selected_tag)
+    logging.info('Building a note "%s" (%s)...', page.folder_name, tag_comment)
 
     output_folder_path = __get_output_folder_path(page, metadata, selected_tag)
-
-    logging.debug('Page path: "%s"', page.path)
     logging.debug('Output folder path: "%s"', output_folder_path)
 
     file_text = __get_file_text(page, metadata, selected_tag)
@@ -78,7 +64,20 @@ def __write_note(
     page_writer.copy_page_attachments(page, output_folder_path)
 
 
-def get_template_parameters(page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata, selected_tag: str | None) -> dict:
+def __get_file_text(
+    page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata, selected_tag: str | None
+) -> str:
+    """
+    Returns template parameters for the note.html file.
+    """
+
+    template_parameters = __get_template_parameters(page, metadata, selected_tag)
+    template_parameters["page_text"] = page.text
+
+    return metadata.templates.get_template("text.html").render(template_parameters)
+
+
+def __get_template_parameters(page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata, selected_tag: str | None) -> dict:
 
     result = page_writer.get_html_template_parameters(
         metadata=metadata,
@@ -89,8 +88,6 @@ def get_template_parameters(page: page_reader.BlogPage, metadata: metadata_reade
 
     result['tags'] = metadata.tags
     result['selected_tag'] = selected_tag
-
-    result['text'] = page.text
 
     # result['note_after_url'] = '' if note_after is None else config['url'] + notes_parent_path + note_after[
     #     'dirname'] + '/'
@@ -109,14 +106,22 @@ def get_template_parameters(page: page_reader.BlogPage, metadata: metadata_reade
     return result
 
 
-def __get_file_text(
-    page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata, selected_tag: str | None
-) -> str:
+def __get_output_folder_path(page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata, selected_tag: str) -> str:
     """
-    Returns template parameters for the note.html file.
+    Returns path to note's folder.
     """
 
-    template_parameters = get_template_parameters(page, metadata, selected_tag)
-    template_parameters["page_text"] = page.text
+    result = os.path.join(metadata.paths["output"], constants.NOTES_FOLDER_NAME)
 
-    return metadata.templates.get_template("text.html").render(template_parameters)
+    if selected_tag is not None:
+        result = os.path.join(result, "tags", selected_tag)
+
+    return os.path.join(result, page.folder_name)
+
+
+def __get_selected_tag_comment(selected_tag: str | None) -> str:
+    """
+    Returns a comment for a tag selected.
+    """
+
+    return "no selected tag" if selected_tag is None else f'selected tag is "{selected_tag}"'

@@ -27,6 +27,7 @@ class BlogPage:
     description: str
     created: datetime.datetime
     options: list[str]
+    tags: list[str]
 
     attachments: list[str]
 
@@ -57,6 +58,10 @@ def get_page(page_folder_path: str, metadata: metadata_reader.BlogMetadata) -> B
     if page_options is None:
         page_options = []
 
+    page_tags = page_info.get("tags")
+    if page_tags is None:
+        page_tags = []
+
     page_attachments = __get_page_attachments(page_folder_path)
 
     return BlogPage(
@@ -68,6 +73,7 @@ def get_page(page_folder_path: str, metadata: metadata_reader.BlogMetadata) -> B
         page_description,
         page_created,
         page_options,
+        page_tags,
         page_attachments,
     )
 

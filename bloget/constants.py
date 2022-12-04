@@ -5,5 +5,6 @@
 TITLE = "Blog Builder"
 VERSION = "0.1.0"
 ENCODING = "utf-8"
+NOTES_FOLDER_NAME = "notes"
 PAGE_TEXT_FILE_NAME = "index.md"
 PAGE_INFO_FILE_NAME = "index.yaml"

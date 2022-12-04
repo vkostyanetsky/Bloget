@@ -8,7 +8,7 @@ Implementation of a class to read blog's data.
 
 import os
 from dataclasses import dataclass
-
+from bloget import constants
 from bloget.readers import metadata_reader, page_reader
 
 
@@ -33,7 +33,7 @@ def get_pages(blog_metadata: metadata_reader.BlogMetadata) -> BlogPages:
     pages_path = blog_metadata.paths.get("pages")
     assert isinstance(pages_path, str)
 
-    notes_folder_name = blog_metadata.settings.get("notes_directory")
+    notes_folder_name = constants.NOTES_FOLDER_NAME
     assert isinstance(notes_folder_name, str)
 
     notes_path = os.path.join(pages_path, notes_folder_name)
