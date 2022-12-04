@@ -7,9 +7,9 @@ Implementation of note pages building functionality.
 import logging
 import os
 
-from bloget import utils, constants
+from bloget import constants, utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
-from bloget.writers import page_writer
+from bloget.writers.utils import page_writing_utils
 
 
 def write_note_lists(
@@ -154,7 +154,9 @@ def __get_notes_list_file_text(
         list_notes, list_number, selected_tag, metadata
     )
 
-    return metadata.templates.get_template("notes_list.html").render(template_parameters)
+    return metadata.templates.get_template("notes_list.html").render(
+        template_parameters
+    )
 
 
 def __get_note_list_page_title(
@@ -211,7 +213,7 @@ def __get_note_list_template_parameters(
     page_title = __get_note_list_page_title(selected_tag, metadata)
     page_path = __get_note_list_page_path(list_number, selected_tag)
 
-    result = page_writer.get_html_template_parameters(
+    result = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
         page_title=page_title,
         page_path=page_path,

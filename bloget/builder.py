@@ -13,13 +13,13 @@ import shutil
 from bloget import utils, webserver
 from bloget.readers import metadata_reader, pages_reader
 from bloget.writers import (
+    note_writer,
+    notes_list_writer,
     page_404_writer,
     robots_writer,
     rss_feed_writer,
     sitemap_writer,
     text_writer,
-    note_writer,
-    notes_list_writer
 )
 
 

@@ -7,9 +7,9 @@ Implementation of note pages building functionality.
 import logging
 import os
 
-from bloget import utils, constants
+from bloget import constants, utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
-from bloget.writers import page_writer
+from bloget.writers.utils import page_writing_utils
 
 
 def write_notes(
@@ -33,7 +33,11 @@ def __write_notes_by_selected_tag(
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
 
-    tag_comment = "with no tag selected" if selected_tag is None else f'for "{selected_tag}" tag selected'
+    tag_comment = (
+        "with no tag selected"
+        if selected_tag is None
+        else f'for "{selected_tag}" tag selected'
+    )
 
     logging.info(f"Notes building {tag_comment}")
 
@@ -66,7 +70,7 @@ def __write_note(
     # it must be done for notes/<note_name> only.
 
     if selected_tag is None:
-        page_writer.copy_page_attachments(page, folder_path)
+        page_writing_utils.copy_page_attachments(page, folder_path)
 
 
 def __get_file_text(
@@ -90,7 +94,7 @@ def __get_template_parameters(
     selected_tag: str | None,
 ) -> dict:
 
-    result = page_writer.get_html_template_parameters(
+    result = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
         page_title=page.title,
         page_path=page.path,
@@ -132,5 +136,3 @@ def __get_output_folder_path(
         result = os.path.join(result, "tags", selected_tag)
 
     return os.path.join(result, page.folder_name)
-
-

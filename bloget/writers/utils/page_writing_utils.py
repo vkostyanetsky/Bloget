@@ -6,7 +6,6 @@ Common methods which are applicable to both types of pages (texts & notes).
 
 import logging
 import os
-import shutil
 
 from bloget import utils
 from bloget.readers import metadata_reader, page_reader

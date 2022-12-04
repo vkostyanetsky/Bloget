@@ -6,7 +6,7 @@ import os
 
 from bloget import utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
-from bloget.writers import page_writer
+from bloget.writers.utils import page_writing_utils
 
 
 def write_texts(
@@ -43,7 +43,7 @@ def __write_text(
     utils.make_folder(output_folder_path)
     utils.make_file(file_path, file_text)
 
-    page_writer.copy_page_attachments(page, output_folder_path)
+    page_writing_utils.copy_page_attachments(page, output_folder_path)
 
 
 def __get_file_text(
@@ -53,7 +53,7 @@ def __get_file_text(
     Returns template parameters for the text.html file.
     """
 
-    template_parameters = page_writer.get_html_template_parameters(
+    template_parameters = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
         page_title=page.title,
         page_path=page.path,
