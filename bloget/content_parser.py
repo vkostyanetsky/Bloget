@@ -4,7 +4,7 @@ from markdown import markdown
 from bloget.readers import metadata_reader
 
 
-def parse(content: str, metadata: metadata_reader.BlogMetadata) -> str:
+def parse(content: str, page_path: str, metadata: metadata_reader.BlogMetadata) -> str:
     """
     Parses a page's content from Markdown to HTML.
     """
@@ -12,7 +12,7 @@ def parse(content: str, metadata: metadata_reader.BlogMetadata) -> str:
     content = __replace_links_to_social_networks(content, metadata)
     content = markdown(content)
 
-    return update_html(content)
+    return update_html(content, page_path, metadata)
 
 
 def __replace_links_to_social_networks(
@@ -72,26 +72,28 @@ def __replace_github_gist_link(
         lines[index] = template.format(gist_owner, gist_id, metadata.language["gist"])
 
 
-# def get_link(link: str, page: pages.BlogPage, settings: dict):
-#
-#     result = link
-#     is_url = link.startswith('http://') or link.startswith('https://')
-#
-#     if not is_url:
-#
-#         prefix = settings['url']
-#
-#         is_relative_path = not link.startswith('/')
-#
-#         if is_relative_path:
-#             prefix = prefix + page['path']
-#
-#         result = prefix + link
-#
-#     return result
+def get_link(link: str, page_path, metadata):
+
+    result = link
+    is_url = link.startswith('http://') or link.startswith('https://')
+
+    if not is_url:
+
+        link_parts: list[str] = [metadata.settings['url']]
+
+        is_relative_path = not link.startswith('/')
+
+        if is_relative_path:
+            link_parts.append(page_path)
+
+        link_parts.append(link)
+
+        result = "/".join(link_parts)
+
+    return result
 
 
-def update_html(content: str) -> str:
+def update_html(content: str, page_path: str, metadata) -> str:
 
     soup = BeautifulSoup(content, features="html.parser")
 
@@ -104,8 +106,8 @@ def update_html(content: str) -> str:
     for tag in soup.find_all("p"):
         tag["class"] = "measure-wide"
 
-    # for tag in soup.find_all("img"):
-    #     tag['src'] = get_link(tag['src'])
+    for tag in soup.find_all("img"):
+        tag['src'] = get_link(tag['src'], page_path, metadata)
 
     for tag in soup.find_all("a"):
 
@@ -114,6 +116,6 @@ def update_html(content: str) -> str:
         if tag.find("img") is None:
             tag["class"] = "link blue dim bb"
 
-        # tag['href'] = get_link(tag['href'])
+        tag['href'] = get_link(tag['href'], page_path, metadata)
 
     return str(soup)

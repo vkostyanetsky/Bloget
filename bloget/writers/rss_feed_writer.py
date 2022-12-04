@@ -1,5 +1,6 @@
 import logging
 import os
+import html
 
 from bloget import utils
 from bloget.readers import metadata_reader, pages_reader
@@ -49,7 +50,7 @@ def __get_rss_items(
         if in_feed:
 
             item = {
-                "title": note.title,
+                "title": html.escape(note.title),
                 "link": f"{metadata.settings['url']}/{note.path}",
                 "guid": f"note-{note.folder_name}",
                 "pub_date": note.created.strftime("%a, %d %b %Y %H:%M:%S +0700"),

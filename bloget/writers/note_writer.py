@@ -24,12 +24,18 @@ def write_notes(
     __write_notes_by_selected_tag(pages=pages, selected_tag=None, metadata=metadata)
 
     for selected_tag in metadata.tags:
-        __write_notes_by_selected_tag(pages=pages, selected_tag=selected_tag, metadata=metadata)
+        __write_notes_by_selected_tag(
+            pages=pages, selected_tag=selected_tag, metadata=metadata
+        )
 
     logging.info("Notes building has been completed!")
 
 
-def __write_notes_by_selected_tag(pages: pages_reader.BlogPages, selected_tag: str | None, metadata: metadata_reader.BlogMetadata) -> None:
+def __write_notes_by_selected_tag(
+    pages: pages_reader.BlogPages,
+    selected_tag: str | None,
+    metadata: metadata_reader.BlogMetadata,
+) -> None:
 
     selected_tag_comment = __get_selected_tag_comment(selected_tag)
 
@@ -43,7 +49,8 @@ def __write_notes_by_selected_tag(pages: pages_reader.BlogPages, selected_tag: s
 
 def __write_note(
     page: page_reader.BlogPage,
-    metadata: metadata_reader.BlogMetadata, selected_tag: str | None
+    metadata: metadata_reader.BlogMetadata,
+    selected_tag: str | None,
 ) -> None:
     """
     Builds a given text page.
@@ -65,7 +72,9 @@ def __write_note(
 
 
 def __get_file_text(
-    page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata, selected_tag: str | None
+    page: page_reader.BlogPage,
+    metadata: metadata_reader.BlogMetadata,
+    selected_tag: str | None,
 ) -> str:
     """
     Returns template parameters for the note.html file.
@@ -77,7 +86,11 @@ def __get_file_text(
     return metadata.templates.get_template("text.html").render(template_parameters)
 
 
-def __get_template_parameters(page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata, selected_tag: str | None) -> dict:
+def __get_template_parameters(
+    page: page_reader.BlogPage,
+    metadata: metadata_reader.BlogMetadata,
+    selected_tag: str | None,
+) -> dict:
 
     result = page_writer.get_html_template_parameters(
         metadata=metadata,
@@ -86,8 +99,8 @@ def __get_template_parameters(page: page_reader.BlogPage, metadata: metadata_rea
         page_is_editable=True,
     )
 
-    result['tags'] = metadata.tags
-    result['selected_tag'] = selected_tag
+    result["tags"] = metadata.tags
+    result["selected_tag"] = selected_tag
 
     # result['note_after_url'] = '' if note_after is None else config['url'] + notes_parent_path + note_after[
     #     'dirname'] + '/'
@@ -106,7 +119,11 @@ def __get_template_parameters(page: page_reader.BlogPage, metadata: metadata_rea
     return result
 
 
-def __get_output_folder_path(page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata, selected_tag: str) -> str:
+def __get_output_folder_path(
+    page: page_reader.BlogPage,
+    metadata: metadata_reader.BlogMetadata,
+    selected_tag: str,
+) -> str:
     """
     Returns path to note's folder.
     """
@@ -124,4 +141,8 @@ def __get_selected_tag_comment(selected_tag: str | None) -> str:
     Returns a comment for a tag selected.
     """
 
-    return "no selected tag" if selected_tag is None else f'selected tag is "{selected_tag}"'
+    return (
+        "no selected tag"
+        if selected_tag is None
+        else f'selected tag is "{selected_tag}"'
+    )

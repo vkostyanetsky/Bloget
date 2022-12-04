@@ -40,6 +40,7 @@ def copy_file(source_path: str, target_path: str) -> None:
     except IOError:
         raise_error(f'Unable to copy "{source_path}" to: {target_path}')
 
+
 def make_file(path: str, data: str) -> None:
     """
     Makes a file.

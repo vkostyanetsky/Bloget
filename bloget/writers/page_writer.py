@@ -34,7 +34,7 @@ def get_html_template_parameters(
     page_title: str,
     page_path: str,
     page_is_editable: bool,
-) -> dict[str, str | dict[str, str]]:
+) -> dict[str, str | list[page_reader.BlogPage] | dict[str, str]]:
     """
     Returns common parameters for HTML templates.
     """

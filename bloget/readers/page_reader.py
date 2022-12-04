@@ -43,7 +43,7 @@ def get_page(page_folder_path: str, metadata: metadata_reader.BlogMetadata) -> B
     page_folder_name = __get_page_folder_name(page_folder_path, metadata)
 
     page_path = __get_page_path(page_folder_path, metadata)
-    page_text = __get_page_text(page_folder_path, metadata)
+    page_text = __get_page_text(page_folder_path, page_path, metadata)
 
     page_info = __get_page_info(page_folder_path)
 
@@ -150,7 +150,7 @@ def __get_page_info(folder_path: str) -> dict[str, str | list[str]]:
     return utils.read_yaml_file(file_path)
 
 
-def __get_page_text(folder_path: str, metadata: metadata_reader.BlogMetadata) -> str:
+def __get_page_text(folder_path: str, page_path: str, metadata: metadata_reader.BlogMetadata) -> str:
     """
     Reads & converts page's content.
     """
@@ -160,4 +160,4 @@ def __get_page_text(folder_path: str, metadata: metadata_reader.BlogMetadata) ->
     with open(file_path, encoding=constants.ENCODING) as file:
         result = file.read()
 
-    return content_parser.parse(result, metadata)
+    return content_parser.parse(result, page_path, metadata)
