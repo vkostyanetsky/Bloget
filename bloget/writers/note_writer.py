@@ -33,12 +33,7 @@ def __write_notes_by_selected_tag(
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
 
-    tag_comment = (
-        "with no tag selected"
-        if selected_tag is None
-        else f'for "{selected_tag}" tag selected'
-    )
-
+    tag_comment = page_writing_utils.get_selected_tag_comment(selected_tag)
     logging.info(f"Notes building {tag_comment}")
 
     for page in pages.notes:
