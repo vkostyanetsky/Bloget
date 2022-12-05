@@ -33,7 +33,11 @@ def get_selected_tag_comment(selected_tag: str) -> str:
     Generates description for a selected tag.
     """
 
-    return "with no tag selected" if selected_tag is None else f'for "{selected_tag}" tag selected'
+    return (
+        "with no tag selected"
+        if selected_tag is None
+        else f'for "{selected_tag}" tag selected'
+    )
 
 
 def get_html_template_parameters(

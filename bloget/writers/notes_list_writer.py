@@ -196,9 +196,11 @@ def __get_note_list_page_path(list_number: int, selected_tag: str | None) -> str
     return "/".join(path_parts)
 
 
-def __get_note_list_page_url(list_number: int, selected_tag: str | None, metadata: metadata_reader.BlogMetadata) -> str:
+def __get_note_list_page_url(
+    list_number: int, selected_tag: str | None, metadata: metadata_reader.BlogMetadata
+) -> str:
 
-    url_parts = metadata.settings['url']
+    url_parts = metadata.settings["url"]
     page_path = __get_note_list_page_path(list_number, selected_tag)
 
     return f"{url_parts}/{page_path}"
@@ -226,13 +228,17 @@ def __get_note_list_template_parameters(
     result["notes"] = list_notes
 
     if list_number > 1:
-        next_list_url = __get_note_list_page_url(list_number - 1, selected_tag, metadata)
+        next_list_url = __get_note_list_page_url(
+            list_number - 1, selected_tag, metadata
+        )
 
         result["next_list_url"] = next_list_url
         result["hotkey_ctrl_up_url"] = next_list_url
 
     if not list_is_last:
-        previous_list_url = __get_note_list_page_url(list_number + 1, selected_tag, metadata)
+        previous_list_url = __get_note_list_page_url(
+            list_number + 1, selected_tag, metadata
+        )
 
         result["previous_list_url"] = previous_list_url
         result["hotkey_ctrl_down_url"] = previous_list_url
