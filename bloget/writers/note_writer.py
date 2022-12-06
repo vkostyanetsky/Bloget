@@ -34,7 +34,7 @@ def __write_notes_by_selected_tag(
 ) -> None:
 
     tag_comment = page_writing_utils.get_selected_tag_comment(selected_tag)
-    logging.info(f"Notes building {tag_comment}")
+    logging.info("Notes building %s", tag_comment)
 
     for page in pages.notes:
 
@@ -98,20 +98,6 @@ def __get_template_parameters(
 
     result["tags"] = metadata.tags
     result["selected_tag"] = selected_tag
-
-    # result['note_after_url'] = '' if note_after is None else config['url'] + notes_parent_path + note_after[
-    #     'dirname'] + '/'
-    # result['note_after_title'] = '' if note_after is None else note_after['metadata']['title']
-
-    # if note_earlier is None:
-    #     result['note_earlier_url'] = ''
-    # else:
-    #     result['note_earlier_url'] = config['url'] + notes_parent_path + note_earlier['dirname'] + '/'
-
-    # result['note_earlier_title'] = '' if note_earlier is None else note_earlier['metadata']['title']
-
-    # result['hotkey_ctrl_right_url'] = result['note_after_url']
-    # result['hotkey_ctrl_left_url'] = result['note_earlier_url']
 
     return result
 

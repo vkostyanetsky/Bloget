@@ -1,3 +1,7 @@
+"""
+Implementation of sitemap.xml building functionality.
+"""
+
 import logging
 import os
 

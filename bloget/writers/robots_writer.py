@@ -1,3 +1,7 @@
+"""
+Implementation of robots.txt building functionality.
+"""
+
 import logging
 import os
 

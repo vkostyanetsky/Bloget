@@ -1,3 +1,7 @@
+"""
+Implementation of RSS feed building functionality.
+"""
+
 import html
 import logging
 import os
@@ -10,6 +14,9 @@ def write_rss_feed(
     pages: pages_reader.BlogPages,
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
+    """
+    Builds & writes rss feed.
+    """
 
     logging.info("RSS feed building")
 

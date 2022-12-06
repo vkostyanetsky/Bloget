@@ -1,3 +1,7 @@
+"""
+Implementation of page 404 building functionality.
+"""
+
 import logging
 import os
 
@@ -7,6 +11,9 @@ from bloget.writers.utils import page_writing_utils
 
 
 def write_page_404(metadata: metadata_reader.BlogMetadata) -> None:
+    """
+    Builds & writes the 404 page.
+    """
 
     logging.info("Building page 404")
 

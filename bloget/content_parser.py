@@ -1,3 +1,7 @@
+"""
+Content parser for a page's text.
+"""
+
 from bs4 import BeautifulSoup
 from markdown import markdown
 
@@ -43,9 +47,9 @@ def __replace_youtube_link(lines: list, index: int, line: str, marker: str):
 
         video_id = line.strip().replace(marker, "")
         template = (
-            '<iframe width="560" height="315" src="https://www.youtube.com/embed/{0}" frameborder="0" '
-            'allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" '
-            "allowfullscreen></iframe> "
+            '<iframe width="560" height="315" src="https://www.youtube.com/embed/{0}" '
+            'frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; '
+            'picture-in-picture" allowfullscreen></iframe> '
         )
 
         lines[index] = template.format(video_id)
@@ -73,6 +77,9 @@ def __replace_github_gist_link(
 
 
 def get_link(link: str, page_path, metadata):
+    """
+    Returns full link to a current page if a link is relative.
+    """
 
     result = link
     is_url = link.startswith("http://") or link.startswith("https://")
@@ -94,6 +101,9 @@ def get_link(link: str, page_path, metadata):
 
 
 def update_html(content: str, page_path: str, metadata) -> str:
+    """
+    Implementation of a full cycle of updating page's html.
+    """
 
     soup = BeautifulSoup(content, features="html.parser")
 

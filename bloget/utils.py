@@ -28,7 +28,7 @@ def copy_file(source_path: str, target_path: str) -> None:
     Copies file or folder.
     """
 
-    logging.debug(f'Copying "{source_path}" to "{target_path}"...')
+    logging.debug('Copying "%s" to "%s"...', source_path, target_path)
 
     try:
 
@@ -46,7 +46,7 @@ def make_file(path: str, data: str) -> None:
     Makes a file.
     """
 
-    logging.debug(f'Making a file "{path}"...')
+    logging.debug('Making a file "%s"...', path)
 
     try:
 
@@ -63,7 +63,7 @@ def make_folder(path: str) -> None:
     Makes a directory is it doesn't exist.
     """
 
-    logging.debug(f'Making a folder "{path}"...')
+    logging.debug('Making a folder "%s"...', path)
 
     if not os.path.exists(path):
 

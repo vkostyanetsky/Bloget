@@ -52,7 +52,7 @@ def __write_note_lists_by_selected_tag(
     """
 
     tag_comment = page_writing_utils.get_selected_tag_comment(selected_tag)
-    logging.info(f"Note lists building {tag_comment}")
+    logging.info("Note lists building %s", tag_comment)
 
     notes = __get_notes_by_tag(pages.notes, selected_tag)
     notes_left = len(notes)

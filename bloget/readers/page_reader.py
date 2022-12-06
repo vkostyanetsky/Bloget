@@ -13,15 +13,10 @@ from bloget.readers import metadata_reader
 
 
 @dataclass
-class BlogPage:
+class BlogPageMetadata:
     """
-    Implementation of blog's page (note or text).
+    Container for a page's metadata (data from a index.yaml file).
     """
-
-    folder_path: str
-    folder_name: str
-    path: str
-    text: str
 
     title: str
     description: str
@@ -29,7 +24,60 @@ class BlogPage:
     options: list[str]
     tags: list[str]
 
+
+@dataclass
+class BlogPage:
+    """
+    Container for a page (note or text).
+    """
+
+    folder_path: str
+    folder_name: str
+    path: str
+    text: str
+
+    metadata: BlogPageMetadata
     attachments: list[str]
+
+    @property
+    def title(self):
+        """
+        A shortcut to title field in page's metadata.
+        """
+
+        return self.metadata.title
+
+    @property
+    def description(self):
+        """
+        A shortcut to description field in page's metadata.
+        """
+
+        return self.metadata.description
+
+    @property
+    def created(self):
+        """
+        A shortcut to created field in page's metadata.
+        """
+
+        return self.metadata.created
+
+    @property
+    def options(self):
+        """
+        A shortcut to options field in page's metadata.
+        """
+
+        return self.metadata.options
+
+    @property
+    def tags(self):
+        """
+        A shortcut to tags field in page's metadata.
+        """
+
+        return self.metadata.tags
 
     def __repr__(self) -> str:
         return self.folder_path
@@ -45,22 +93,7 @@ def get_page(page_folder_path: str, metadata: metadata_reader.BlogMetadata) -> B
     page_path = __get_page_path(page_folder_path, metadata)
     page_text = __get_page_text(page_folder_path, page_path, metadata)
 
-    page_info = __get_page_info(page_folder_path)
-
-    page_title = page_info.get("title")
-    page_description = page_info.get("description")
-
-    page_created = page_info.get("created")
-    if page_created is None:
-        page_created = datetime.datetime(1, 1, 1)
-
-    page_options = page_info.get("options")
-    if page_options is None:
-        page_options = []
-
-    page_tags = page_info.get("tags")
-    if page_tags is None:
-        page_tags = []
+    page_metadata = __get_page_metadata(page_folder_path)
 
     page_attachments = __get_page_attachments(page_folder_path)
 
@@ -69,11 +102,7 @@ def get_page(page_folder_path: str, metadata: metadata_reader.BlogMetadata) -> B
         page_folder_name,
         page_path,
         page_text,
-        page_title,
-        page_description,
-        page_created,
-        page_options,
-        page_tags,
+        page_metadata,
         page_attachments,
     )
 
@@ -140,14 +169,36 @@ def __get_page_attachments(folder_path: str) -> list[str]:
     return result
 
 
-def __get_page_info(folder_path: str) -> dict[str, str | list[str]]:
+def __get_page_metadata(folder_path: str) -> BlogPageMetadata:
     """
     Reads page's information.
     """
 
     file_path = os.path.join(folder_path, constants.PAGE_INFO_FILE_NAME)
+    page_info = utils.read_yaml_file(file_path)
 
-    return utils.read_yaml_file(file_path)
+    page_title = page_info.get("title")
+    page_description = page_info.get("description")
+
+    page_created = page_info.get("created")
+    if page_created is None:
+        page_created = datetime.datetime(1, 1, 1)
+
+    page_options = page_info.get("options")
+    if page_options is None:
+        page_options = []
+
+    page_tags = page_info.get("tags")
+    if page_tags is None:
+        page_tags = []
+
+    return BlogPageMetadata(
+        title=page_title,
+        description=page_description,
+        created=page_created,
+        options=page_options,
+        tags=page_tags
+    )
 
 
 def __get_page_text(
