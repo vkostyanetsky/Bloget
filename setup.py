@@ -7,7 +7,7 @@ The setup and build script for the bloget library.
 from setuptools import setup
 from bloget.constants import VERSION
 
-with open("README.md", encoding="utf-8-sig") as readme:
+with open("README.md", encoding="utf-8") as readme:
     long_description = readme.read()
 
 setup(
