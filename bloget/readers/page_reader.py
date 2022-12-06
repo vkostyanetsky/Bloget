@@ -197,7 +197,7 @@ def __get_page_metadata(folder_path: str) -> BlogPageMetadata:
         description=page_description,
         created=page_created,
         options=page_options,
-        tags=page_tags
+        tags=page_tags,
     )
 
 
