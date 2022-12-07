@@ -33,5 +33,5 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Topic :: Utilities",
     ],
-    keywords="static blog",
+    keywords="static blog generator",
 )
