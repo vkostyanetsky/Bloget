@@ -80,7 +80,7 @@ def __clear_output(metadata: metadata_reader.BlogMetadata) -> None:
         utils.raise_error(f"Unable to clear output directory: {output_path}")
 
 
-def __copy_skin_assets(metadata: metadata_reader.BlogMetadata):
+def __copy_skin_assets(metadata: metadata_reader.BlogMetadata) -> None:
     """
     Copies files from the skin's assets directory to the building output directory.
     """

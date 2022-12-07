@@ -40,7 +40,7 @@ class BlogPage:
     attachments: list[str]
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         A shortcut to title field in page's metadata.
         """
@@ -48,7 +48,7 @@ class BlogPage:
         return self.metadata.title
 
     @property
-    def description(self):
+    def description(self) -> str:
         """
         A shortcut to description field in page's metadata.
         """
@@ -56,7 +56,7 @@ class BlogPage:
         return self.metadata.description
 
     @property
-    def created(self):
+    def created(self) -> datetime.datetime:
         """
         A shortcut to created field in page's metadata.
         """
@@ -64,7 +64,7 @@ class BlogPage:
         return self.metadata.created
 
     @property
-    def options(self):
+    def options(self) -> list[str]:
         """
         A shortcut to options field in page's metadata.
         """
@@ -72,7 +72,7 @@ class BlogPage:
         return self.metadata.options
 
     @property
-    def tags(self):
+    def tags(self) -> list[str]:
         """
         A shortcut to tags field in page's metadata.
         """
@@ -178,7 +178,10 @@ def __get_page_metadata(folder_path: str) -> BlogPageMetadata:
     page_info = utils.read_yaml_file(file_path)
 
     page_title = page_info.get("title")
+    assert isinstance(page_title, str)
+
     page_description = page_info.get("description")
+    assert isinstance(page_description, str)
 
     page_created = page_info.get("created")
     if page_created is None:

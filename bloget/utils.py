@@ -73,10 +73,12 @@ def make_folder(path: str) -> None:
             raise_error(f"Unable to make a folder: {path}")
 
 
-def read_yaml_file(file_path: str) -> dict:
+def read_yaml_file(file_path: str) -> dict[str, str]:
     """
     Returns content of YAML files as a dictionary.
     """
+
+    result: dict[str, str] = {}
 
     try:
         with open(file=file_path, encoding=constants.ENCODING) as yaml_file:

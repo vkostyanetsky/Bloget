@@ -38,7 +38,9 @@ def __replace_links_to_social_networks(
     return "\n".join(lines)
 
 
-def __replace_youtube_link(lines: list, index: int, line: str, marker: str):
+def __replace_youtube_link(
+    lines: list[str], index: int, line: str, marker: str
+) -> None:
     """
     Replaces a link to YouTube by its iframe.
     """
@@ -56,8 +58,8 @@ def __replace_youtube_link(lines: list, index: int, line: str, marker: str):
 
 
 def __replace_github_gist_link(
-    lines: list, index: int, line: str, metadata: metadata_reader.BlogMetadata
-):
+    lines: list[str], index: int, line: str, metadata: metadata_reader.BlogMetadata
+) -> None:
     """
     Replaces a link to GitHub Gist by its script.
     """
@@ -76,7 +78,7 @@ def __replace_github_gist_link(
         lines[index] = template.format(gist_owner, gist_id, metadata.language["gist"])
 
 
-def get_link(link: str, page_path, metadata):
+def get_link(link: str, page_path: str, metadata: metadata_reader.BlogMetadata) -> str:
     """
     Returns full link to a current page if a link is relative.
     """
@@ -100,7 +102,9 @@ def get_link(link: str, page_path, metadata):
     return result
 
 
-def update_html(content: str, page_path: str, metadata) -> str:
+def update_html(
+    content: str, page_path: str, metadata: metadata_reader.BlogMetadata
+) -> str:
     """
     Implementation of a full cycle of updating page's html.
     """

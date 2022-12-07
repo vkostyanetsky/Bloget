@@ -18,14 +18,19 @@ def start(metadata: metadata_reader.BlogMetadata) -> None:
     """
 
     url = metadata.settings.get("url")
-    title = metadata.language.get("site_title")
-    folder = metadata.paths.get("output")
+    assert isinstance(url, str)
 
-    app = flask.Flask(title)
+    site_title = metadata.language.get("site_title")
+    assert isinstance(site_title, str)
+
+    output_folder = metadata.paths.get("output")
+    assert isinstance(output_folder, str)
+
+    app = flask.Flask(site_title)
 
     @app.route("/")
     @app.route("/<path:resource_path>")
-    def resource(resource_path=None):
+    def resource(resource_path=None) -> tuple[flask.Response, int]:
         """
         Sends a static file back if it does exist.
         """
@@ -33,7 +38,7 @@ def start(metadata: metadata_reader.BlogMetadata) -> None:
         if resource_path is None:
             resource_path = ""
 
-        resource_path = os.path.join(folder, resource_path)
+        resource_path = os.path.join(output_folder, resource_path)
 
         http_code = 200
 
@@ -41,7 +46,7 @@ def start(metadata: metadata_reader.BlogMetadata) -> None:
             resource_path = os.path.join(resource_path, "index.html")
 
         if not os.path.exists(resource_path):
-            resource_path = os.path.join(folder, "404.html")
+            resource_path = os.path.join(output_folder, "404.html")
             http_code = 404
 
         if not os.path.exists(resource_path):
@@ -49,7 +54,7 @@ def start(metadata: metadata_reader.BlogMetadata) -> None:
 
         return flask.send_file(resource_path), http_code
 
-    os.chdir(folder)
+    os.chdir(output_folder)
 
     parse_result = urlparse(url)
 
