@@ -16,5 +16,6 @@ jobs:
       with:
         python-version: 3.x
     - run: pip install --upgrade pip
+    - run: pip -r requirements.txt
     - run: pip install mypy
     - run: mypy --strict --install-types $(git ls-files '*.py')
