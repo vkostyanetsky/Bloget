@@ -6,4 +6,3 @@ Jinja2==3.1.2
 Markdown==3.4.1
 py_menu==1.2.1
 PyYAML==6.0
-setuptools==63.2.0
