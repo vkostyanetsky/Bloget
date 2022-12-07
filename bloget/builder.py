@@ -61,6 +61,7 @@ def __clear_output(metadata: metadata_reader.BlogMetadata) -> None:
     logging.info("Clearing output directory")
 
     output_path = metadata.paths.get("output")
+    assert isinstance(output_path, str)
 
     try:
         for item in os.listdir(output_path):
@@ -88,9 +89,12 @@ def __copy_skin_assets(metadata: metadata_reader.BlogMetadata) -> None:
     logging.info("Copying skin assets")
 
     skin_path = metadata.paths.get("skin")
+    assert isinstance(skin_path, str)
+
     skin_assets_path = os.path.join(skin_path, "assets")
 
     output_path = metadata.paths.get("output")
+    assert isinstance(output_path, str)
 
     for item in os.listdir(skin_assets_path):
 

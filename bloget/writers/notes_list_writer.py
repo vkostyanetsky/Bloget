@@ -212,7 +212,7 @@ def __get_note_list_template_parameters(
     list_is_last: bool,
     selected_tag: str | None,
     metadata: metadata_reader.BlogMetadata,
-) -> dict[str, str | list[page_reader.BlogPage]]:
+) -> dict[str, str | list[page_reader.BlogPage] | dict[str, str] | None]:
 
     page_title = __get_note_list_page_title(selected_tag, metadata)
     page_path = __get_note_list_page_path(list_number, selected_tag)

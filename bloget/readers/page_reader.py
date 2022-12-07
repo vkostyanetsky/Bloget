@@ -184,6 +184,7 @@ def __get_page_metadata(folder_path: str) -> BlogPageMetadata:
     assert isinstance(page_description, str)
 
     page_created = page_info.get("created")
+    assert isinstance(page_created, datetime.datetime)
     if page_created is None:
         page_created = datetime.datetime(1, 1, 1)
 

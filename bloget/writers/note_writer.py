@@ -87,7 +87,7 @@ def __get_template_parameters(
     page: page_reader.BlogPage,
     metadata: metadata_reader.BlogMetadata,
     selected_tag: str | None,
-) -> dict:
+) -> dict[str, str | list[page_reader.BlogPage] | dict[str, str] | None]:
 
     result = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
@@ -105,7 +105,7 @@ def __get_template_parameters(
 def __get_output_folder_path(
     page: page_reader.BlogPage,
     metadata: metadata_reader.BlogMetadata,
-    selected_tag: str,
+    selected_tag: str | None,
 ) -> str:
     """
     Returns path to note's folder.

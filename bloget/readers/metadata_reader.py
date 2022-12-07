@@ -49,6 +49,7 @@ def __get_templates(paths: dict[str, str]) -> jinja2.Environment:
     """
 
     skin_path = paths.get("skin")
+    assert isinstance(skin_path, str)
     skin_templates_path = os.path.join(skin_path, "templates")
 
     return jinja2.Environment(

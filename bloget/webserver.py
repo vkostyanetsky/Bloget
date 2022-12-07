@@ -30,10 +30,12 @@ def start(metadata: metadata_reader.BlogMetadata) -> None:
 
     @app.route("/")
     @app.route("/<path:resource_path>")
-    def resource(resource_path=None) -> tuple[flask.Response, int]:
+    def resource(resource_path: str | None = None) -> tuple[flask.Response, int]:
         """
         Sends a static file back if it does exist.
         """
+
+        assert isinstance(output_folder, str)
 
         if resource_path is None:
             resource_path = ""

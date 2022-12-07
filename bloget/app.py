@@ -8,7 +8,7 @@ import argparse
 import logging
 import os
 
-import coloredlogs
+import coloredlogs  # type: ignore
 
 from bloget import builder
 
@@ -57,22 +57,25 @@ def __get_arguments() -> argparse.Namespace:
         dest="command", help="Action you want the app to do.", required=True
     )
 
-    __add_subparser_for_add_command(subparsers, base_parser)
-    __add_subparser_for_build_command(subparsers, base_parser)
-
-    return parser.parse_args()
-
-
-def __add_subparser_for_add_command(subparsers, base_parser) -> None:
-    """
-    Adds an arguments subparser for the ADD command.
-    """
-
-    subparser = __get_subparser_for_add_command()
+    add_command_subparser = __get_subparser_for_add_command()
 
     subparsers.add_parser(
-        "add", aliases=["a"], help="Add a note", parents=[base_parser, subparser]
+        "add",
+        aliases=["a"],
+        help="Add a note",
+        parents=[base_parser, add_command_subparser],
     )
+
+    build_command_subparser = __get_subparser_for_build_command()
+
+    subparsers.add_parser(
+        "build",
+        aliases=["b"],
+        help="Build blog",
+        parents=[base_parser, build_command_subparser],
+    )
+
+    return parser.parse_args()
 
 
 def __get_subparser_for_add_command() -> argparse.ArgumentParser:
@@ -86,18 +89,6 @@ def __get_subparser_for_add_command() -> argparse.ArgumentParser:
     )
 
     return subparser
-
-
-def __add_subparser_for_build_command(subparsers, base_parser) -> None:
-    """
-    Adds an arguments subparser for the BUILD command.
-    """
-
-    subparser = __get_subparser_for_build_command()
-
-    subparsers.add_parser(
-        "build", aliases=["b"], help="Build blog", parents=[base_parser, subparser]
-    )
 
 
 def __get_subparser_for_build_command() -> argparse.ArgumentParser:

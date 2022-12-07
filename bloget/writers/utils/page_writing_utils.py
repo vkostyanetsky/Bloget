@@ -28,7 +28,7 @@ def copy_page_attachments(page: page_reader.BlogPage, output_folder_path: str) -
             utils.copy_file(source_file_path, target_file_path)
 
 
-def get_selected_tag_comment(selected_tag: str) -> str:
+def get_selected_tag_comment(selected_tag: str | None) -> str:
     """
     Generates description for a selected tag.
     """
@@ -45,7 +45,7 @@ def get_html_template_parameters(
     page_title: str,
     page_path: str,
     page_is_editable: bool,
-) -> dict[str, str | list[page_reader.BlogPage] | dict[str, str]]:
+) -> dict[str, str | list[page_reader.BlogPage] | dict[str, str] | None]:
     """
     Returns common parameters for HTML templates.
     """
