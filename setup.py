@@ -4,15 +4,15 @@
 The setup and build script for the bloget library.
 """
 
-from setuptools import setup
-from bloget.constants import VERSION
+import setuptools  # type: ignore
+from bloget import constants
 
 with open("README.md", encoding="utf-8") as readme:
     long_description = readme.read()
 
-setup(
+setuptools.setup(
     name="bloget",
-    version=VERSION,
+    version=constants.VERSION,
     description="Reads pages & notes from Markdown files and builds a beautiful blog out of it",
     long_description=long_description,
     long_description_content_type="text/markdown",
