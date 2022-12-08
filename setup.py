@@ -5,6 +5,7 @@ The setup and build script for the bloget library.
 """
 
 import setuptools  # type: ignore
+
 from bloget import constants
 
 with open("README.md", encoding="utf-8") as readme:
