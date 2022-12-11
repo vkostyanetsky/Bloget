@@ -30,18 +30,6 @@ def write_note_lists(
         )
 
 
-def __get_notes_by_tag(
-    notes: list[page_reader.BlogPage], tag: str | None
-) -> list[page_reader.BlogPage]:
-    """
-    Filters lists of notes by a tag given.
-    """
-
-    notes = list(filter(lambda note: tag is None or tag in note.tags, notes))
-
-    return sorted(notes, key=lambda note: note.created, reverse=True)
-
-
 def __write_note_lists_by_selected_tag(
     pages: pages_reader.BlogPages,
     selected_tag: str | None,
@@ -54,7 +42,7 @@ def __write_note_lists_by_selected_tag(
     tag_comment = page_writing_utils.get_selected_tag_comment(selected_tag)
     logging.info("Note lists building %s", tag_comment)
 
-    notes = __get_notes_by_tag(pages.notes, selected_tag)
+    notes = page_writing_utils.get_notes_by_tag(pages.notes, selected_tag)
     notes_left = len(notes)
 
     list_number = 1
@@ -224,6 +212,7 @@ def __get_note_list_template_parameters(
         page_is_editable=False,
     )
 
+    result["selected_tag"] = selected_tag
     result["tags"] = metadata.tags
     result["notes"] = list_notes
 

@@ -11,6 +11,20 @@ from bloget import utils
 from bloget.readers import metadata_reader, page_reader
 
 
+def get_notes_by_tag(notes: list[page_reader.BlogPage], tag: str | None) -> list[page_reader.BlogPage]:
+    """
+    Filters notes list, then sorts it.
+    """
+
+    notes = [
+        note
+        for note in notes
+        if tag is None or tag in note.tags
+    ]
+
+    return sorted(notes, key=lambda note: note.created, reverse=True)
+
+
 def copy_page_attachments(page: page_reader.BlogPage, output_folder_path: str) -> None:
     """
     Copies page's attachments to the page build folder.
