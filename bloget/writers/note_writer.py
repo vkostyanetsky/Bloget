@@ -38,9 +38,7 @@ def __write_notes_by_selected_tag(
 
     notes = page_writing_utils.get_notes_by_tag(pages.notes, selected_tag)
 
-    for index in range(len(notes)):
-
-        note = notes[index]
+    for index, note in enumerate(notes):
 
         previous_note = None if index == 0 else notes[index - 1]
         next_note = None if len(notes) - 1 == index else notes[index + 1]
@@ -53,7 +51,7 @@ def __write_note(
     previous_note: page_reader.BlogPage | None,
     next_note: page_reader.BlogPage | None,
     selected_tag: str | None,
-    metadata: metadata_reader.BlogMetadata
+    metadata: metadata_reader.BlogMetadata,
 ) -> None:
     """
     Builds a given text page.
@@ -87,7 +85,9 @@ def __get_file_text(
     Returns template parameters for the note.html file.
     """
 
-    template_parameters = __get_template_parameters(note, previous_note, next_note, selected_tag, metadata)
+    template_parameters = __get_template_parameters(
+        note, previous_note, next_note, selected_tag, metadata
+    )
 
     return metadata.templates.get_template("note.html").render(template_parameters)
 
@@ -98,7 +98,9 @@ def __get_template_parameters(
     next_note: page_reader.BlogPage | None,
     selected_tag: str | None,
     metadata: metadata_reader.BlogMetadata,
-) -> dict[str, str | list[page_reader.BlogPage] | page_reader.BlogPage | dict[str, str] | None]:
+) -> dict[
+    str, str | list[page_reader.BlogPage] | page_reader.BlogPage | dict[str, str] | None
+]:
 
     result = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
@@ -106,11 +108,15 @@ def __get_template_parameters(
         page_path=note.path,
         page_is_editable=True,
     )
-    
-    result["previous_note_path"] = __get_note_page_path(previous_note, selected_tag) if previous_note else ""
+
+    result["previous_note_path"] = (
+        __get_note_page_path(previous_note, selected_tag) if previous_note else ""
+    )
     result["previous_note_title"] = previous_note.title if previous_note else ""
 
-    result["next_note_path"] = __get_note_page_path(next_note, selected_tag) if next_note else ""
+    result["next_note_path"] = (
+        __get_note_page_path(next_note, selected_tag) if next_note else ""
+    )
     result["next_note_title"] = next_note.title if next_note else ""
 
     result["note"] = note
