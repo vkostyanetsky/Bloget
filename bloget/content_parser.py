@@ -16,7 +16,7 @@ def parse(content: str, page_path: str, metadata: metadata_reader.BlogMetadata) 
     content = __replace_links_to_social_networks(content, metadata)
     content = markdown(content)
 
-    return update_html(content, page_path, metadata)
+    return update_internal_links(content, page_path, metadata)
 
 
 def __replace_links_to_social_networks(
@@ -58,7 +58,7 @@ def __replace_youtube_link(
 
 
 def __replace_github_gist_link(
-    lines: list[str], index: int, line: str, metadata: metadata_reader.BlogMetadata
+    lines: list[str ], index: int, line: str, metadata: metadata_reader.BlogMetadata
 ) -> None:
     """
     Replaces a link to GitHub Gist by its script.
@@ -78,7 +78,7 @@ def __replace_github_gist_link(
         lines[index] = template.format(gist_owner, gist_id, metadata.language["gist"])
 
 
-def get_link(link: str, page_path: str, metadata: metadata_reader.BlogMetadata) -> str:
+def get_internal_link(link: str, page_path: str, metadata: metadata_reader.BlogMetadata) -> str:
     """
     Returns full link to a current page if a link is relative.
     """
@@ -102,7 +102,7 @@ def get_link(link: str, page_path: str, metadata: metadata_reader.BlogMetadata) 
     return result
 
 
-def update_html(
+def update_internal_links(
     content: str, page_path: str, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
@@ -111,25 +111,12 @@ def update_html(
 
     soup = BeautifulSoup(content, features="html.parser")
 
-    for tag in soup.find_all("ol"):
-        tag["class"] = "measure-wide"
-
-    for tag in soup.find_all("ul"):
-        tag["class"] = "measure-wide"
-
-    for tag in soup.find_all("p"):
-        tag["class"] = "measure-wide"
-
     for tag in soup.find_all("img"):
-        tag["src"] = get_link(tag["src"], page_path, metadata)
+        tag["src"] = get_internal_link(tag["src"], page_path, metadata)
 
     for tag in soup.find_all("a"):
 
         tag["target"] = "_blank"
-
-        if tag.find("img") is None:
-            tag["class"] = "link blue dim bb"
-
-        tag["href"] = get_link(tag["href"], page_path, metadata)
+        tag["href"] = get_internal_link(tag["href"], page_path, metadata)
 
     return str(soup)
