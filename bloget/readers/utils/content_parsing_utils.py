@@ -18,7 +18,7 @@ def parse(content: str, page_path: str, metadata: metadata_reader.BlogMetadata) 
     content = __replace_links_to_social_networks(content, metadata)
     content = markdown(content)
 
-    return update_internal_links(content, page_path, metadata)
+    return __update_internal_links(content, page_path, metadata)
 
 
 def __replace_links_to_social_networks(
@@ -106,7 +106,7 @@ def get_internal_link(
     return result
 
 
-def update_internal_links(
+def __update_internal_links(
     content: str, page_path: str, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
