@@ -8,8 +8,9 @@ import datetime
 import os
 from dataclasses import dataclass
 
-from bloget import constants, content_parser, utils
+from bloget import constants, utils
 from bloget.readers import metadata_reader
+from bloget.readers.utils import content_parsing_utils
 
 
 @dataclass
@@ -217,4 +218,4 @@ def __get_page_text(
     with open(file_path, encoding=constants.ENCODING) as file:
         result = file.read()
 
-    return content_parser.parse(result, page_path, metadata)
+    return content_parsing_utils.parse(result, page_path, metadata)

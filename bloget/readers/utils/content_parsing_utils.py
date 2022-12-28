@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
+
 """
-Content parser for a page's text.
+Content parser for texts & notes.
 """
 
 from bs4 import BeautifulSoup
@@ -58,7 +60,7 @@ def __replace_youtube_link(
 
 
 def __replace_github_gist_link(
-    lines: list[str ], index: int, line: str, metadata: metadata_reader.BlogMetadata
+    lines: list[str], index: int, line: str, metadata: metadata_reader.BlogMetadata
 ) -> None:
     """
     Replaces a link to GitHub Gist by its script.
@@ -78,7 +80,9 @@ def __replace_github_gist_link(
         lines[index] = template.format(gist_owner, gist_id, metadata.language["gist"])
 
 
-def get_internal_link(link: str, page_path: str, metadata: metadata_reader.BlogMetadata) -> str:
+def get_internal_link(
+    link: str, page_path: str, metadata: metadata_reader.BlogMetadata
+) -> str:
     """
     Returns full link to a current page if a link is relative.
     """
