@@ -6,6 +6,7 @@ Implementation of note pages building functionality.
 
 import logging
 import os
+import typing
 
 from bloget import constants, utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
@@ -200,9 +201,7 @@ def __get_note_list_template_parameters(
     list_is_last: bool,
     selected_tag: str | None,
     metadata: metadata_reader.BlogMetadata,
-) -> dict[
-    str, str | list[page_reader.BlogPage] | page_reader.BlogPage | dict[str, str] | None
-]:
+) -> dict[str, typing.Any]:
 
     page_title = __get_note_list_page_title(selected_tag, metadata)
     page_path = __get_note_list_page_path(list_number, selected_tag)

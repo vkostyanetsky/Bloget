@@ -6,6 +6,7 @@ Common methods which are applicable to both types of pages (texts & notes).
 
 import logging
 import os
+import typing
 
 from bloget import utils
 from bloget.readers import metadata_reader, page_reader
@@ -57,9 +58,7 @@ def get_html_template_parameters(
     page_title: str,
     page_path: str,
     page_is_editable: bool,
-) -> dict[
-    str, str | list[page_reader.BlogPage] | page_reader.BlogPage | dict[str, str] | None
-]:
+) -> dict[str, typing.Any]:
     """
     Returns common parameters for HTML templates.
     """

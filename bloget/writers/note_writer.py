@@ -6,6 +6,7 @@ Implementation of note pages building functionality.
 
 import logging
 import os
+import typing
 
 from bloget import constants, utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
@@ -98,9 +99,7 @@ def __get_template_parameters(
     next_note: page_reader.BlogPage | None,
     selected_tag: str | None,
     metadata: metadata_reader.BlogMetadata,
-) -> dict[
-    str, str | list[page_reader.BlogPage] | page_reader.BlogPage | dict[str, str] | None
-]:
+) -> dict[str, typing.Any]:
 
     result = page_writing_utils.get_html_template_parameters(
         metadata=metadata,

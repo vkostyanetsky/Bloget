@@ -4,6 +4,7 @@ Implementation of sitemap.xml building functionality.
 
 import logging
 import os
+import typing
 
 from bloget import utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
@@ -38,7 +39,7 @@ def __get_file_text(
 
 def __get_template_parameters(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
-) -> dict[str, list[dict[str, str]]]:
+) -> dict[str, typing.Any]:
     """
     Returns sitemap.xml template parameters.
     """
