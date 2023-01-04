@@ -104,6 +104,7 @@ def __get_template_parameters(
     result = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
         page_title=note.title,
+        page_description=note.description,
         page_path=note.path,
         page_is_editable=True,
     )

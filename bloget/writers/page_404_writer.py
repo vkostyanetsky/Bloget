@@ -31,6 +31,7 @@ def __get_file_text(metadata: metadata_reader.BlogMetadata) -> str:
     template_parameters = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
         page_title=metadata.language["page_404_title"],
+        page_description="",
         page_path="404.html",
         page_is_editable=False,
     )

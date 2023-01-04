@@ -56,6 +56,7 @@ def get_selected_tag_comment(selected_tag: str | None) -> str:
 def get_html_template_parameters(
     metadata: metadata_reader.BlogMetadata,
     page_title: str,
+    page_description: str,
     page_path: str,
     page_is_editable: bool,
 ) -> dict[str, typing.Any]:
@@ -69,6 +70,7 @@ def get_html_template_parameters(
         "language": metadata.language,
         "settings": metadata.settings,
         "page_title": page_title,
+        "page_description": page_description,
         "page_path": page_path,
         "page_edit_url": page_edit_url,
     }

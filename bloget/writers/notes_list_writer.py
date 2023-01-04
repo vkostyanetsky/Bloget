@@ -209,6 +209,7 @@ def __get_note_list_template_parameters(
     result = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
         page_title=page_title,
+        page_description="",
         page_path=page_path,
         page_is_editable=False,
     )

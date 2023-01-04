@@ -56,6 +56,7 @@ def __get_file_text(
     template_parameters = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
         page_title=page.title,
+        page_description=page.description,
         page_path=page.path,
         page_is_editable=True,
     )
