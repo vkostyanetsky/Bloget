@@ -57,15 +57,12 @@ def __add_page_links(
     pages: list[page_reader.BlogPage],
     settings: dict[str, str],
 ) -> None:
-
     for page in pages:
-
         is_in_sitemap = (
             True if page.options is None else "no-sitemap" not in page.options
         )
 
         if is_in_sitemap:
-
             link = {
                 "loc": f"{settings['url']}/{page.path}",
                 "lastmod": page.created.strftime("%Y-%m-%d"),

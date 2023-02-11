@@ -40,9 +40,7 @@ def get_pages(blog_metadata: metadata_reader.BlogMetadata) -> BlogPages:
     notes_path = os.path.join(pages_path, notes_folder_name)
 
     for directory, _, files in os.walk(pages_path):
-
         if "index.yaml" in files:
-
             is_note = directory.startswith(notes_path)
 
             page = page_reader.get_page(directory, blog_metadata)

@@ -161,7 +161,6 @@ def __get_page_attachments(folder_path: str) -> list[str]:
     result = []
 
     for file_name in file_names:
-
         file_path = os.path.join(folder_path, file_name)
 
         if os.path.isfile(file_path) and file_name not in predefined_file_names:

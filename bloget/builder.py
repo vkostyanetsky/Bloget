@@ -48,7 +48,6 @@ def build_blog(arguments: argparse.Namespace) -> None:
     __copy_skin_assets(metadata)
 
     if arguments.webserver:
-
         logging.info("Starting a web server")
         webserver.start(metadata)
 
@@ -65,11 +64,9 @@ def __clear_output(metadata: metadata_reader.BlogMetadata) -> None:
 
     try:
         for item in os.listdir(output_path):
-
             protected_files = [".git", "CNAME"]
 
             if item not in protected_files:
-
                 project_file_path = os.path.join(output_path, item)
 
                 if os.path.isfile(project_file_path):
@@ -97,7 +94,6 @@ def __copy_skin_assets(metadata: metadata_reader.BlogMetadata) -> None:
     assert isinstance(output_path, str)
 
     for item in os.listdir(skin_assets_path):
-
         source_path = os.path.join(skin_assets_path, item)
         target_path = os.path.join(output_path, item)
 

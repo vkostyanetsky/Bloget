@@ -25,7 +25,6 @@ def write_note_lists(
     )
 
     for selected_tag in metadata.tags:
-
         __write_note_lists_by_selected_tag(
             pages=pages, selected_tag=selected_tag, metadata=metadata
         )
@@ -51,12 +50,10 @@ def __write_note_lists_by_selected_tag(
     list_size = 20
 
     for note in notes:
-
         list_notes.append(note)
         notes_left -= 1
 
         if len(list_notes) == list_size or notes_left == 0:
-
             list_is_last = notes_left == 0
 
             __write_notes_list(
@@ -188,7 +185,6 @@ def __get_note_list_page_path(list_number: int, selected_tag: str | None) -> str
 def __get_note_list_page_url(
     list_number: int, selected_tag: str | None, metadata: metadata_reader.BlogMetadata
 ) -> str:
-
     url_parts = metadata.settings["url"]
     page_path = __get_note_list_page_path(list_number, selected_tag)
 
@@ -202,7 +198,6 @@ def __get_note_list_template_parameters(
     selected_tag: str | None,
     metadata: metadata_reader.BlogMetadata,
 ) -> dict[str, typing.Any]:
-
     page_title = __get_note_list_page_title(selected_tag, metadata)
     page_path = __get_note_list_page_path(0, selected_tag)
 

@@ -45,15 +45,12 @@ def __get_file_text(
 def __get_rss_items(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
 ) -> list[dict[str, str]]:
-
     items: list[dict[str, str]] = []
 
     for note in pages.notes:
-
         in_feed = True if note.options is None else "no-rss" not in note.options
 
         if in_feed:
-
             item = {
                 "title": html.escape(note.title),
                 "link": f"{metadata.settings['url']}/{note.path}",

@@ -33,14 +33,12 @@ def __write_notes_by_selected_tag(
     selected_tag: str | None,
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
-
     tag_comment = page_writing_utils.get_selected_tag_comment(selected_tag)
     logging.info("Notes building %s", tag_comment)
 
     notes = page_writing_utils.get_notes_by_tag(pages.notes, selected_tag)
 
     for index, note in enumerate(notes):
-
         previous_note = None if index == 0 else notes[index - 1]
         next_note = None if len(notes) - 1 == index else notes[index + 1]
 
@@ -100,7 +98,6 @@ def __get_template_parameters(
     selected_tag: str | None,
     metadata: metadata_reader.BlogMetadata,
 ) -> dict[str, typing.Any]:
-
     result = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
         page_title=note.title,

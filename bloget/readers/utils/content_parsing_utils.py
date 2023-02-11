@@ -30,8 +30,7 @@ def __replace_links_to_social_networks(
 
     lines = content.splitlines()
 
-    for (index, line) in enumerate(lines):
-
+    for index, line in enumerate(lines):
         __replace_github_gist_link(lines, index, line, metadata)
 
         __replace_youtube_link(lines, index, line, "https://www.youtube.com/watch?v=")
@@ -48,7 +47,6 @@ def __replace_youtube_link(
     """
 
     if line.startswith(marker):
-
         video_id = line.strip().replace(marker, "")
         template = (
             '<iframe width="560" height="315" src="https://www.youtube.com/embed/{0}" '
@@ -69,7 +67,6 @@ def __replace_github_gist_link(
     marker = "https://gist.github.com/"
 
     if line.startswith(marker):
-
         gist = line.strip().replace(marker, "").split("/")
 
         gist_owner = gist[0]
@@ -91,7 +88,6 @@ def get_internal_link(
     is_url = link.startswith("http://") or link.startswith("https://")
 
     if not is_url:
-
         link_parts: list[str] = [metadata.settings["url"]]
 
         is_relative_path = not link.startswith("/")
@@ -119,7 +115,6 @@ def __update_internal_links(
         tag["src"] = get_internal_link(tag["src"], page_path, metadata)
 
     for tag in soup.find_all("a"):
-
         tag["target"] = "_blank"
         tag["href"] = get_internal_link(tag["href"], page_path, metadata)
 

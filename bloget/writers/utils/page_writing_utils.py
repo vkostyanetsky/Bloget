@@ -30,9 +30,7 @@ def copy_page_attachments(page: page_reader.BlogPage, output_folder_path: str) -
     """
 
     if page.attachments:
-
         for attachment in page.attachments:
-
             logging.debug('Copying attachment from "%s"', attachment)
 
             source_file_path = os.path.join(page.folder_path, attachment)
@@ -86,7 +84,6 @@ def __get_page_edit_url(
     result = ""
 
     if page_is_editable and metadata.settings.get("github_repository"):
-
         parts = [
             f"https://github.com/{metadata.settings['github_repository']}/edit/main"
         ]

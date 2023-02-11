@@ -31,7 +31,6 @@ def copy_file(source_path: str, target_path: str) -> None:
     logging.debug('Copying "%s" to "%s"...', source_path, target_path)
 
     try:
-
         if os.path.isdir(source_path):
             shutil.copytree(source_path, target_path)
         else:
@@ -49,12 +48,10 @@ def make_file(path: str, data: str) -> None:
     logging.debug('Making a file "%s"...', path)
 
     try:
-
         with open(path, "w+", encoding=constants.ENCODING) as file:
             file.write(data)
 
     except IOError:
-
         raise_error(f"Unable to make a file: {path}")
 
 
@@ -66,7 +63,6 @@ def make_folder(path: str) -> None:
     logging.debug('Making a folder "%s"...', path)
 
     if not os.path.exists(path):
-
         try:
             os.makedirs(path)
         except IOError:
