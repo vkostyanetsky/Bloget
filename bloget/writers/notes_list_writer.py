@@ -164,7 +164,7 @@ def __get_note_list_page_title(
 
 def __get_note_list_page_path(list_number: int, selected_tag: str | None) -> str:
     """
-    Returns a title of a note list.
+    Returns a path of a note list.
 
     For instance,
         notes
@@ -204,7 +204,7 @@ def __get_note_list_template_parameters(
 ) -> dict[str, typing.Any]:
 
     page_title = __get_note_list_page_title(selected_tag, metadata)
-    page_path = __get_note_list_page_path(list_number, selected_tag)
+    page_path = __get_note_list_page_path(0, selected_tag)
 
     result = page_writing_utils.get_html_template_parameters(
         metadata=metadata,
