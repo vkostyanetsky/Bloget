@@ -24,7 +24,7 @@ setuptools.setup(
     install_requires=[
         "beautifulsoup4~=4.11.1",
         "coloredlogs~=15.0.1",
-        "Flask~=2.1.1",
+        "Flask>=2.1.1,<2.4.0",
         "Jinja2~=3.1.2",
         "Markdown~=3.4.1",
         "PyYAML~=6.0",
