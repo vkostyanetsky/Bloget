@@ -50,21 +50,25 @@ def __get_tag_counters(
     ]
     """
 
-    result = {}
+    counters = {}
 
     for tag in metadata.tags:
-        result[tag] = 0
+        counters[tag] = 0
 
     for note in pages.notes:
         for tag in note.tags:
-            result[tag] += 1
+            counters[tag] += 1
 
-    rr = []
+    result = []
 
-    for tag in result:
-        rr.append({"name": tag, "counter": result[tag]})
+    for tag_name in counters:
 
-    return sorted(rr, key=lambda x: x["counter"], reverse=True)
+        tag_counter = counters[tag_name]
+
+        if tag_counter:
+            result.append({"name": tag_name, "counter": tag_counter})
+
+    return sorted(result, key=lambda x: x["counter"], reverse=True)
 
 
 def __get_tags_folder_path(metadata: metadata_reader.BlogMetadata) -> str:
