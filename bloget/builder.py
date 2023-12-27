@@ -20,6 +20,7 @@ from bloget.writers import (
     rss_feed_writer,
     sitemap_writer,
     text_writer,
+    tags_writer,
 )
 
 
@@ -40,6 +41,7 @@ def build_blog(arguments: argparse.Namespace) -> None:
     note_writer.write_notes(pages, metadata)
     notes_list_writer.write_note_lists(pages, metadata)
 
+    tags_writer.write_tags(pages, metadata)
     sitemap_writer.write_sitemap(pages, metadata)
     rss_feed_writer.write_rss_feed(pages, metadata)
     page_404_writer.write_page_404(metadata)
