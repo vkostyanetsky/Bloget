@@ -24,9 +24,8 @@ def main() -> None:
 
     if arguments.command == "build":
         builder.build_blog(arguments)
-
-    elif arguments.command == "add":
-        pass
+    else:
+        logging.info("Nothing to do!")
 
 
 def __setup_logging(arguments: argparse.Namespace) -> None:
@@ -142,3 +141,7 @@ def __get_subparser_for_build_command() -> argparse.ArgumentParser:
     )
 
     return subparser
+
+
+if __name__ == "__main__":
+    main()
