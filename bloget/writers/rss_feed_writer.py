@@ -47,7 +47,9 @@ def __get_rss_items(
 ) -> list[dict[str, str]]:
     items: list[dict[str, str]] = []
 
-    for note in pages.notes:
+    notes = sorted(pages.notes, key=lambda x: x.created, reverse=True)
+
+    for note in notes:
         in_feed = True if note.options is None else "no-rss" not in note.options
 
         if in_feed:
