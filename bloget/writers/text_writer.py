@@ -1,6 +1,7 @@
 """
 Implementation of text pages building functionality.
 """
+
 import logging
 import os
 
