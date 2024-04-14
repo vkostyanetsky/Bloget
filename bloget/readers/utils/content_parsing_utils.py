@@ -84,11 +84,15 @@ def get_internal_link(
     Returns full link to a current page if a link is relative.
     """
 
+    def delete_slashes(item: str):
+        return item.strip("/")
+
     result = link
     is_url = link.startswith("http://") or link.startswith("https://")
 
     if not is_url:
-        link_parts: list[str] = [metadata.settings["url"]]
+
+        link_parts = [metadata.settings["url"]]
 
         is_relative_path = not link.startswith("/")
 
@@ -96,6 +100,8 @@ def get_internal_link(
             link_parts.append(page_path)
 
         link_parts.append(link)
+
+        link_parts = map(delete_slashes, link_parts)
 
         result = "/".join(link_parts)
 
