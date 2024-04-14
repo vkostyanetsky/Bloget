@@ -74,6 +74,24 @@ def get_html_template_parameters(
     }
 
 
+def get_html_template_parameters_for_service_page(
+    metadata: metadata_reader.BlogMetadata,
+    page_title: str,
+    page_path: str,
+) -> dict[str, typing.Any]:
+    """
+    Returns common parameters for HTML templates.
+    """
+
+    return get_html_template_parameters(
+        metadata=metadata,
+        page_title=page_title,
+        page_description="",
+        page_path=page_path,
+        page_is_editable=False,
+    )
+
+
 def __get_page_edit_url(
     metadata: metadata_reader.BlogMetadata, page_path: str, page_is_editable: bool
 ) -> str:

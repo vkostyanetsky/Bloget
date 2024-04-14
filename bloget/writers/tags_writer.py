@@ -61,9 +61,7 @@ def __get_tag_counters(
 
     result = []
 
-    for tag_name in counters:
-        tag_counter = counters[tag_name]
-
+    for tag_name, tag_counter in counters.items():
         if tag_counter:
             result.append({"name": tag_name, "counter": tag_counter})
 
@@ -120,12 +118,10 @@ def __get_tags_template_parameters(
     page_title = __get_tags_page_title(metadata)
     page_path = __get_tags_page_path()
 
-    result = page_writing_utils.get_html_template_parameters(
+    result = page_writing_utils.get_html_template_parameters_for_service_page(
         metadata=metadata,
         page_title=page_title,
-        page_description="",
         page_path=page_path,
-        page_is_editable=False,
     )
 
     result["tag_counters"] = tag_counters

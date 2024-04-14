@@ -201,12 +201,10 @@ def __get_note_list_template_parameters(
     page_title = __get_note_list_page_title(selected_tag, metadata)
     page_path = __get_note_list_page_path(0, selected_tag)
 
-    result = page_writing_utils.get_html_template_parameters(
+    result = page_writing_utils.get_html_template_parameters_for_service_page(
         metadata=metadata,
         page_title=page_title,
-        page_description="",
         page_path=page_path,
-        page_is_editable=False,
     )
 
     result["selected_tag"] = selected_tag
