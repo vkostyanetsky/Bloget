@@ -91,7 +91,6 @@ def get_internal_link(
     is_url = link.startswith("http://") or link.startswith("https://")
 
     if not is_url:
-
         link_parts = [metadata.settings["url"]]
 
         is_relative_path = not link.startswith("/")

@@ -62,7 +62,6 @@ def __get_tag_counters(
     result = []
 
     for tag_name in counters:
-
         tag_counter = counters[tag_name]
 
         if tag_counter:
