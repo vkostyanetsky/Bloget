@@ -109,7 +109,9 @@ def __get_template_parameters(
     if previous_note:
         result["previous_note_path"] = __get_note_page_path(previous_note, selected_tag)
         result["previous_note_title"] = previous_note.title
-        result["hotkey_ctrl_right_url"] = __get_note_page_url(result["previous_note_path"], metadata)
+        result["hotkey_ctrl_right_url"] = __get_note_page_url(
+            result["previous_note_path"], metadata
+        )
     else:
         result["previous_note_path"] = ""
         result["previous_note_title"] = ""
@@ -117,7 +119,9 @@ def __get_template_parameters(
     if next_note:
         result["next_note_path"] = __get_note_page_path(next_note, selected_tag)
         result["next_note_title"] = next_note.title
-        result["hotkey_ctrl_left_url"] = __get_note_page_url(result["next_note_path"], metadata)
+        result["hotkey_ctrl_left_url"] = __get_note_page_url(
+            result["next_note_path"], metadata
+        )
     else:
         result["next_note_path"] = ""
         result["next_note_title"] = ""
