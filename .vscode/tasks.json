@@ -1,0 +1,42 @@
+{
+    "version": "2.0.0",
+    "tasks": 
+    [
+        {
+            "label": "🔧 RU Blog Build",
+            "type": "shell",
+            "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
+            "args": [
+                "-m", "bloget",
+                "build",
+                "--output=${workspaceFolder}/../BlogetTemp",
+                "--skin=${workspaceFolder}/../BlogetSkin",
+                "--url=http://localhost:8085",
+                "--webserver"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/../kostyanetsky.ru"
+            },
+            "presentation": {"reveal": "always", "panel": "shared"},
+            "problemMatcher": []
+        },
+        {
+            "label": "🔧 EN Blog Build",
+            "type": "shell",
+            "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
+            "args": [
+                "-m", "bloget",
+                "build",
+                "--output=${workspaceFolder}/../BlogetTemp",
+                "--skin=${workspaceFolder}/../BlogetSkin",
+                "--url=http://localhost:8085",
+                "--webserver"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/../kostyanetsky.me"
+            },
+            "presentation": {"reveal": "always", "panel": "shared"},
+            "problemMatcher": []
+        }
+    ]
+}
