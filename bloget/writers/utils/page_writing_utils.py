@@ -12,14 +12,10 @@ from bloget import utils
 from bloget.readers import metadata_reader, page_reader
 
 
-def get_notes_by_tag(
-    notes: list[page_reader.BlogPage], tag: str | None
-) -> list[page_reader.BlogPage]:
+def get_notes(notes: list[page_reader.BlogPage]) -> list[page_reader.BlogPage]:
     """
     Filters notes list, then sorts it.
     """
-
-    notes = [note for note in notes if tag is None or tag in note.tags]
 
     return sorted(notes, key=lambda note: note.created, reverse=True)
 
@@ -37,18 +33,6 @@ def copy_page_attachments(page: page_reader.BlogPage, output_folder_path: str) -
             target_file_path = os.path.join(output_folder_path, attachment)
 
             utils.copy_file(source_file_path, target_file_path)
-
-
-def get_selected_tag_comment(selected_tag: str | None) -> str:
-    """
-    Generates description for a selected tag.
-    """
-
-    return (
-        "with no tag selected"
-        if selected_tag is None
-        else f'for "{selected_tag}" tag selected'
-    )
 
 
 def get_html_template_parameters(

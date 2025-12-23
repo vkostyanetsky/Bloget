@@ -20,36 +20,21 @@ def write_notes(
     Builds given note pages.
     """
 
-    __write_notes_by_selected_tag(pages=pages, selected_tag=None, metadata=metadata)
+    logging.info("Notes building")
 
-    for selected_tag in metadata.tags:
-        __write_notes_by_selected_tag(
-            pages=pages, selected_tag=selected_tag, metadata=metadata
-        )
-
-
-def __write_notes_by_selected_tag(
-    pages: pages_reader.BlogPages,
-    selected_tag: str | None,
-    metadata: metadata_reader.BlogMetadata,
-) -> None:
-    tag_comment = page_writing_utils.get_selected_tag_comment(selected_tag)
-    logging.info("Notes building %s", tag_comment)
-
-    notes = page_writing_utils.get_notes_by_tag(pages.notes, selected_tag)
+    notes = page_writing_utils.get_notes(pages.notes)
 
     for index, note in enumerate(notes):
         previous_note = None if index == 0 else notes[index - 1]
         next_note = None if len(notes) - 1 == index else notes[index + 1]
 
-        __write_note(note, previous_note, next_note, selected_tag, metadata)
+        __write_note(note, previous_note, next_note, metadata)
 
 
 def __write_note(
     note: page_reader.BlogPage,
     previous_note: page_reader.BlogPage | None,
     next_note: page_reader.BlogPage | None,
-    selected_tag: str | None,
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
     """
@@ -58,26 +43,21 @@ def __write_note(
 
     logging.info('Building a note from "%s"', note.folder_path)
 
-    folder_path = __get_output_folder_path(note, metadata, selected_tag)
+    folder_path = __get_output_folder_path(note, metadata)
 
-    file_text = __get_file_text(note, previous_note, next_note, selected_tag, metadata)
+    file_text = __get_file_text(note, previous_note, next_note, metadata)
     file_path = os.path.join(folder_path, "index.html")
 
     utils.make_folder(folder_path)
     utils.make_file(file_path, file_text)
 
-    # No need to copy attachments to note slices for notes/tags/*/<note_name>;
-    # it must be done for notes/<note_name> only.
-
-    if selected_tag is None:
-        page_writing_utils.copy_page_attachments(note, folder_path)
+    page_writing_utils.copy_page_attachments(note, folder_path)
 
 
 def __get_file_text(
     note: page_reader.BlogPage,
     previous_note: page_reader.BlogPage | None,
     next_note: page_reader.BlogPage | None,
-    selected_tag: str | None,
     metadata: metadata_reader.BlogMetadata,
 ) -> str:
     """
@@ -85,7 +65,7 @@ def __get_file_text(
     """
 
     template_parameters = __get_template_parameters(
-        note, previous_note, next_note, selected_tag, metadata
+        note, previous_note, next_note, metadata
     )
 
     return metadata.templates.get_template("note.html").render(template_parameters)
@@ -95,7 +75,6 @@ def __get_template_parameters(
     note: page_reader.BlogPage,
     previous_note: page_reader.BlogPage | None,
     next_note: page_reader.BlogPage | None,
-    selected_tag: str | None,
     metadata: metadata_reader.BlogMetadata,
 ) -> dict[str, typing.Any]:
     result = page_writing_utils.get_html_template_parameters(
@@ -107,9 +86,9 @@ def __get_template_parameters(
     )
 
     if previous_note:
-        result["previous_note_path"] = __get_note_page_path(previous_note, selected_tag)
+        result["previous_note_path"] = __get_note_page_path(previous_note)
         result["previous_note_title"] = previous_note.title
-        result["hotkey_ctrl_right_url"] = __get_note_page_url(
+        result["hotkey_ctrl_left_url"] = __get_note_page_url(
             result["previous_note_path"], metadata
         )
     else:
@@ -117,9 +96,9 @@ def __get_template_parameters(
         result["previous_note_title"] = ""
 
     if next_note:
-        result["next_note_path"] = __get_note_page_path(next_note, selected_tag)
+        result["next_note_path"] = __get_note_page_path(next_note)
         result["next_note_title"] = next_note.title
-        result["hotkey_ctrl_left_url"] = __get_note_page_url(
+        result["hotkey_ctrl_right_url"] = __get_note_page_url(
             result["next_note_path"], metadata
         )
     else:
@@ -129,7 +108,6 @@ def __get_template_parameters(
     result["note"] = note
 
     result["tags"] = metadata.tags
-    result["selected_tag"] = selected_tag
 
     return result
 
@@ -143,7 +121,6 @@ def __get_note_page_url(
 def __get_output_folder_path(
     page: page_reader.BlogPage,
     metadata: metadata_reader.BlogMetadata,
-    selected_tag: str | None,
 ) -> str:
     """
     Returns path to note's folder.
@@ -151,13 +128,10 @@ def __get_output_folder_path(
 
     result = os.path.join(metadata.paths["output"], constants.NOTES_FOLDER_NAME)
 
-    if selected_tag is not None:
-        result = os.path.join(result, "tags", selected_tag)
-
     return os.path.join(result, page.folder_name)
 
 
-def __get_note_page_path(note: page_reader.BlogPage, selected_tag: str | None) -> str:
+def __get_note_page_path(note: page_reader.BlogPage) -> str:
     """
     Returns a path to a note.
 
@@ -167,10 +141,6 @@ def __get_note_page_path(note: page_reader.BlogPage, selected_tag: str | None) -
     """
 
     path_parts = [constants.NOTES_FOLDER_NAME]
-
-    if selected_tag is not None:
-        path_parts.append("tags")
-        path_parts.append(selected_tag)
 
     path_parts.append(note.folder_name)
 

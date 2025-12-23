@@ -7,7 +7,8 @@
             "type": "shell",
             "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
             "args": [
-                "-m", "bloget",
+                "-m",
+                "bloget",
                 "build",
                 "--output=${workspaceFolder}/../BlogetTemp",
                 "--skin=${workspaceFolder}/../BlogetSkin",
@@ -17,7 +18,10 @@
             "options": {
                 "cwd": "${workspaceFolder}/../kostyanetsky.ru"
             },
-            "presentation": {"reveal": "always", "panel": "shared"},
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
             "problemMatcher": []
         },
         {
@@ -25,7 +29,8 @@
             "type": "shell",
             "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
             "args": [
-                "-m", "bloget",
+                "-m",
+                "bloget",
                 "build",
                 "--output=${workspaceFolder}/../BlogetTemp",
                 "--skin=${workspaceFolder}/../BlogetSkin",
@@ -35,7 +40,10 @@
             "options": {
                 "cwd": "${workspaceFolder}/../kostyanetsky.me"
             },
-            "presentation": {"reveal": "always", "panel": "shared"},
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
             "problemMatcher": []
         }
     ]

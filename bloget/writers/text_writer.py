@@ -62,6 +62,7 @@ def __get_file_text(
         page_is_editable=True,
     )
 
+    template_parameters["tags"] = page.tags
     template_parameters["page_text"] = page.text
 
     return metadata.templates.get_template("text.html").render(template_parameters)

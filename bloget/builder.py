@@ -15,12 +15,12 @@ from bloget.readers import metadata_reader, pages_reader
 from bloget.writers import (
     note_writer,
     notes_list_writer,
+    notes_search_index_writer,
     page_404_writer,
     robots_writer,
     rss_feed_writer,
     sitemap_writer,
     text_writer,
-    tags_writer,
 )
 
 
@@ -36,12 +36,13 @@ def build_blog(arguments: argparse.Namespace) -> None:
 
     __clear_output(metadata)
 
+    notes_search_index_writer.write_notes_search_index(pages, metadata)
+
     text_writer.write_texts(pages, metadata)
 
     note_writer.write_notes(pages, metadata)
     notes_list_writer.write_note_lists(pages, metadata)
 
-    tags_writer.write_tags(pages, metadata)
     sitemap_writer.write_sitemap(pages, metadata)
     rss_feed_writer.write_rss_feed(pages, metadata)
     page_404_writer.write_page_404(metadata)

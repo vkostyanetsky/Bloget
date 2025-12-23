@@ -8,7 +8,7 @@ import argparse
 import logging
 import os
 
-import coloredlogs  # type: ignore
+import coloredlogs
 
 from bloget import builder
 

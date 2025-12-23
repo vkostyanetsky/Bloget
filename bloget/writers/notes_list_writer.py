@@ -20,34 +20,16 @@ def write_note_lists(
     Builds note list pages.
     """
 
-    __write_note_lists_by_selected_tag(
-        pages=pages, selected_tag=None, metadata=metadata
-    )
+    logging.info("Note lists building")
 
-    for selected_tag in metadata.tags:
-        __write_note_lists_by_selected_tag(
-            pages=pages, selected_tag=selected_tag, metadata=metadata
-        )
-
-
-def __write_note_lists_by_selected_tag(
-    pages: pages_reader.BlogPages,
-    selected_tag: str | None,
-    metadata: metadata_reader.BlogMetadata,
-) -> None:
-    """
-    Writes note list pages by selected tag.
-    """
-
-    tag_comment = page_writing_utils.get_selected_tag_comment(selected_tag)
-    logging.info("Note lists building %s", tag_comment)
-
-    notes = page_writing_utils.get_notes_by_tag(pages.notes, selected_tag)
+    notes = page_writing_utils.get_notes(pages.notes)
     notes_left = len(notes)
 
     list_number = 1
     list_notes = []
     list_size = 20
+
+    page_count = (len(notes) + list_size - 1) // list_size
 
     for note in notes:
         list_notes.append(note)
@@ -60,7 +42,7 @@ def __write_note_lists_by_selected_tag(
                 list_notes=list_notes,
                 list_number=list_number,
                 list_is_last=list_is_last,
-                selected_tag=selected_tag,
+                page_count=page_count,
                 metadata=metadata,
             )
 
@@ -69,7 +51,7 @@ def __write_note_lists_by_selected_tag(
 
 
 def __get_note_list_folder_path(
-    list_number: int, selected_tag: str | None, metadata: metadata_reader.BlogMetadata
+    list_number: int, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
     Returns a path to note list folder.
@@ -78,9 +60,6 @@ def __get_note_list_folder_path(
     """
 
     result = os.path.join(metadata.paths["output"], constants.NOTES_FOLDER_NAME)
-
-    if selected_tag is not None:
-        result = os.path.join(result, "tags", selected_tag)
 
     if list_number > 1:
         result = os.path.join(result, f"page-{list_number}")
@@ -92,7 +71,7 @@ def __write_notes_list(
     list_notes: list[page_reader.BlogPage],
     list_number: int,
     list_is_last: bool,
-    selected_tag: str | None,
+    page_count: int,
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
     """
@@ -107,10 +86,10 @@ def __write_notes_list(
         notes/tags/alice/page-1/index.html
     """
 
-    folder_path = __get_note_list_folder_path(list_number, selected_tag, metadata)
+    folder_path = __get_note_list_folder_path(list_number, metadata)
 
     file_text = __get_notes_list_file_text(
-        list_notes, list_number, list_is_last, selected_tag, metadata
+        list_notes, list_number, list_is_last, page_count, metadata
     )
     file_path = os.path.join(folder_path, "index.html")
 
@@ -122,7 +101,7 @@ def __get_notes_list_file_text(
     list_notes: list[page_reader.BlogPage],
     list_number: int,
     list_is_last: bool,
-    selected_tag: str | None,
+    page_count: int,
     metadata: metadata_reader.BlogMetadata,
 ) -> str:
     """
@@ -130,7 +109,7 @@ def __get_notes_list_file_text(
     """
 
     template_parameters = __get_note_list_template_parameters(
-        list_notes, list_number, list_is_last, selected_tag, metadata
+        list_notes, list_number, list_is_last, page_count, metadata
     )
 
     return metadata.templates.get_template("notes_list.html").render(
@@ -138,9 +117,7 @@ def __get_notes_list_file_text(
     )
 
 
-def __get_note_list_page_title(
-    selected_tag: str | None, metadata: metadata_reader.BlogMetadata
-) -> str:
+def __get_note_list_page_title(metadata: metadata_reader.BlogMetadata) -> str:
     """
     Returns a title of a note list.
 
@@ -149,32 +126,19 @@ def __get_note_list_page_title(
         Alice ("alice" tag selected whose title is "alice")
     """
 
-    if selected_tag is None:
-        result = metadata.language["notes"]
-    else:
-        result = (
-            metadata.tags[selected_tag][:1].upper() + metadata.tags[selected_tag][1:]
-        )
-
-    return result
+    return metadata.language["notes"]
 
 
-def __get_note_list_page_path(list_number: int, selected_tag: str | None) -> str:
+def __get_note_list_page_path(list_number: int) -> str:
     """
     Returns a path of a note list.
 
     For instance,
         notes
         notes/page-1
-        notes/tags/alice/
-        notes/tags/alice/page-1
     """
 
     path_parts = [constants.NOTES_FOLDER_NAME]
-
-    if selected_tag is not None:
-        path_parts.append("tags")
-        path_parts.append(selected_tag)
 
     if list_number > 1:
         path_parts.append(f"page-{list_number}")
@@ -183,10 +147,10 @@ def __get_note_list_page_path(list_number: int, selected_tag: str | None) -> str
 
 
 def __get_note_list_page_url(
-    list_number: int, selected_tag: str | None, metadata: metadata_reader.BlogMetadata
+    list_number: int, metadata: metadata_reader.BlogMetadata
 ) -> str:
     url_parts = metadata.settings["url"]
-    page_path = __get_note_list_page_path(list_number, selected_tag)
+    page_path = __get_note_list_page_path(list_number)
 
     return f"{url_parts}/{page_path}"
 
@@ -195,11 +159,11 @@ def __get_note_list_template_parameters(
     list_notes: list[page_reader.BlogPage],
     list_number: int,
     list_is_last: bool,
-    selected_tag: str | None,
+    page_count: int,
     metadata: metadata_reader.BlogMetadata,
 ) -> dict[str, typing.Any]:
-    page_title = __get_note_list_page_title(selected_tag, metadata)
-    page_path = __get_note_list_page_path(0, selected_tag)
+    page_title = __get_note_list_page_title(metadata)
+    page_path = __get_note_list_page_path(list_number)
 
     result = page_writing_utils.get_html_template_parameters_for_service_page(
         metadata=metadata,
@@ -207,24 +171,23 @@ def __get_note_list_template_parameters(
         page_path=page_path,
     )
 
-    result["selected_tag"] = selected_tag
+    result["page"] = list_number
+    result["page_notes"] = len(list_notes)
+    result["page_count"] = page_count
     result["tags"] = metadata.tags
     result["notes"] = list_notes
+    result["notes_folder"] = constants.NOTES_FOLDER_NAME
 
     if list_number > 1:
-        next_list_url = __get_note_list_page_url(
-            list_number - 1, selected_tag, metadata
-        )
+        next_list_url = __get_note_list_page_url(list_number - 1, metadata)
 
         result["next_list_url"] = next_list_url
-        result["hotkey_ctrl_up_url"] = next_list_url
+        result["hotkey_ctrl_right_url"] = next_list_url
 
     if not list_is_last:
-        previous_list_url = __get_note_list_page_url(
-            list_number + 1, selected_tag, metadata
-        )
+        previous_list_url = __get_note_list_page_url(list_number + 1, metadata)
 
         result["previous_list_url"] = previous_list_url
-        result["hotkey_ctrl_down_url"] = previous_list_url
+        result["hotkey_ctrl_left_url"] = previous_list_url
 
     return result
