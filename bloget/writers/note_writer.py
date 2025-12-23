@@ -25,8 +25,8 @@ def write_notes(
     notes = page_writing_utils.get_notes(pages.notes)
 
     for index, note in enumerate(notes):
-        previous_note = None if index == 0 else notes[index - 1]
-        next_note = None if len(notes) - 1 == index else notes[index + 1]
+        previous_note = None if len(notes) - 1 == index else notes[index + 1]
+        next_note = None if index == 0 else notes[index - 1]
 
         __write_note(note, previous_note, next_note, metadata)
 
