@@ -3,7 +3,7 @@
     "tasks": 
     [
         {
-            "label": "🔧 RU Blog Build",
+            "label": "🚀 RU Blog: Build",
             "type": "shell",
             "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
             "args": [
@@ -25,7 +25,26 @@
             "problemMatcher": []
         },
         {
-            "label": "🔧 EN Blog Build",
+            "label": "📋 RU Blog Tags",
+            "type": "shell",
+            "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
+            "args": [
+                "-m",
+                "bloget",
+                "tags",
+                "list",
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/../kostyanetsky.ru"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },        
+        {
+            "label": "🚀 EN Blog Build",
             "type": "shell",
             "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
             "args": [
@@ -36,6 +55,25 @@
                 "--skin=${workspaceFolder}/../BlogetSkin",
                 "--url=http://localhost:8085",
                 "--webserver"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/../kostyanetsky.me"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "📋 EN Blog Tags",
+            "type": "shell",
+            "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
+            "args": [
+                "-m",
+                "bloget",
+                "tags",
+                "list",
             ],
             "options": {
                 "cwd": "${workspaceFolder}/../kostyanetsky.me"
