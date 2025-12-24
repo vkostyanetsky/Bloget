@@ -10,7 +10,7 @@ import os
 
 import coloredlogs
 
-from bloget import builder
+from bloget import builder, tags
 
 
 def main() -> None:
@@ -18,17 +18,25 @@ def main() -> None:
     Main entry point of the application.
     """
 
-    arguments = __get_arguments()
+    arguments = _get_arguments()
 
-    __setup_logging(arguments)
+    _setup_logging(arguments)
 
     if arguments.command == "build":
+
         builder.build_blog(arguments)
+
+    elif arguments.command == "tags":
+        if arguments.tags_command == "list":
+            tags.show_tags_list(arguments)
+        else:
+            logging.info("Nothing to do for tags!")
+
     else:
         logging.info("Nothing to do!")
 
 
-def __setup_logging(arguments: argparse.Namespace) -> None:
+def _setup_logging(arguments: argparse.Namespace) -> None:
     """
     Sets up logging feature.
     """
@@ -40,14 +48,9 @@ def __setup_logging(arguments: argparse.Namespace) -> None:
     coloredlogs.install(level=logging_level, fmt=format_string)
 
 
-def __get_arguments() -> argparse.Namespace:
-    """
-    Returns command line arguments.
-    """
-
+def _get_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="BLOGET")
     base_parser = argparse.ArgumentParser(add_help=False)
-
     base_parser.add_argument(
         "--debug", nargs="?", required=False, default=False, const=True
     )
@@ -56,17 +59,10 @@ def __get_arguments() -> argparse.Namespace:
         dest="command", help="Action you want the app to do.", required=True
     )
 
-    add_command_subparser = __get_subparser_for_add_command()
-
-    subparsers.add_parser(
-        "add",
-        aliases=["a"],
-        help="Add a note",
-        parents=[base_parser, add_command_subparser],
-    )
-
     build_command_subparser = __get_subparser_for_build_command()
+    build2_command_subparser = __get_subparser_for_build2_command()
 
+    # build
     subparsers.add_parser(
         "build",
         aliases=["b"],
@@ -74,20 +70,27 @@ def __get_arguments() -> argparse.Namespace:
         parents=[base_parser, build_command_subparser],
     )
 
-    return parser.parse_args()
-
-
-def __get_subparser_for_add_command() -> argparse.ArgumentParser:
-    """
-    Returns an arguments subparser for the ADD command.
-    """
-
-    subparser = argparse.ArgumentParser(add_help=False)
-    subparser.add_argument(
-        "--name", help="A name of a new note", type=str, required=True
+    # tags
+    tags_parser = subparsers.add_parser(
+        "tags",
+        aliases=["t"],
+        help="Manage tags",
+        parents=[base_parser],
     )
 
-    return subparser
+    tags_subparsers = tags_parser.add_subparsers(
+        dest="tags_command", help="Tags action", required=True
+    )
+
+    # tags list + build-like args
+    tags_subparsers.add_parser(
+        "list",
+        aliases=["ls"],
+        help="List tags",
+        parents=[base_parser, build2_command_subparser],
+    )
+
+    return parser.parse_args()
 
 
 def __get_subparser_for_build_command() -> argparse.ArgumentParser:
@@ -138,6 +141,37 @@ def __get_subparser_for_build_command() -> argparse.ArgumentParser:
         required=False,
         default=False,
         const=True,
+    )
+
+    return subparser
+
+
+def __get_subparser_for_build2_command() -> argparse.ArgumentParser:
+    """
+    Returns an arguments subparser for the BUILD command.
+    """
+
+    subparser = argparse.ArgumentParser(add_help=False)
+
+    subparser.add_argument(
+        "--pages",
+        type=str,
+        help="input directory with pages (markdown files)",
+        default=os.getcwd(),
+    )
+
+    subparser.add_argument(
+        "--metadata",
+        type=str,
+        help="input directory with metadata (language and settings)",
+        default=".metadata",
+    )
+
+    subparser.add_argument(
+        "--skin",
+        type=str,
+        help="input directory with a skin (templates & assets)",
+        default=".skin",
     )
 
     return subparser

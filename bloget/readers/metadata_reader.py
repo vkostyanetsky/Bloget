@@ -8,6 +8,7 @@ Implementation of a class to read blog's metadata.
 import argparse
 import os
 from dataclasses import dataclass
+from typing import Optional
 
 import jinja2
 
@@ -55,16 +56,16 @@ def __get_templates(paths: dict[str, str]) -> jinja2.Environment:
     )
 
 
-def __get_paths(arguments: argparse.Namespace) -> dict[str, str]:
+def __get_paths(arguments: argparse.Namespace) -> dict[str, Optional[str]]:
     """
     Returns paths to various directories required to generate.
     """
 
     return {
-        "metadata": arguments.metadata,
-        "pages": arguments.pages,
-        "skin": arguments.skin,
-        "output": arguments.output,
+        "metadata": getattr(arguments, "metadata", ""),
+        "pages": getattr(arguments, "pages", ""),
+        "skin": getattr(arguments, "skin", ""),
+        "output": getattr(arguments, "output", ""),
     }
 
 
@@ -80,8 +81,10 @@ def __get_settings(
 
     settings = utils.read_yaml_file(settings_file_path)
 
-    if arguments.url is not None:
-        settings["url"] = arguments.url
+    url = getattr(arguments, "url", None)
+
+    if url is not None:
+        settings["url"] = url
 
     return settings
 
