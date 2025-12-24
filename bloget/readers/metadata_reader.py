@@ -23,7 +23,6 @@ class BlogMetadata:
     paths: dict[str, str]
     settings: dict[str, str]
     language: dict[str, str]
-    tags: dict[str, str]
     templates: jinja2.Environment
 
 
@@ -36,11 +35,10 @@ def get_metadata(arguments: argparse.Namespace) -> BlogMetadata:
 
     settings = __get_settings(arguments, paths)
     language = __get_language(paths)
-    tags = __get_tags(paths)
 
     templates = __get_templates(paths)
 
-    return BlogMetadata(paths, settings, language, tags, templates)
+    return BlogMetadata(paths, settings, language, templates)
 
 
 def __get_templates(paths: dict[str, str]) -> jinja2.Environment:
@@ -97,17 +95,6 @@ def __get_language(paths: dict[str, str]) -> dict[str, str]:
     language_file_path = os.path.join(metadata_path, "language.yaml")
 
     return utils.read_yaml_file(language_file_path)
-
-
-def __get_tags(paths: dict[str, str]) -> dict[str, str]:
-    """
-    Returns tags of a blog.
-    """
-
-    metadata_path = __get_metadata_path(paths)
-    tags_file_path = os.path.join(metadata_path, "tags.yaml")
-
-    return utils.read_yaml_file(tags_file_path)
 
 
 def __get_metadata_path(paths: dict[str, str]) -> str:

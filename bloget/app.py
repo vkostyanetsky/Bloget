@@ -107,7 +107,7 @@ def __get_subparser_for_build_command() -> argparse.ArgumentParser:
     subparser.add_argument(
         "--metadata",
         type=str,
-        help="input directory with metadata (language, settings, and tags)",
+        help="input directory with metadata (language and settings)",
         default=".metadata",
     )
 

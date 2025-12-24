@@ -56,7 +56,7 @@ def __get_note_list_folder_path(
     """
     Returns a path to note list folder.
 
-    For instance: D:/Blog/notes/tags/alice/page-1
+    For instance: D:/Blog/notes/page-1
     """
 
     result = os.path.join(metadata.paths["output"], constants.NOTES_FOLDER_NAME)
@@ -77,13 +77,9 @@ def __write_notes_list(
     """
     Writes a note list.
 
-    Without a selected tag:
+    Examples:
         notes/index.html
         notes/page-1/index.html
-
-    With a selected tag "alice":
-        notes/tags/alice/index.html
-        notes/tags/alice/page-1/index.html
     """
 
     folder_path = __get_note_list_folder_path(list_number, metadata)
@@ -174,7 +170,6 @@ def __get_note_list_template_parameters(
     result["page"] = list_number
     result["page_notes"] = len(list_notes)
     result["page_count"] = page_count
-    result["tags"] = metadata.tags
     result["notes"] = list_notes
     result["notes_folder"] = constants.NOTES_FOLDER_NAME
 

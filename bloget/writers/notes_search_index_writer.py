@@ -83,5 +83,5 @@ def _get_html(
     template = metadata.templates.get_template("macros.html")
 
     return template.module.render_note(
-        page, metadata.tags, metadata.settings, metadata.language, True
+        page, metadata.settings, metadata.language, True
     )
