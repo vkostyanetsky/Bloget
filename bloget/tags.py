@@ -2,7 +2,7 @@
 
 
 """
-Implementation of general build logic.
+Implementation of tags handler.
 """
 
 import argparse
@@ -16,7 +16,7 @@ def show_tags_list(arguments: argparse.Namespace) -> None:
     Initializes blog's data by arguments given, then builds it.
     """
 
-    logging.info("Blog building")
+    logging.info("Tags list showing")
 
     metadata = metadata_reader.get_metadata(arguments)
 
