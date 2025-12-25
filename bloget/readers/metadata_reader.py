@@ -7,9 +7,9 @@ Implementation of a class to read blog's metadata.
 
 import argparse
 import os
+from collections import Counter
 from dataclasses import dataclass
 from typing import Optional
-from collections import Counter
 
 import jinja2
 
@@ -29,7 +29,6 @@ class BlogMetadata:
     tags: dict[str, str]
     templates: jinja2.Environment
 
-
     def sort_stacks_by_usage(self, projects: list) -> None:
         """
         Sorts self.stacks in descending order by how often a stack appears in projects' metadata.
@@ -40,7 +39,9 @@ class BlogMetadata:
             project_stacks = project.metadata.stacks or []
             usage.update(set(project_stacks))
 
-        original_index = {k: i for i, k in enumerate(self.stacks.keys())}  # Stable sort if usage is equal
+        original_index = {
+            k: i for i, k in enumerate(self.stacks.keys())
+        }  # Stable sort if usage is equal
 
         sorted_items = sorted(
             self.stacks.items(),
@@ -48,7 +49,6 @@ class BlogMetadata:
         )
 
         self.stacks = dict(sorted_items)
-
 
     def sort_tags_by_usage(self, notes: list) -> None:
         """
@@ -60,14 +60,16 @@ class BlogMetadata:
             note_tags = note.metadata.tags or []
             usage.update(set(note_tags))
 
-        original_index = {k: i for i, k in enumerate(self.tags.keys())}  # Stable sort if usage is equal
+        original_index = {
+            k: i for i, k in enumerate(self.tags.keys())
+        }  # Stable sort if usage is equal
 
         sorted_items = sorted(
             self.tags.items(),
             key=lambda kv: (-usage.get(kv[0], 0), original_index[kv[0]]),
         )
 
-        self.tags = dict(sorted_items)        
+        self.tags = dict(sorted_items)
 
 
 def get_metadata(arguments: argparse.Namespace) -> BlogMetadata:

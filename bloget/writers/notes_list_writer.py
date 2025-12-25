@@ -146,7 +146,7 @@ def __get_note_list_template_parameters(
     page_count: int,
     metadata: metadata_reader.BlogMetadata,
 ) -> dict[str, typing.Any]:
-    page_title = metadata.language['notes']
+    page_title = metadata.language["notes"]
     page_path = __get_note_list_page_path(list_number)
 
     result = page_writing_utils.get_html_template_parameters_for_service_page(

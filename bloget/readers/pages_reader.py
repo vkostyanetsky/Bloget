@@ -55,7 +55,7 @@ def get_pages(blog_metadata: metadata_reader.BlogMetadata) -> BlogPages:
 
     blog_metadata.sort_tags_by_usage(notes)
     blog_metadata.sort_stacks_by_usage(projects)
-    
+
     return BlogPages(texts, notes, projects)
 
 

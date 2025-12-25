@@ -25,7 +25,7 @@ def write_projects_list(
     logging.info("Projects list page building")
 
     folder_path = os.path.join(metadata.paths["output"], constants.PROJECTS_FOLDER_NAME)
-    
+
     file_path = os.path.join(folder_path, "index.html")
     file_text = _file_text(pages.projects, metadata)
 
@@ -42,14 +42,18 @@ def write_projects_list(
         page_writing_utils.copy_page_attachments(project, project_folder_path)
 
 
-def _file_text(projects: list[page_reader.BlogPage], metadata: metadata_reader.BlogMetadata) -> str:
+def _file_text(
+    projects: list[page_reader.BlogPage], metadata: metadata_reader.BlogMetadata
+) -> str:
     """
     Returns HTML of the page.
     """
 
     template_parameters = _get_template_parameters(projects, metadata)
 
-    return metadata.templates.get_template("projects_list.jinja").render(template_parameters)
+    return metadata.templates.get_template("projects_list.jinja").render(
+        template_parameters
+    )
 
 
 def __get_note_list_page_url(
@@ -61,7 +65,9 @@ def __get_note_list_page_url(
     return f"{url_parts}/{page_path}"
 
 
-def _get_template_parameters(projects: list[page_reader.BlogPage], metadata: metadata_reader.BlogMetadata) -> dict[str, typing.Any]:
+def _get_template_parameters(
+    projects: list[page_reader.BlogPage], metadata: metadata_reader.BlogMetadata
+) -> dict[str, typing.Any]:
 
     result = page_writing_utils.get_html_template_parameters_for_service_page(
         metadata=metadata,

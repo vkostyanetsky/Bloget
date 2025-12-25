@@ -42,7 +42,9 @@ def _html_to_search_text(html: str) -> str:
     return text.lower()
 
 
-def _build_notes_payload(items: Iterable[tuple[page_reader.BlogPage, str]]) -> list[dict[str, object]]:
+def _build_notes_payload(
+    items: Iterable[tuple[page_reader.BlogPage, str]]
+) -> list[dict[str, object]]:
     """
     Makes a searchable payload for each note HTML.
     """
@@ -83,4 +85,6 @@ def _get_html(
 
     template = metadata.templates.get_template("macros.jinja")
 
-    return template.module.note(page, metadata.tags, metadata.settings, metadata.language, True)
+    return template.module.note(
+        page, metadata.tags, metadata.settings, metadata.language, True
+    )
