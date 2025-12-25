@@ -39,7 +39,7 @@ def __get_file_text(
         "items": __get_rss_items(pages, metadata),
     }
 
-    return metadata.templates.get_template("rss_feed.xml").render(template_parameters)
+    return metadata.templates.get_template("rss_feed.jinja").render(template_parameters)
 
 
 def __get_rss_items(

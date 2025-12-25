@@ -34,14 +34,14 @@ def __get_file_text(
 
     template_parameters = __get_template_parameters(pages, metadata)
 
-    return metadata.templates.get_template("sitemap.xml").render(template_parameters)
+    return metadata.templates.get_template("sitemap.jinja").render(template_parameters)
 
 
 def __get_template_parameters(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
 ) -> dict[str, typing.Any]:
     """
-    Returns sitemap.xml template parameters.
+    Returns sitemap.jinja template parameters.
     """
 
     links: list[dict[str, str]] = []

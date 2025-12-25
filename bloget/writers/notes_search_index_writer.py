@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import logging
 import os
-from typing import Iterable
+from collections.abc import Iterable
 
 from bs4 import BeautifulSoup
 
@@ -42,12 +42,18 @@ def _html_to_search_text(html: str) -> str:
     return text.lower()
 
 
-def _build_notes_payload(html_notes: Iterable[str]) -> list[dict[str, str]]:
+def _build_notes_payload(items: Iterable[tuple[page_reader.BlogPage, str]]) -> list[dict[str, object]]:
     """
-    Makes a searchable text for each note HTML.
+    Makes a searchable payload for each note HTML.
     """
-
-    return [{"html": h, "text": _html_to_search_text(h)} for h in html_notes]
+    return [
+        {
+            "html": html,
+            "text": _html_to_search_text(html),
+            "tags": note.metadata.tags,  # list[str]
+        }
+        for note, html in items
+    ]
 
 
 def write_notes_search_index(
@@ -56,20 +62,15 @@ def write_notes_search_index(
     """
     Builds notes search index.
     """
-
     logging.info("Notes search index building")
 
     notes = page_writing_utils.get_notes(pages.notes)
-    index = []
 
-    for note in notes:
-        index.append(_get_html(note, metadata))
-
-    payload = _build_notes_payload(index)
+    rendered = [(note, _get_html(note, metadata)) for note in notes]
+    payload = _build_notes_payload(rendered)
 
     file_text = json.dumps(payload, ensure_ascii=False, indent=2)
     file_path = os.path.join(metadata.paths["output"], "notes.json")
-
     utils.make_file(file_path, file_text)
 
 
@@ -80,6 +81,6 @@ def _get_html(
     Returns rendered note.
     """
 
-    template = metadata.templates.get_template("macros.html")
+    template = metadata.templates.get_template("macros.jinja")
 
-    return template.module.render_note(page, metadata.settings, metadata.language, True)
+    return template.module.note(page, metadata.tags, metadata.settings, metadata.language, True)

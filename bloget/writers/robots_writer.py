@@ -29,4 +29,4 @@ def __get_file_text(metadata: metadata_reader.BlogMetadata) -> str:
 
     template_parameters = {"settings": metadata.settings}
 
-    return metadata.templates.get_template("robots.txt").render(template_parameters)
+    return metadata.templates.get_template("robots.jinja").render(template_parameters)

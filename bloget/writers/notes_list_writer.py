@@ -101,28 +101,16 @@ def __get_notes_list_file_text(
     metadata: metadata_reader.BlogMetadata,
 ) -> str:
     """
-    Returns template parameters for the note.html file.
+    Returns template parameters for the note.jinja file.
     """
 
     template_parameters = __get_note_list_template_parameters(
         list_notes, list_number, list_is_last, page_count, metadata
     )
 
-    return metadata.templates.get_template("notes_list.html").render(
+    return metadata.templates.get_template("notes_list.jinja").render(
         template_parameters
     )
-
-
-def __get_note_list_page_title(metadata: metadata_reader.BlogMetadata) -> str:
-    """
-    Returns a title of a note list.
-
-    For instance,
-        Notes (no tag selected)
-        Alice ("alice" tag selected whose title is "alice")
-    """
-
-    return metadata.language["notes"]
 
 
 def __get_note_list_page_path(list_number: int) -> str:
@@ -158,7 +146,7 @@ def __get_note_list_template_parameters(
     page_count: int,
     metadata: metadata_reader.BlogMetadata,
 ) -> dict[str, typing.Any]:
-    page_title = __get_note_list_page_title(metadata)
+    page_title = metadata.language['notes']
     page_path = __get_note_list_page_path(list_number)
 
     result = page_writing_utils.get_html_template_parameters_for_service_page(
@@ -171,6 +159,7 @@ def __get_note_list_template_parameters(
     result["page_notes"] = len(list_notes)
     result["page_count"] = page_count
     result["notes"] = list_notes
+    result["tags"] = metadata.tags
     result["notes_folder"] = constants.NOTES_FOLDER_NAME
 
     if list_number > 1:

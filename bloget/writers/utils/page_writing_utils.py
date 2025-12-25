@@ -49,6 +49,7 @@ def get_html_template_parameters(
     page_edit_url = __get_page_edit_url(metadata, page_path, page_is_editable)
 
     return {
+        "stacks": metadata.stacks,
         "language": metadata.language,
         "settings": metadata.settings,
         "page_title": page_title,

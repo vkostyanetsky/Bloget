@@ -36,4 +36,4 @@ def __get_file_text(metadata: metadata_reader.BlogMetadata) -> str:
         page_is_editable=False,
     )
 
-    return metadata.templates.get_template("404.html").render(template_parameters)
+    return metadata.templates.get_template("404.jinja").render(template_parameters)

@@ -61,14 +61,14 @@ def _get_file_text(
     metadata: metadata_reader.BlogMetadata,
 ) -> str:
     """
-    Returns template parameters for the note.html file.
+    Returns template parameters for the note.jinja file.
     """
 
     template_parameters = _get_template_parameters(
         note, previous_note, next_note, metadata
     )
 
-    return metadata.templates.get_template("note.html").render(template_parameters)
+    return metadata.templates.get_template("note.jinja").render(template_parameters)
 
 
 def _get_template_parameters(
@@ -106,6 +106,7 @@ def _get_template_parameters(
         result["next_note_title"] = ""
 
     result["note"] = note
+    result["tags"] = metadata.tags
 
     return result
 

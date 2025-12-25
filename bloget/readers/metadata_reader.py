@@ -9,6 +9,7 @@ import argparse
 import os
 from dataclasses import dataclass
 from typing import Optional
+from collections import Counter
 
 import jinja2
 
@@ -24,7 +25,49 @@ class BlogMetadata:
     paths: dict[str, str]
     settings: dict[str, str]
     language: dict[str, str]
+    stacks: dict[str, str]
+    tags: dict[str, str]
     templates: jinja2.Environment
+
+
+    def sort_stacks_by_usage(self, projects: list) -> None:
+        """
+        Sorts self.stacks in descending order by how often a stack appears in projects' metadata.
+        """
+        usage = Counter()
+
+        for project in projects:
+            project_stacks = project.metadata.stacks or []
+            usage.update(set(project_stacks))
+
+        original_index = {k: i for i, k in enumerate(self.stacks.keys())}  # Stable sort if usage is equal
+
+        sorted_items = sorted(
+            self.stacks.items(),
+            key=lambda kv: (-usage.get(kv[0], 0), original_index[kv[0]]),
+        )
+
+        self.stacks = dict(sorted_items)
+
+
+    def sort_tags_by_usage(self, notes: list) -> None:
+        """
+        Sorts self.tags in descending order by how often a tag appears in notes' metadata.
+        """
+        usage = Counter()
+
+        for note in notes:
+            note_tags = note.metadata.tags or []
+            usage.update(set(note_tags))
+
+        original_index = {k: i for i, k in enumerate(self.tags.keys())}  # Stable sort if usage is equal
+
+        sorted_items = sorted(
+            self.tags.items(),
+            key=lambda kv: (-usage.get(kv[0], 0), original_index[kv[0]]),
+        )
+
+        self.tags = dict(sorted_items)        
 
 
 def get_metadata(arguments: argparse.Namespace) -> BlogMetadata:
@@ -32,17 +75,19 @@ def get_metadata(arguments: argparse.Namespace) -> BlogMetadata:
     Returns a container with information about a blog to build.
     """
 
-    paths = __get_paths(arguments)
+    paths = _get_paths(arguments)
 
-    settings = __get_settings(arguments, paths)
-    language = __get_language(paths)
+    settings = _get_settings(arguments, paths)
+    language = _get_language(paths)
+    stacks = _get_stacks(paths)
+    tags = _get_tags(paths)
 
-    templates = __get_templates(paths)
+    templates = _get_templates(paths)
 
-    return BlogMetadata(paths, settings, language, templates)
+    return BlogMetadata(paths, settings, language, stacks, tags, templates)
 
 
-def __get_templates(paths: dict[str, str]) -> jinja2.Environment:
+def _get_templates(paths: dict[str, str]) -> jinja2.Environment:
     """
     Returns template of a blog.
     """
@@ -56,7 +101,7 @@ def __get_templates(paths: dict[str, str]) -> jinja2.Environment:
     )
 
 
-def __get_paths(arguments: argparse.Namespace) -> dict[str, Optional[str]]:
+def _get_paths(arguments: argparse.Namespace) -> dict[str, Optional[str]]:
     """
     Returns paths to various directories required to generate.
     """
@@ -69,14 +114,14 @@ def __get_paths(arguments: argparse.Namespace) -> dict[str, Optional[str]]:
     }
 
 
-def __get_settings(
+def _get_settings(
     arguments: argparse.Namespace, paths: dict[str, str]
 ) -> dict[str, str]:
     """
     Returns settings of a blog.
     """
 
-    metadata_path = __get_metadata_path(paths)
+    metadata_path = _get_metadata_path(paths)
     settings_file_path = os.path.join(metadata_path, "settings.yaml")
 
     settings = utils.read_yaml_file(settings_file_path)
@@ -89,18 +134,40 @@ def __get_settings(
     return settings
 
 
-def __get_language(paths: dict[str, str]) -> dict[str, str]:
+def _get_language(paths: dict[str, str]) -> dict[str, str]:
     """
     Returns language of a blog.
     """
 
-    metadata_path = __get_metadata_path(paths)
+    metadata_path = _get_metadata_path(paths)
     language_file_path = os.path.join(metadata_path, "language.yaml")
 
     return utils.read_yaml_file(language_file_path)
 
 
-def __get_metadata_path(paths: dict[str, str]) -> str:
+def _get_stacks(paths: dict[str, str]) -> dict[str, str]:
+    """
+    Returns stacks.
+    """
+
+    metadata_path = _get_metadata_path(paths)
+    file_path = os.path.join(metadata_path, "stacks.yaml")
+
+    return utils.read_yaml_file(file_path)
+
+
+def _get_tags(paths: dict[str, str]) -> dict[str, str]:
+    """
+    Returns tags.
+    """
+
+    metadata_path = _get_metadata_path(paths)
+    file_path = os.path.join(metadata_path, "tags.yaml")
+
+    return utils.read_yaml_file(file_path)
+
+
+def _get_metadata_path(paths: dict[str, str]) -> str:
     """
     Returns the path to a folder with metadata.
     """

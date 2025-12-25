@@ -74,7 +74,7 @@ def __replace_github_gist_link(
 
         template = '<script src="https://gist.github.com/{0}/{1}.js">{2}</script>'
 
-        lines[index] = template.format(gist_owner, gist_id, metadata.language["gist"])
+        lines[index] = template.format(gist_owner, gist_id, "Gist")
 
 
 def get_internal_link(

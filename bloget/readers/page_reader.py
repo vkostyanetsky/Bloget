@@ -23,6 +23,7 @@ class BlogPageMetadata:
     description: str
     created: datetime.datetime
     options: list[str]
+    stacks: list[str]
     tags: list[str]
 
 
@@ -89,14 +90,14 @@ def get_page(page_folder_path: str, metadata: metadata_reader.BlogMetadata) -> B
     Returns object of a blog's page.
     """
 
-    page_folder_name = __get_page_folder_name(page_folder_path, metadata)
+    page_folder_name = _get_page_folder_name(page_folder_path, metadata)
 
-    page_path = __get_page_path(page_folder_path, metadata)
-    page_text = __get_page_text(page_folder_path, page_path, metadata)
+    page_path = _get_page_path(page_folder_path, metadata)
+    page_text = _get_page_text(page_folder_path, page_path, metadata)
 
-    page_metadata = __get_page_metadata(page_folder_path)
+    page_metadata = _get_page_metadata(page_folder_path)
 
-    page_attachments = __get_page_attachments(page_folder_path)
+    page_attachments = _get_page_attachments(page_folder_path)
 
     return BlogPage(
         page_folder_path,
@@ -108,7 +109,7 @@ def get_page(page_folder_path: str, metadata: metadata_reader.BlogMetadata) -> B
     )
 
 
-def __get_page_folder_name(
+def _get_page_folder_name(
     folder_path: str, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
@@ -120,7 +121,7 @@ def __get_page_folder_name(
     return "" if pages_path == folder_path else os.path.split(folder_path)[1]
 
 
-def __get_page_path(folder_path: str, metadata: metadata_reader.BlogMetadata) -> str:
+def _get_page_path(folder_path: str, metadata: metadata_reader.BlogMetadata) -> str:
     """
     Returns page path by pages_path given.
 
@@ -146,7 +147,7 @@ def __get_page_path(folder_path: str, metadata: metadata_reader.BlogMetadata) ->
     return "/".join(folders)
 
 
-def __get_page_attachments(folder_path: str) -> list[str]:
+def _get_page_attachments(folder_path: str) -> list[str]:
     """
     Makes list of attachments in a page folder.
     """
@@ -169,7 +170,7 @@ def __get_page_attachments(folder_path: str) -> list[str]:
     return result
 
 
-def __get_page_metadata(folder_path: str) -> BlogPageMetadata:
+def _get_page_metadata(folder_path: str) -> BlogPageMetadata:
     """
     Reads page's information.
     """
@@ -192,6 +193,10 @@ def __get_page_metadata(folder_path: str) -> BlogPageMetadata:
     if page_options is None:
         page_options = []
 
+    page_stacks = page_info.get("stacks")
+    if page_stacks is None:
+        page_stacks = []
+
     page_tags = page_info.get("tags")
     if page_tags is None:
         page_tags = []
@@ -201,11 +206,12 @@ def __get_page_metadata(folder_path: str) -> BlogPageMetadata:
         description=page_description,
         created=page_created,
         options=page_options,
+        stacks=page_stacks,
         tags=page_tags,
     )
 
 
-def __get_page_text(
+def _get_page_text(
     folder_path: str, page_path: str, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """

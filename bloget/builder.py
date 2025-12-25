@@ -16,6 +16,8 @@ from bloget.writers import (
     note_writer,
     notes_list_writer,
     notes_search_index_writer,
+    project_writer,
+    projects_list_writer,
     page_404_writer,
     robots_writer,
     rss_feed_writer,
@@ -32,30 +34,33 @@ def build_blog(arguments: argparse.Namespace) -> None:
     logging.info("Blog building")
 
     metadata = metadata_reader.get_metadata(arguments)
+
     pages = pages_reader.get_pages(metadata)
 
-    __clear_output(metadata)
-
-    notes_search_index_writer.write_notes_search_index(pages, metadata)
+    _clear_output(metadata)
 
     text_writer.write_texts(pages, metadata)
 
+    project_writer.write_projects(pages, metadata)
+    projects_list_writer.write_projects_list(pages, metadata)
+
     note_writer.write_notes(pages, metadata)
     notes_list_writer.write_note_lists(pages, metadata)
+    notes_search_index_writer.write_notes_search_index(pages, metadata)
 
     sitemap_writer.write_sitemap(pages, metadata)
     rss_feed_writer.write_rss_feed(pages, metadata)
     page_404_writer.write_page_404(metadata)
     robots_writer.write_robots(metadata)
 
-    __copy_skin_assets(metadata)
+    _copy_skin_assets(metadata)
 
     if arguments.webserver:
         logging.info("Starting a web server")
         webserver.start(metadata)
 
 
-def __clear_output(metadata: metadata_reader.BlogMetadata) -> None:
+def _clear_output(metadata: metadata_reader.BlogMetadata) -> None:
     """
     Removes all blog's files and directories which were previously generated.
     """
@@ -81,7 +86,7 @@ def __clear_output(metadata: metadata_reader.BlogMetadata) -> None:
         utils.raise_error(f"Unable to clear output directory: {output_path}")
 
 
-def __copy_skin_assets(metadata: metadata_reader.BlogMetadata) -> None:
+def _copy_skin_assets(metadata: metadata_reader.BlogMetadata) -> None:
     """
     Copies files from the skin's assets directory to the building output directory.
     """

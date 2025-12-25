@@ -1,5 +1,5 @@
 """
-Implementation of text pages building functionality.
+Implementation of project pages building functionality.
 """
 
 import logging
@@ -10,28 +10,28 @@ from bloget.readers import metadata_reader, page_reader, pages_reader
 from bloget.writers.utils import page_writing_utils
 
 
-def write_texts(
+def write_projects(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
 ) -> None:
     """
-    Builds given text pages.
+    Builds given project pages.
     """
 
-    logging.info("Texts building")
+    logging.info("Projects building")
 
-    for text in pages.texts:
-        __write_text(text, metadata)
+    for project in pages.projects:
+        _write_project(project, metadata)
 
 
-def __write_text(
+def _write_project(
     page: page_reader.BlogPage,
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
     """
-    Builds a given text page.
+    Builds a given project page.
     """
 
-    logging.info('Building a text from "%s"', page.folder_path)
+    logging.info('Building a project from "%s"', page.folder_path)
 
     output_folder_path = os.path.join(metadata.paths["output"], page.path)
 
@@ -65,4 +65,4 @@ def __get_file_text(
     template_parameters["tags"] = page.tags
     template_parameters["page_text"] = page.text
 
-    return metadata.templates.get_template("text.jinja").render(template_parameters)
+    return metadata.templates.get_template("project.jinja").render(template_parameters)
