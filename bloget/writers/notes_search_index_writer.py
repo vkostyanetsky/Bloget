@@ -43,7 +43,7 @@ def _html_to_search_text(html: str) -> str:
 
 
 def _build_notes_payload(
-    items: Iterable[tuple[page_reader.BlogPage, str]]
+    items: Iterable[tuple[page_reader.BlogPage, str]],
 ) -> list[dict[str, object]]:
     """
     Makes a searchable payload for each note HTML.
