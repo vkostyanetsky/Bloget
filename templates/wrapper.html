@@ -1,0 +1,338 @@
+{% import "macros.jinja" as macros %}
+
+<!doctype html>
+<html lang="ru" class="text-[18px] leading-[1.65]">
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <title>{{ page_title }}</title>
+
+    <meta name="description" content="{{ page_description }}" />
+    
+    <!-- RSS -->
+
+    <link rel="alternate" type="application/rss+xml" title="{{ language['site_title'] }}" href="{{ settings['url'] }}/rss.xml" />
+
+    <!-- Icons -->
+
+    <link rel="icon" href="{{ settings['url'] }}/favicon.ico">
+    <link rel="icon" href="{{ settings['url'] }}/assets/icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ settings['url'] }}/assets/icons/apple-touch-icon.png">
+    <link rel="manifest" href="{{ settings['url'] }}/manifest.webmanifest">    
+
+    <!-- Open Graph -->
+
+    <meta property="og:title" content="{{ page_title }}"/>
+    <meta property="og:description" content="{{ page_description }}"/>
+    <meta property="og:image" content="{{ settings['url'] }}/assets/images/og.jpg">
+    <meta property="og:type" content="article"/>
+    <meta property="og:url" content= "{{ settings['url'] }}/{{ page_path }}" />    
+
+    <!-- Tailwind (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* PT Sans (regular) — modern set */
+        @font-face {
+            font-family: "PT Sans";
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src:
+            local("PT Sans"),
+            local("PTSans-Regular"),
+            url("../assets/fonts/pt-sans-v16-latin_cyrillic-regular.woff2") format("woff2"),
+            url("../assets/fonts/pt-sans-v16-latin_cyrillic-regular.woff") format("woff");
+        }
+
+        :root {
+            --site-font: "PT Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+            "Apple Color Emoji", "Segoe UI Emoji";
+
+            --text: rgb(0 0 0);                /* black */
+            --text-strong: rgb(0 0 0);         /* black */
+            --muted: rgb(71 85 105);           /* slate-600 */
+            --link: rgb(15 23 42);             /* slate-900 */
+            --link-underline: rgb(203 213 225);/* slate-300 */
+            --link-underline-hover: rgb(100 116 139); /* slate-500 */
+
+            --border: rgb(226 232 240);        /* slate-200 */
+            --surface: rgb(255 255 255);       /* white */
+            --surface-soft: rgb(248 250 252);  /* slate-50 */
+
+            --radius-sm: 10px;
+            --radius-md: 16px;
+
+            --space-1: 0.35rem;
+            --space-2: 0.75rem;
+            --space-3: 0.9rem;
+            --space-4: 1.2rem;
+            --space-5: 1.8rem;
+        }
+
+        body {
+            font-family: var(--site-font);
+            color: var(--text);
+            font-kerning: normal;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        ::selection {
+            background: rgb(226 232 240);
+        }
+
+        .prose-like > * + * {
+            margin-top: var(--space-3);
+        }
+
+        .prose-like p {
+            color: var(--text);
+        }
+
+        .prose-like strong {
+            color: var(--text-strong);
+            font-weight: 600;
+        }
+
+        .prose-like h2 {
+            margin-top: var(--space-5);
+            font-size: 1.25rem;
+            line-height: 1.5;
+            font-weight: 600;
+            color: var(--text-strong);
+        }
+
+        .prose-like ul,
+        .prose-like ol {
+            padding-left: 1.2rem;
+            color: var(--text);
+        }
+
+        .prose-like ul {
+            list-style: disc;
+        }
+
+        .prose-like ol {
+            list-style: decimal;
+        }
+
+        .prose-like li {
+            margin-top: var(--space-1);
+        }
+
+        .prose-like a {
+            color: var(--link);
+            text-decoration: underline;
+            text-decoration-color: var(--link-underline);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 0.18em;
+        }
+
+        .prose-like a:hover {
+            text-decoration-color: var(--link-underline-hover);
+        }
+
+        .prose-like a:focus-visible {
+            outline: 2px solid rgb(148 163 184); /* slate-400 */
+            outline-offset: 2px;
+            border-radius: 6px;
+        }
+
+        .prose-like :not(pre) > code {
+            font-size: 0.95em;
+            padding: 0.1em 0.35em;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background: var(--surface-soft);
+        }
+
+        .prose-like pre {
+            margin-top: 1rem;
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--surface-soft);
+            overflow-x: auto;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
+            tab-size: 2;
+        }
+
+        .prose-like pre code {
+            display: block;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            border-radius: 0;
+
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgb(15 23 42);
+            white-space: pre;
+            word-break: normal;
+        }
+
+        .prose-like a[id] {
+            scroll-margin-top: 6rem;
+        }
+
+        .figure {
+            margin-top: var(--space-4);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--surface);
+        }
+
+        .figure img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .figure figcaption {
+            padding: var(--space-2) 1rem;
+            font-size: 0.875rem;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            background: var(--surface-soft);
+        }
+
+        .prose-like blockquote {
+            margin-top: var(--space-4);
+            padding: 0.75rem 1rem;
+            border-left: 4px solid var(--border);
+            background: var(--surface-soft);
+            border-radius: var(--radius-sm);
+            color: rgb(30 41 59);
+        }
+
+        .prose-like hr {
+            margin-top: var(--space-5);
+            border: 0;
+            border-top: 1px solid var(--border);
+        }
+    </style>
+
+    <!-- Blog -->
+
+    <script>
+        let ctrlLeftUrl     = '{{ hotkey_ctrl_left_url }}';
+        let ctrlRightUrl    = '{{ hotkey_ctrl_right_url }}';
+    </script>
+    
+    <script src="{{ settings['url'] }}/assets/blog.js"></script>    
+
+  </head>
+
+  <body class="min-h-screen bg-white text-slate-900">
+
+    <!-- header -->
+    <header class="border-b border-slate-200">
+        <div class="mx-auto w-full max-w-4xl px-4 py-5">
+            <div class="flex flex-wrap items-baseline gap-x-5 gap-y-2">
+
+                <!-- header: main menu -->
+                <nav class="flex flex-wrap items-baseline gap-x-5 gap-y-2 text-sm">
+                    {% set item_base = "inline-block text-[1.25rem] leading-tight mr-4" %}
+                    {% set link_base = item_base ~ " border-b border-current no-underline transition-opacity hover:opacity-70" %}
+                    {% set link_blue = link_base ~ " text-blue-600" %}
+                    {% set link_orange = link_base ~ " text-orange-600" %}
+                    {% set item_active = item_base ~ " text-black font-medium" %}
+
+                    {# site title #}
+                    {% if page_path == '' %}
+                    <span class="{{ item_active }}">{{ language.get('site_title') }}</span>
+                    {% else %}
+                    <a class="{{ link_blue }}" href="{{ settings['url'] }}/">{{ language['site_title'] }}</a>
+                    {% endif %}
+
+                    {# projects #}
+                    {% if page_path == 'projects' %}
+                    <span class="{{ item_active }}">{{ language.get('projects') }}</span>
+                    {% elif page_path.startswith('projects') %}
+                    <a class="{{ link_orange }}" href="{{ settings['url'] }}/projects/">{{ language['projects'] }}</a>
+                    {% else %}
+                    <a class="{{ link_blue }}" href="{{ settings['url'] }}/projects/">{{ language['projects'] }}</a>
+                    {% endif %}
+
+                    {# notes #}
+                    {% if page_path == 'notes' %}
+                    <span class="{{ item_active }}">{{ language.get('notes') }}</span>
+                    {% elif page_path.startswith('notes') %}
+                    <a class="{{ link_orange }}" href="{{ settings['url'] }}/notes/">{{ language['notes'] }}</a>
+                    {% else %}
+                    <a class="{{ link_blue }}" href="{{ settings['url'] }}/notes/">{{ language['notes'] }}</a>
+                    {% endif %}
+                </nav>
+
+                <!-- header: mirror link & edit link -->
+                <div class="ml-auto flex items-center gap-4">
+                    {% if settings['github_repository'] != '' %}
+                    {% if page_edit_url %}
+                        <a
+                        title="{{ language['edit_page'] }}"
+                        href="{{ page_edit_url }}"
+                        class="inline-block text-[1.35rem] leading-none text-blue-600 no-underline transition-opacity hover:opacity-70"
+                        >✎</a>
+                    {% else %}
+                        <span
+                        class="inline-block text-[1.35rem] leading-none text-slate-400"
+                        title="{{ language['edit_page'] }}"
+                        aria-disabled="true"
+                        >✎</span>
+                    {% endif %}
+                    {% endif %}
+
+                    {% if settings['mirror_url'] != '' %}
+                    {% set mirror_base = settings['mirror_url'].rstrip('/') %}
+                    <a
+                        href="{{ mirror_base }}/{{ page_path }}"
+                        class="inline-block text-[1rem] leading-tight text-blue-600 border-b border-current no-underline transition-opacity hover:opacity-70"
+                        title="{{ settings['mirror_language_code']|upper }}"
+                    >
+                        {{ settings['mirror_language_code']|upper }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- content -->
+    <main
+      class="mx-auto w-full max-w-4xl px-4 py-10"
+      id="pageMeta"
+      data-page="{{ page }}"
+      data-total-notes="{{ page_notes }}"
+      data-total-pages="{{ page_count }}"
+    >
+      <a id="top" class="block scroll-mt-24"></a>
+
+      {% block content %}{% endblock %}
+
+    </main>
+
+    <!-- footer -->
+    <footer class="mt-12 border-t border-slate-200">
+      <div class="mx-auto w-full max-w-4xl px-4 py-8 text-sm text-slate-600">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p>{{ language['full_name'] }}</p>
+          <p>
+            <a class="text-slate-900 underline decoration-slate-300 hover:decoration-slate-500" href="{{ settings.get('url') }}/rss.xml">RSS</a>
+            <span class="mx-2 text-slate-300">·</span>
+            <a class="text-slate-900 underline decoration-slate-300 hover:decoration-slate-500" href="https://github.com/vkostyanetsky">GitHub</a>
+            <span class="mx-2 text-slate-300">·</span>
+            <a class="text-slate-900 underline decoration-slate-300 hover:decoration-slate-500" href="https://t.me/tell_me_alisa">Telegram</a>            
+          </p>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>

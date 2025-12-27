@@ -94,12 +94,11 @@ def _get_templates(paths: dict[str, str]) -> jinja2.Environment:
     Returns template of a blog.
     """
 
-    skin_path = paths.get("skin")
-    assert isinstance(skin_path, str)
-    skin_templates_path = os.path.join(skin_path, "templates")
+    templates_path = paths.get("templates")
+    assert isinstance(templates_path, str)
 
     return jinja2.Environment(
-        loader=jinja2.FileSystemLoader(searchpath=skin_templates_path)
+        loader=jinja2.FileSystemLoader(searchpath=templates_path)
     )
 
 
@@ -111,7 +110,8 @@ def _get_paths(arguments: argparse.Namespace) -> dict[str, Optional[str]]:
     return {
         "metadata": getattr(arguments, "metadata", ""),
         "pages": getattr(arguments, "pages", ""),
-        "skin": getattr(arguments, "skin", ""),
+        "assets": getattr(arguments, "assets", ""),
+        "templates": getattr(arguments, "templates", ""),
         "output": getattr(arguments, "output", ""),
     }
 

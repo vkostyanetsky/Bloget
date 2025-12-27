@@ -10,9 +10,10 @@
                 "-m",
                 "bloget",
                 "build",
-                "--output=${workspaceFolder}/../BlogetTemp",
-                "--skin=${workspaceFolder}/../BlogetSkin",
                 "--url=http://localhost:8085",
+                "--output=${workspaceFolder}/../BlogetTemp",
+                "--assets=${workspaceFolder}/../Bloget/assets",
+                "--templates=${workspaceFolder}/../Bloget/templates",
                 "--webserver"
             ],
             "options": {
@@ -51,9 +52,10 @@
                 "-m",
                 "bloget",
                 "build",
-                "--output=${workspaceFolder}/../BlogetTemp",
-                "--skin=${workspaceFolder}/../BlogetSkin",
                 "--url=http://localhost:8085",
+                "--output=${workspaceFolder}/../BlogetTemp",
+                "--assets=${workspaceFolder}/../Bloget/assets",
+                "--templates=${workspaceFolder}/../Bloget/templates",
                 "--webserver"
             ],
             "options": {

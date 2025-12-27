@@ -1,0 +1,45 @@
+{% extends "wrapper.html" %}
+
+{% block content %}
+
+      <section id="staticNotes" class="space-y-12">
+        <article class="rounded-2xl bg-white">
+          
+          <header class="text-3xl font-semibold tracking-tight space-y-2">
+            {{ note.title }}
+          </header>
+
+          <div class="mt-5">
+            <div class="prose-like">
+                {{ macros.note(note, tags, settings, language) }}
+            </div>
+          </div>
+
+        </article>
+
+      </section>
+        
+      <!-- Static pagination (works without JS; hide during search) -->
+      <nav id="pagination" class="mt-10 flex items-center justify-between">
+        {% if previous_note_path != '' %}
+        <a
+          id="prevLink"
+          href="{{ settings['url'] }}/{{previous_note_path}}"
+          class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-50"
+        >
+          ← {{ previous_note_title }}
+        </a>
+        {% endif %}
+        <span class="w-[1px]"></span>
+        {% if next_note_path != '' %}
+        <a
+          id="nextLink"
+          href="{{ settings['url'] }}/{{ next_note_path }}"
+          class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-50"
+        >
+          {{ next_note_title }} →
+        </a>
+        {% endif %}
+      </nav>
+
+{% endblock %}

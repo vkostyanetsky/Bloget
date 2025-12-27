@@ -1,0 +1,49 @@
+{% macro note(note, tags, settings, language, show_title=false) %}
+
+        <article class="rounded-2xl bg-white">
+
+          <header class="space-y-2">
+
+            {% if show_title %}            
+            <header class="space-y-2">
+            <a href="{{ settings['url'] }}/{{ note.path }}"
+                class="inline text-2xl font-semibold tracking-tight hover:underline">
+                {{ note.title }}
+            </a>
+            </header>
+            {% endif %}
+
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-600">
+              <span>{{ note.created.strftime('%d').lstrip('0') }} {{ language.get('months').get(note.created.strftime('%m')) }} {{ note.created.strftime('%Y') }}</span>
+              {% if note.tags %}
+                <span class="text-slate-300">·</span>
+                {% for tag in note.tags %}
+                <div class="flex flex-wrap gap-2">
+                    <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-700">{{ tags[tag] }}</span>
+                </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+
+          </header>
+
+          <div class="mt-5">
+            <div class="prose-like">
+              {{ note.text | safe }}
+            </div>
+          </div>
+          
+        </article>
+
+{% endmacro %}
+
+{% macro page_header(title, description) %}
+
+      <header class="space-y-3">
+        <h1 class="text-3xl font-semibold tracking-tight">{{ title }}</h1>
+        <p class="max-w-2xl text-slate-700">
+          {{ description }}
+        </p>
+      </header>
+
+{% endmacro %}

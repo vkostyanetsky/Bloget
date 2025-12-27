@@ -1,0 +1,18 @@
+<rss version="2.0">
+    <channel>    
+        <title>{{ language['full_name'] }}</title>
+        <description>{{ language['site_description'] }}</description>
+        <language>{{ settings['language_code'] }}</language>
+        <link>{{ settings['url'] }}</link>
+        <lastBuildDate>{{ items[0]['pub_date'] }}</lastBuildDate>
+        {% for item in items %}
+        <item>
+            <title>{{ item['title'] }}</title>
+            <link>{{ item['link'] }}</link>
+            <guid isPermaLink="false">{{ item['guid'] }}</guid>
+            <pubDate>{{ item['pub_date'] }}</pubDate>
+            <description>{{ item['description'] }}</description>
+        </item>
+        {% endfor %}
+    </channel>
+</rss>

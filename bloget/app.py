@@ -10,7 +10,7 @@ import os
 
 import coloredlogs
 
-from bloget import builder, tags
+from bloget import builder
 
 
 def main() -> None:
@@ -25,13 +25,6 @@ def main() -> None:
     if arguments.command == "build":
 
         builder.build_blog(arguments)
-
-    elif arguments.command == "tags":
-
-        if arguments.tags_command == "list":
-            tags.show_tags_list(arguments)
-        else:
-            logging.info("Nothing to do for tags!")
 
     else:
         logging.info("Nothing to do!")
@@ -71,68 +64,7 @@ def _get_arguments() -> argparse.Namespace:
         parents=[base_parser, build_command_subparser],
     )
 
-    # tags
-
-    tags_command_subparser = _get_subparser_for_tags_command()
-
-    tags_parser = subparsers.add_parser(
-        "tags",
-        aliases=["t"],
-        help="Manage tags",
-        parents=[base_parser],
-    )
-
-    tags_subparsers = tags_parser.add_subparsers(
-        dest="tags_command", help="Tags action", required=True
-    )
-
-    tags_subparsers.add_parser(
-        "list",
-        aliases=["ls"],
-        help="List tags",
-        parents=[base_parser, tags_command_subparser],
-    )
-
     return parser.parse_args()
-
-
-def _add_pages_argument(subparser: argparse.ArgumentParser) -> None:
-    """
-    Adds --pages argument.
-    """
-
-    subparser.add_argument(
-        "--pages",
-        type=str,
-        help="input directory with pages (markdown files)",
-        default=os.getcwd(),
-    )
-
-
-def _add_metadata_argument(subparser: argparse.ArgumentParser) -> None:
-    """
-    Adds --metadata argument.
-    """
-
-    subparser.add_argument(
-        "--metadata",
-        type=str,
-        help="input directory with metadata (language and settings)",
-        default=".metadata",
-    )
-
-
-def _add_skin_argument(subparser: argparse.ArgumentParser) -> None:
-    """
-    Adds --skin argument.
-    """
-
-    subparser.add_argument(
-        "--skin",
-        type=str,
-        help="input directory with a skin (templates & assets)",
-        default=".skin",
-    )
 
 
 def _get_subparser_for_build_command() -> argparse.ArgumentParser:
@@ -142,9 +74,31 @@ def _get_subparser_for_build_command() -> argparse.ArgumentParser:
 
     subparser = argparse.ArgumentParser(add_help=False)
 
-    _add_pages_argument(subparser)
-    _add_metadata_argument(subparser)
-    _add_skin_argument(subparser)
+    subparser.add_argument(
+        "--pages",
+        type=str,
+        help="input directory with pages (markdown files)",
+        default=os.getcwd(),
+    )
+
+    subparser.add_argument(
+        "--metadata",
+        type=str,
+        help="input directory with metadata (language and settings)",
+        default=".metadata",
+    )
+    
+    subparser.add_argument(
+        "--assets",
+        type=str,
+        help="input directory with assets",
+    )
+
+    subparser.add_argument(
+        "--templates",
+        type=str,
+        help="input directory with jinja templates",
+    )    
 
     subparser.add_argument(
         "--output",
@@ -167,20 +121,6 @@ def _get_subparser_for_build_command() -> argparse.ArgumentParser:
         default=False,
         const=True,
     )
-
-    return subparser
-
-
-def _get_subparser_for_tags_command() -> argparse.ArgumentParser:
-    """
-    Returns an arguments subparser for the BUILD command.
-    """
-
-    subparser = argparse.ArgumentParser(add_help=False)
-
-    _add_pages_argument(subparser)
-    _add_metadata_argument(subparser)
-    _add_skin_argument(subparser)
 
     return subparser
 

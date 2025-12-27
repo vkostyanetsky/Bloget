@@ -12,7 +12,7 @@ To build a blog from `C:\Blogs\ru` and start a web-server to test the result:
 
 ```
 cd C:\Blogs\ru
-bloget build --output=C:\Blogs\test --skin=C:\Blogs\skin --url=http://localhost:8085 --webserver
+bloget build --url=http://localhost:8085 --output=C:\Blogs\test --assets=C:\Blogs\assets --templates=C:\Blogs\templates --webserver
 ```
 
 To push changes in `C:\Blogs\ru` to GitHub: 
