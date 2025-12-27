@@ -35,6 +35,45 @@ def copy_page_attachments(page: page_reader.BlogPage, output_folder_path: str) -
             utils.copy_file(source_file_path, target_file_path)
 
 
+def make_index_file(
+    file_context: str,
+    page: page_reader.BlogPage,
+    metadata: metadata_reader.BlogMetadata,
+) -> None:
+    """
+    Makes index.html & copies attachments.
+    """
+
+    page_folder_path = os.path.join(metadata.paths["output"], page.path)
+    utils.make_folder(page_folder_path)
+
+    file_path = os.path.join(page_folder_path, "index.html")
+
+    utils.make_file(file_path, file_context)
+
+    copy_page_attachments(page, page_folder_path)
+
+
+def html_template_parameters_for_page(
+    page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata
+) -> dict[str, typing.Any]:
+    """
+    Returns common parameters for page HTML template.
+    """
+
+    result = get_html_template_parameters(
+        metadata=metadata,
+        page_title=page.title,
+        page_description=page.description,
+        page_path=page.path,
+        page_is_editable=True,
+    )
+
+    result["page_text"] = page.text
+
+    return result
+
+
 def get_html_template_parameters(
     metadata: metadata_reader.BlogMetadata,
     page_title: str,

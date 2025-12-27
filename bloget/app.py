@@ -87,7 +87,7 @@ def _get_subparser_for_build_command() -> argparse.ArgumentParser:
         help="input directory with metadata (language and settings)",
         default=".metadata",
     )
-    
+
     subparser.add_argument(
         "--assets",
         type=str,
@@ -98,7 +98,7 @@ def _get_subparser_for_build_command() -> argparse.ArgumentParser:
         "--templates",
         type=str,
         help="input directory with jinja templates",
-    )    
+    )
 
     subparser.add_argument(
         "--output",

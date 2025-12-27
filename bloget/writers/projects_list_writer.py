@@ -56,15 +56,6 @@ def _file_text(
     )
 
 
-def __get_note_list_page_url(
-    list_number: int, metadata: metadata_reader.BlogMetadata
-) -> str:
-    url_parts = metadata.settings["url"]
-    page_path = __get_note_list_page_path(list_number)
-
-    return f"{url_parts}/{page_path}"
-
-
 def _get_template_parameters(
     projects: list[page_reader.BlogPage], metadata: metadata_reader.BlogMetadata
 ) -> dict[str, typing.Any]:

@@ -3,9 +3,7 @@ Implementation of project pages building functionality.
 """
 
 import logging
-import os
 
-from bloget import utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
 from bloget.writers.utils import page_writing_utils
 
@@ -33,36 +31,20 @@ def _write_project(
 
     logging.info('Building a project from "%s"', page.folder_path)
 
-    output_folder_path = os.path.join(metadata.paths["output"], page.path)
-
-    logging.debug('Page path: "%s"', page.path)
-    logging.debug('Output folder path: "%s"', output_folder_path)
-
-    file_text = __get_file_text(page, metadata)
-    file_path = os.path.join(output_folder_path, "index.html")
-
-    utils.make_folder(output_folder_path)
-    utils.make_file(file_path, file_text)
-
-    page_writing_utils.copy_page_attachments(page, output_folder_path)
+    file_content = _get_project_file_content(page, metadata)
+    page_writing_utils.make_index_file(file_content, page, metadata)
 
 
-def __get_file_text(
+def _get_project_file_content(
     page: page_reader.BlogPage, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
-    Returns template parameters for the text.jinja file.
+    Returns template for the text.jinja file.
     """
 
-    template_parameters = page_writing_utils.get_html_template_parameters(
-        metadata=metadata,
-        page_title=page.title,
-        page_description=page.description,
-        page_path=page.path,
-        page_is_editable=True,
+    template_parameters = page_writing_utils.html_template_parameters_for_page(
+        page, metadata
     )
-
-    template_parameters["tags"] = page.tags
-    template_parameters["page_text"] = page.text
+    template_parameters["stacks"] = page.metadata.stacks
 
     return metadata.templates.get_template("project.jinja").render(template_parameters)

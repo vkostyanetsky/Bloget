@@ -97,9 +97,7 @@ def _get_templates(paths: dict[str, str]) -> jinja2.Environment:
     templates_path = paths.get("templates")
     assert isinstance(templates_path, str)
 
-    return jinja2.Environment(
-        loader=jinja2.FileSystemLoader(searchpath=templates_path)
-    )
+    return jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath=templates_path))
 
 
 def _get_paths(arguments: argparse.Namespace) -> dict[str, Optional[str]]:

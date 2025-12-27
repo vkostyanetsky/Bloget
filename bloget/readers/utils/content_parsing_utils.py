@@ -15,15 +15,13 @@ def parse(content: str, page_path: str, metadata: metadata_reader.BlogMetadata) 
     Parses a page's content from Markdown to HTML.
     """
 
-    content = __replace_links_to_social_networks(content, metadata)
+    content = _replace_links_to_social_networks(content)
     content = markdown(content)
 
-    return __update_internal_links(content, page_path, metadata)
+    return _update_internal_links(content, page_path, metadata)
 
 
-def __replace_links_to_social_networks(
-    content: str, metadata: metadata_reader.BlogMetadata
-) -> str:
+def _replace_links_to_social_networks(content: str) -> str:
     """
     Replaces links to social networks by applets.
     """
@@ -31,17 +29,15 @@ def __replace_links_to_social_networks(
     lines = content.splitlines()
 
     for index, line in enumerate(lines):
-        __replace_github_gist_link(lines, index, line, metadata)
+        _replace_github_gist_link(lines, index, line)
 
-        __replace_youtube_link(lines, index, line, "https://www.youtube.com/watch?v=")
-        __replace_youtube_link(lines, index, line, "https://youtu.be/")
+        _replace_youtube_link(lines, index, line, "https://www.youtube.com/watch?v=")
+        _replace_youtube_link(lines, index, line, "https://youtu.be/")
 
     return "\n".join(lines)
 
 
-def __replace_youtube_link(
-    lines: list[str], index: int, line: str, marker: str
-) -> None:
+def _replace_youtube_link(lines: list[str], index: int, line: str, marker: str) -> None:
     """
     Replaces a link to YouTube by its iframe.
     """
@@ -57,9 +53,7 @@ def __replace_youtube_link(
         lines[index] = template.format(video_id)
 
 
-def __replace_github_gist_link(
-    lines: list[str], index: int, line: str, metadata: metadata_reader.BlogMetadata
-) -> None:
+def _replace_github_gist_link(lines: list[str], index: int, line: str) -> None:
     """
     Replaces a link to GitHub Gist by its script.
     """
@@ -107,7 +101,7 @@ def get_internal_link(
     return result
 
 
-def __update_internal_links(
+def _update_internal_links(
     content: str, page_path: str, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
