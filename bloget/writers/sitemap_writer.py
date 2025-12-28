@@ -19,25 +19,25 @@ def write_sitemap(
 
     logging.info("Sitemap building")
 
-    file_text = __get_file_text(pages, metadata)
+    file_text = _get_file_text(pages, metadata)
     file_path = os.path.join(metadata.paths["output"], "sitemap.xml")
 
     utils.make_file(file_path, file_text)
 
 
-def __get_file_text(
+def _get_file_text(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
     Returns content of the sitemap file.
     """
 
-    template_parameters = __get_template_parameters(pages, metadata)
+    template_parameters = _get_template_parameters(pages, metadata)
 
     return metadata.templates.get_template("sitemap.jinja").render(template_parameters)
 
 
-def __get_template_parameters(
+def _get_template_parameters(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
 ) -> dict[str, typing.Any]:
     """
@@ -46,13 +46,13 @@ def __get_template_parameters(
 
     links: list[dict[str, str]] = []
 
-    __add_page_links(links, pages.texts, metadata.settings)
-    __add_page_links(links, pages.notes, metadata.settings)
+    _add_page_links(links, pages.texts, metadata.settings)
+    _add_page_links(links, pages.notes, metadata.settings)
 
     return {"links": links}
 
 
-def __add_page_links(
+def _add_page_links(
     links: list[dict[str, str]],
     pages: list[page_reader.BlogPage],
     settings: dict[str, str],

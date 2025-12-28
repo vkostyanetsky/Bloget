@@ -16,13 +16,13 @@ def write_robots(metadata: metadata_reader.BlogMetadata) -> None:
 
     logging.info("Robots building")
 
-    file_text = __get_file_text(metadata)
+    file_text = _get_file_text(metadata)
     file_path = os.path.join(metadata.paths["output"], "robots.txt")
 
     utils.make_file(file_path, file_text)
 
 
-def __get_file_text(metadata: metadata_reader.BlogMetadata) -> str:
+def _get_file_text(metadata: metadata_reader.BlogMetadata) -> str:
     """
     Returns content of the robots.txt file.
     """

@@ -85,7 +85,7 @@ def get_html_template_parameters(
     Returns common parameters for HTML templates.
     """
 
-    page_edit_url = __get_page_edit_url(metadata, page_path, page_is_editable)
+    page_edit_url = _get_page_edit_url(metadata, page_path, page_is_editable)
 
     return {
         "stacks": metadata.stacks,
@@ -116,7 +116,7 @@ def get_html_template_parameters_for_service_page(
     )
 
 
-def __get_page_edit_url(
+def _get_page_edit_url(
     metadata: metadata_reader.BlogMetadata, page_path: str, page_is_editable: bool
 ) -> str:
     """

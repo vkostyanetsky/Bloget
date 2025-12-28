@@ -20,13 +20,13 @@ def write_rss_feed(
 
     logging.info("RSS feed building")
 
-    file_text = __get_file_text(pages, metadata)
+    file_text = _get_file_text(pages, metadata)
     file_path = os.path.join(metadata.paths["output"], "rss.xml")
 
     utils.make_file(file_path, file_text)
 
 
-def __get_file_text(
+def _get_file_text(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
@@ -36,13 +36,13 @@ def __get_file_text(
     template_parameters = {
         "settings": metadata.settings,
         "language": metadata.language,
-        "items": __get_rss_items(pages, metadata),
+        "items": _get_rss_items(pages, metadata),
     }
 
     return metadata.templates.get_template("rss_feed.jinja").render(template_parameters)
 
 
-def __get_rss_items(
+def _get_rss_items(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
 ) -> list[dict[str, str]]:
     items: list[dict[str, str]] = []

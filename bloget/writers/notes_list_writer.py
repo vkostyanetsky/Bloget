@@ -38,7 +38,7 @@ def write_note_lists(
         if len(list_notes) == list_size or notes_left == 0:
             list_is_last = notes_left == 0
 
-            __write_notes_list(
+            _write_notes_list(
                 list_notes=list_notes,
                 list_number=list_number,
                 list_is_last=list_is_last,
@@ -50,7 +50,7 @@ def write_note_lists(
             list_notes = []
 
 
-def __get_note_list_folder_path(
+def _get_note_list_folder_path(
     list_number: int, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
@@ -67,7 +67,7 @@ def __get_note_list_folder_path(
     return result
 
 
-def __write_notes_list(
+def _write_notes_list(
     list_notes: list[page_reader.BlogPage],
     list_number: int,
     list_is_last: bool,
@@ -82,9 +82,9 @@ def __write_notes_list(
         notes/page-1/index.html
     """
 
-    folder_path = __get_note_list_folder_path(list_number, metadata)
+    folder_path = _get_note_list_folder_path(list_number, metadata)
 
-    file_text = __get_notes_list_file_text(
+    file_text = _get_notes_list_file_text(
         list_notes, list_number, list_is_last, page_count, metadata
     )
     file_path = os.path.join(folder_path, "index.html")
@@ -93,7 +93,7 @@ def __write_notes_list(
     utils.make_file(file_path, file_text)
 
 
-def __get_notes_list_file_text(
+def _get_notes_list_file_text(
     list_notes: list[page_reader.BlogPage],
     list_number: int,
     list_is_last: bool,
@@ -104,7 +104,7 @@ def __get_notes_list_file_text(
     Returns template parameters for the note.jinja file.
     """
 
-    template_parameters = __get_note_list_template_parameters(
+    template_parameters = _get_note_list_template_parameters(
         list_notes, list_number, list_is_last, page_count, metadata
     )
 
@@ -113,7 +113,7 @@ def __get_notes_list_file_text(
     )
 
 
-def __get_note_list_page_path(list_number: int) -> str:
+def _get_note_list_page_path(list_number: int) -> str:
     """
     Returns a path of a note list.
 
@@ -130,16 +130,16 @@ def __get_note_list_page_path(list_number: int) -> str:
     return "/".join(path_parts)
 
 
-def __get_note_list_page_url(
+def _get_note_list_page_url(
     list_number: int, metadata: metadata_reader.BlogMetadata
 ) -> str:
     url_parts = metadata.settings["url"]
-    page_path = __get_note_list_page_path(list_number)
+    page_path = _get_note_list_page_path(list_number)
 
     return f"{url_parts}/{page_path}"
 
 
-def __get_note_list_template_parameters(
+def _get_note_list_template_parameters(
     list_notes: list[page_reader.BlogPage],
     list_number: int,
     list_is_last: bool,
@@ -147,7 +147,7 @@ def __get_note_list_template_parameters(
     metadata: metadata_reader.BlogMetadata,
 ) -> dict[str, typing.Any]:
     page_title = metadata.language["notes"]
-    page_path = __get_note_list_page_path(list_number)
+    page_path = _get_note_list_page_path(list_number)
 
     result = page_writing_utils.get_html_template_parameters_for_service_page(
         metadata=metadata,
@@ -163,13 +163,13 @@ def __get_note_list_template_parameters(
     result["notes_folder"] = constants.NOTES_FOLDER_NAME
 
     if list_number > 1:
-        next_list_url = __get_note_list_page_url(list_number - 1, metadata)
+        next_list_url = _get_note_list_page_url(list_number - 1, metadata)
 
         result["next_list_url"] = next_list_url
         result["hotkey_ctrl_right_url"] = next_list_url
 
     if not list_is_last:
-        previous_list_url = __get_note_list_page_url(list_number + 1, metadata)
+        previous_list_url = _get_note_list_page_url(list_number + 1, metadata)
 
         result["previous_list_url"] = previous_list_url
         result["hotkey_ctrl_left_url"] = previous_list_url

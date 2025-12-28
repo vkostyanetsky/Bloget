@@ -17,13 +17,13 @@ def write_page_404(metadata: metadata_reader.BlogMetadata) -> None:
 
     logging.info("Building page 404")
 
-    file_text = __get_file_text(metadata)
+    file_text = _get_file_text(metadata)
     file_path = os.path.join(metadata.paths["output"], "404.html")
 
     utils.make_file(file_path, file_text)
 
 
-def __get_file_text(metadata: metadata_reader.BlogMetadata) -> str:
+def _get_file_text(metadata: metadata_reader.BlogMetadata) -> str:
     """
     Returns content of the page 404 file.
     """
