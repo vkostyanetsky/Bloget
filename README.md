@@ -22,12 +22,27 @@ npm run tailwind:build
 > [!tip]
 > You can run `npm run tailwind:watch` while developing.
 
+### Install Bloget into a virtual environment
+
+Create and activate a virtual environment, then install Bloget from the local repository folder.
+
+From the Bloget repository root (`C:\Blog\Bloget`):
+
+```bash
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+python -m pip install --upgrade pip
+pip install -e .
+```
+
 ### Build the blog and run a local web server
 
 Assume:
-- Bloget repo: C:\Blog\Bloget
-- Input content: C:\Blog\Input
-- Output folder: C:\Blog\Output
+
+- Bloget repo: `C:\Blog\Bloget`
+- Input content: `C:\Blog\Input`
+- Output folder: `C:\Blog\Output`
 
 Run:
 
