@@ -33,5 +33,10 @@ Run:
 
 ```bash
 cd C:\Blog\Input
-bloget build --url=http://localhost:8085 --output=C:\Blog\Output --public=C:\Blog\Bloget\public --templates=C:\Blog\Bloget\templates --webserver
+bloget build `
+    --url=http://localhost:8085 `
+    --output=C:\Blog\Output `
+    --public=C:\Blog\Bloget\public `
+    --templates=C:\Blog\Bloget\templates `
+    --webserver
 ```
