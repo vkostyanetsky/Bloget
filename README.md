@@ -4,7 +4,7 @@
 
 This script generates static files for my [Russian](https://kostyanetsky.ru) and [English](https://kostyanetsky.me) blogs.
 
-Since I made it for personal use, I didn't write detailed usage instructions. If you have any questions, feel free to contact me or [open an issue](https://github.com/vkostyanetsky/Bloget/issues/new).
+Since I made it for personal use, I didn't write detailed usage instructions. If you have any questions, feel free to contact me.
 
 ## 🙂 How to use?
 
