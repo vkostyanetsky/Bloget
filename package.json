@@ -1,23 +1,11 @@
 {
   "name": "bloget",
-  "version": "1.0.0",
-  "description": "[![pylint](https://github.com/vkostyanetsky/BlogBuilder/actions/workflows/pylint.yml/badge.svg)](https://github.com/vkostyanetsky/BlogBuilder/actions/workflows/pylint.yml) [![black](https://github.com/vkostyanetsky/BlogBuilder/actions/workflows/black.yml/badge.svg)](https://github.com/vkostyanetsky/BlogBuilder/actions/workflows/black.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)",
-  "main": "index.js",
+  "private": true,
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "tailwind:build": "npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./assets/assets/css/tailwind.css --minify"
+    "tailwind:build": "npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./public/assets/css/tailwind.css --minify",
+    "tailwind:watch": "npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./public/assets/css/tailwind.css --watch"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vkostyanetsky/Bloget.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/vkostyanetsky/Bloget/issues"
-  },
-  "homepage": "https://github.com/vkostyanetsky/Bloget#readme",
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",
     "tailwindcss": "^4.1.18"

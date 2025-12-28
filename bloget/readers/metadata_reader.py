@@ -108,7 +108,7 @@ def _get_paths(arguments: argparse.Namespace) -> dict[str, Optional[str]]:
     return {
         "metadata": getattr(arguments, "metadata", ""),
         "pages": getattr(arguments, "pages", ""),
-        "assets": getattr(arguments, "assets", ""),
+        "public": getattr(arguments, "public", ""),
         "templates": getattr(arguments, "templates", ""),
         "output": getattr(arguments, "output", ""),
     }

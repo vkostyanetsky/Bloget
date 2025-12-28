@@ -12,7 +12,7 @@
                 "build",
                 "--url=http://localhost:8085",
                 "--output=${workspaceFolder}/../BlogetTemp",
-                "--assets=${workspaceFolder}/../Bloget/assets",
+                "--public=${workspaceFolder}/../Bloget/public",
                 "--templates=${workspaceFolder}/../Bloget/templates",
                 "--webserver"
             ],
@@ -35,7 +35,7 @@
                 "build",
                 "--url=http://localhost:8085",
                 "--output=${workspaceFolder}/../BlogetTemp",
-                "--assets=${workspaceFolder}/../Bloget/assets",
+                "--public=${workspaceFolder}/../Bloget/public",
                 "--templates=${workspaceFolder}/../Bloget/templates",
                 "--webserver"
             ],

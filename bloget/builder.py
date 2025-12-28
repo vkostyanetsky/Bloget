@@ -53,7 +53,7 @@ def build_blog(arguments: argparse.Namespace) -> None:
     page_404_writer.write_page_404(metadata)
     robots_writer.write_robots(metadata)
 
-    _copy_assets(metadata)
+    _copy_public(metadata)
 
     if arguments.webserver:
         logging.info("Starting a web server")
@@ -86,21 +86,21 @@ def _clear_output(metadata: metadata_reader.BlogMetadata) -> None:
         utils.raise_error(f"Unable to clear output directory: {output_path}")
 
 
-def _copy_assets(metadata: metadata_reader.BlogMetadata) -> None:
+def _copy_public(metadata: metadata_reader.BlogMetadata) -> None:
     """
-    Copies files from the assets directory to the building output directory.
+    Copies files from the public directory to the building output directory.
     """
 
-    logging.info("Copying assets")
+    logging.info("Copying public")
 
-    assets_path = metadata.paths.get("assets")
-    assert isinstance(assets_path, str)
+    public_path = metadata.paths.get("public")
+    assert isinstance(public_path, str)
 
     output_path = metadata.paths.get("output")
     assert isinstance(output_path, str)
 
-    for item in os.listdir(assets_path):
-        source_path = os.path.join(assets_path, item)
+    for item in os.listdir(public_path):
+        source_path = os.path.join(public_path, item)
         target_path = os.path.join(output_path, item)
 
         utils.copy_file(source_path, target_path)

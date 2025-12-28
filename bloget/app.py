@@ -89,9 +89,9 @@ def _get_subparser_for_build_command() -> argparse.ArgumentParser:
     )
 
     subparser.add_argument(
-        "--assets",
+        "--public",
         type=str,
-        help="input directory with assets",
+        help="input directory with public",
     )
 
     subparser.add_argument(
