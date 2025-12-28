@@ -8,18 +8,30 @@ If you have any questions, feel free to contact me or [open an issue](https://gi
 
 ## 🙂 How to use?
 
-To build a blog from `C:\Blogs\ru` and start a web-server to test the result: 
+Clone the repo first.
 
-```
-cd C:\Blogs\ru
-bloget build --url=http://localhost:8085 --output=C:\Blogs\test --public=C:\Blogs\public --templates=C:\Blogs\templates --webserver
+### Build Tailwind CSS
+
+From the repository root:
+
+```bash
+npm install
+npm run tailwind:build
 ```
 
-To push changes in `C:\Blogs\ru` to GitHub: 
+> [!tip]
+> You can run `npm run tailwind:watch` while developing.
 
-```
-cd C:\Blogs\ru
-git add .
-git commit -m "Content update"
-git push
+### Build the blog and run a local web server
+
+Assume:
+- Bloget repo: C:\Blog\Bloget
+- Input content: C:\Blog\Input
+- Output folder: C:\Blog\Output
+
+Run:
+
+```bash
+cd C:\Blog\Input
+bloget build --url=http://localhost:8085 --output=C:\Blog\Output --public=C:\Blog\Bloget\public --templates=C:\Blog\Bloget\templates --webserver
 ```
