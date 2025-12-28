@@ -26,25 +26,6 @@
             "problemMatcher": []
         },
         {
-            "label": "📋 RU Blog Tags",
-            "type": "shell",
-            "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
-            "args": [
-                "-m",
-                "bloget",
-                "tags",
-                "list",
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/../kostyanetsky.ru"
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "problemMatcher": []
-        },        
-        {
             "label": "🚀 EN Blog Build",
             "type": "shell",
             "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
@@ -57,25 +38,6 @@
                 "--assets=${workspaceFolder}/../Bloget/assets",
                 "--templates=${workspaceFolder}/../Bloget/templates",
                 "--webserver"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/../kostyanetsky.me"
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "📋 EN Blog Tags",
-            "type": "shell",
-            "command": "${workspaceFolder}\\venv\\Scripts\\python.exe",
-            "args": [
-                "-m",
-                "bloget",
-                "tags",
-                "list",
             ],
             "options": {
                 "cwd": "${workspaceFolder}/../kostyanetsky.me"
