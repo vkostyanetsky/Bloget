@@ -47,6 +47,6 @@ def _get_project_file_content(
     template_parameters = page_writing_utils.html_template_parameters_for_page(
         page, metadata
     )
-    template_parameters["stacks"] = page.metadata.stacks
+    template_parameters["page_stacks"] = page.metadata.stacks
 
     return metadata.templates.get_template("project.jinja").render(template_parameters)

@@ -15,11 +15,11 @@
             <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-600">
 
                 <div class="flex flex-wrap gap-2">
-                {% for stack in stacks %}
+                {% for page_stack in page_stacks %}
                     <span
                     class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-700"
                     >
-                    {{ stack }}
+                    {{ stacks[page_stack] }}
                     </span>
                 {% endfor %}
                 </div>
@@ -29,6 +29,7 @@
 
           <div class="mt-5">
             <div class="prose-like">
+              <p><img alt="{{ language.get('cover') }}" src="{{ settings['url'] }}/{{ page_path }}/cover.png"/></p>
               {{ page_text | safe }}
             </div>
 
