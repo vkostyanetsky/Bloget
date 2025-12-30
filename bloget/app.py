@@ -115,12 +115,15 @@ def _get_subparser_for_build_command() -> argparse.ArgumentParser:
 
     subparser.add_argument(
         "--webserver",
+        action="store_true",
         help="starts a web server for a blog built",
-        nargs="?",
-        required=False,
-        default=False,
-        const=True,
     )
+
+    subparser.add_argument(
+        "--include-drafts",
+        action="store_true",
+        help="include pages with the 'draft' option",
+    )    
 
     return subparser
 

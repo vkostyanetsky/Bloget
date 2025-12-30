@@ -14,7 +14,8 @@
                 "--output=${workspaceFolder}/../BlogetTemp",
                 "--public=${workspaceFolder}/../Bloget/public",
                 "--templates=${workspaceFolder}/../Bloget/templates",
-                "--webserver"
+                "--webserver",
+                "--include-drafts"
             ],
             "options": {
                 "cwd": "${workspaceFolder}/../kostyanetsky.ru"
@@ -37,7 +38,8 @@
                 "--output=${workspaceFolder}/../BlogetTemp",
                 "--public=${workspaceFolder}/../Bloget/public",
                 "--templates=${workspaceFolder}/../Bloget/templates",
-                "--webserver"
+                "--webserver",
+                "--include-drafts"
             ],
             "options": {
                 "cwd": "${workspaceFolder}/../kostyanetsky.me"

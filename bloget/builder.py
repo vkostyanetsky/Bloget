@@ -35,7 +35,7 @@ def build_blog(arguments: argparse.Namespace) -> None:
 
     metadata = metadata_reader.get_metadata(arguments)
 
-    pages = pages_reader.get_pages(metadata)
+    pages = pages_reader.get_pages(metadata, arguments.include_drafts)
 
     _clear_output(metadata)
 
