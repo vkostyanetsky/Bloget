@@ -64,7 +64,7 @@ def write_notes_search_index(
     """
     Builds notes search index.
     """
-    logging.info("Notes search index building")
+    logging.info("NOTES SEARCH INDEX BUILDING...")
 
     notes = page_writing_utils.get_notes(pages.notes)
 
@@ -74,6 +74,8 @@ def write_notes_search_index(
     file_text = json.dumps(payload, ensure_ascii=False, indent=2)
     file_path = os.path.join(metadata.paths["output"], "notes.json")
     utils.make_file(file_path, file_text)
+
+    logging.info("NOTES SEARCH INDEX BUILDING DONE")
 
 
 def _get_html(

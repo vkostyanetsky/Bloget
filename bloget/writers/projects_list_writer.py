@@ -22,24 +22,25 @@ def write_projects_list(
     Example: projects/index.html
     """
 
-    logging.info("Projects list page building")
+    logging.info("PROJECT LIST BUILDING...")
 
     folder_path = os.path.join(metadata.paths["output"], constants.PROJECTS_FOLDER_NAME)
 
+    projects = sorted(pages.projects, key=lambda project: project.created, reverse=True)
+
     file_path = os.path.join(folder_path, "index.html")
-    file_text = _file_text(pages.projects, metadata)
+    file_text = _file_text(projects, metadata)
 
     utils.make_folder(folder_path)
     utils.make_file(file_path, file_text)
 
-    projects = sorted(pages.projects, key=lambda project: project.created, reverse=True)
-
     for project in projects:
-
         project_folder_path = os.path.join(folder_path, project.folder_name)
         utils.make_folder(project_folder_path)
 
         page_writing_utils.copy_page_attachments(project, project_folder_path)
+
+    logging.info("PROJECT LIST BUILDING DONE")
 
 
 def _file_text(

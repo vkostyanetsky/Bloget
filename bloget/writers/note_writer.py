@@ -20,7 +20,7 @@ def write_notes(
     Builds given note pages.
     """
 
-    logging.info("Notes building")
+    logging.info("NOTES BUILDING...")
 
     notes = page_writing_utils.get_notes(pages.notes)
 
@@ -29,6 +29,8 @@ def write_notes(
         previous_note = None if index == len(notes) - 1 else notes[index + 1]
 
         _write_note(note, previous_note, next_note, metadata)
+
+    logging.info("NOTES BUILDING DONE")
 
 
 def _write_note(
@@ -41,7 +43,7 @@ def _write_note(
     Builds a given text page.
     """
 
-    logging.info('Building a note from "%s"', note.folder_path)
+    logging.info('Building note from "%s"', note.folder_path)
 
     folder_path = _get_output_folder_path(note, metadata)
 

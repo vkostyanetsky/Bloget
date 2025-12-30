@@ -15,10 +15,12 @@ def write_projects(
     Builds given project pages.
     """
 
-    logging.info("Projects building")
+    logging.info("PROJECTS BUILDING...")
 
     for project in pages.projects:
         _write_project(project, metadata)
+
+    logging.info("PROJECTS BUILDING DONE")
 
 
 def _write_project(
@@ -29,7 +31,7 @@ def _write_project(
     Builds a given project page.
     """
 
-    logging.info('Building a project from "%s"', page.folder_path)
+    logging.info('Building project from "%s"', page.folder_path)
 
     file_content = _get_project_file_content(page, metadata)
     page_writing_utils.make_index_file(file_content, page, metadata)

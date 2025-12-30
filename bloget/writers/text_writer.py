@@ -15,10 +15,12 @@ def write_texts(
     Builds given text pages.
     """
 
-    logging.info("Texts building")
+    logging.info("TEXTS BUILDING...")
 
     for text in pages.texts:
         _write_text(text, metadata)
+
+    logging.info("TEXTS BUILDING DONE")
 
 
 def _write_text(
@@ -29,7 +31,7 @@ def _write_text(
     Builds a given text page.
     """
 
-    logging.info('Building a text from "%s"', page.folder_path)
+    logging.info('Building text from "%s"', page.folder_path)
 
     file_content = _get_text_file_content(page, metadata)
     page_writing_utils.make_index_file(file_content, page, metadata)

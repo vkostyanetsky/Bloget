@@ -17,12 +17,14 @@ def write_sitemap(
     Builds & writes the sitemap.xml file.
     """
 
-    logging.info("Sitemap building")
+    logging.info("SITEMAP BUILDING...")
 
     file_text = _get_file_text(pages, metadata)
     file_path = os.path.join(metadata.paths["output"], "sitemap.xml")
 
     utils.make_file(file_path, file_text)
+
+    logging.info("SITEMAP BUILDING DONE")
 
 
 def _get_file_text(

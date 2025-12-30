@@ -14,12 +14,14 @@ def write_robots(metadata: metadata_reader.BlogMetadata) -> None:
     Builds & writes the robots.txt file.
     """
 
-    logging.info("Robots building")
+    logging.info("ROBOTS.TXT BUILDING...")
 
     file_text = _get_file_text(metadata)
     file_path = os.path.join(metadata.paths["output"], "robots.txt")
 
     utils.make_file(file_path, file_text)
+
+    logging.info("ROBOTS.TXT BUILDING DONE")
 
 
 def _get_file_text(metadata: metadata_reader.BlogMetadata) -> str:

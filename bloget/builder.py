@@ -91,7 +91,7 @@ def _copy_public(metadata: metadata_reader.BlogMetadata) -> None:
     Copies files from the public directory to the building output directory.
     """
 
-    logging.info("Copying public")
+    logging.info("Copying public folder content to the output folder")
 
     public_path = metadata.paths.get("public")
     assert isinstance(public_path, str)

@@ -20,7 +20,7 @@ def write_note_lists(
     Builds note list pages.
     """
 
-    logging.info("Note lists building")
+    logging.info("NOTE LISTS BUILIDNG...")
 
     notes = page_writing_utils.get_notes(pages.notes)
     notes_left = len(notes)
@@ -48,6 +48,8 @@ def write_note_lists(
 
             list_number += 1
             list_notes = []
+
+    logging.info("NOTE LISTS BUILIDNG DONE")
 
 
 def _get_note_list_folder_path(
@@ -83,6 +85,8 @@ def _write_notes_list(
     """
 
     folder_path = _get_note_list_folder_path(list_number, metadata)
+
+    logging.info("Builing note list #%d...", list_number)
 
     file_text = _get_notes_list_file_text(
         list_notes, list_number, list_is_last, page_count, metadata
