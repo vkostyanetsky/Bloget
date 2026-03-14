@@ -7,6 +7,7 @@ Implementation of the blog's page reader.
 import datetime
 import os
 from dataclasses import dataclass
+from typing import Any
 
 from bloget import constants, utils
 from bloget.readers import metadata_reader
@@ -16,7 +17,7 @@ from bloget.readers.utils import content_parsing_utils
 @dataclass
 class BlogPageMetadata:
     """
-    Container for a page's metadata (data from a index.yaml file).
+    Container for a page's metadata (data from markdown frontmatter).
     """
 
     title: str
@@ -43,42 +44,22 @@ class BlogPage:
 
     @property
     def title(self) -> str:
-        """
-        A shortcut to title field in page's metadata.
-        """
-
         return self.metadata.title
 
     @property
     def description(self) -> str:
-        """
-        A shortcut to description field in page's metadata.
-        """
-
         return self.metadata.description
 
     @property
     def created(self) -> datetime.datetime:
-        """
-        A shortcut to created field in page's metadata.
-        """
-
         return self.metadata.created
 
     @property
     def options(self) -> list[str]:
-        """
-        A shortcut to options field in page's metadata.
-        """
-
         return self.metadata.options
 
     @property
     def tags(self) -> list[str]:
-        """
-        A shortcut to tags field in page's metadata.
-        """
-
         return self.metadata.tags
 
     def __repr__(self) -> str:
@@ -91,11 +72,11 @@ def get_page(page_folder_path: str, metadata: metadata_reader.BlogMetadata) -> B
     """
 
     page_folder_name = _get_page_folder_name(page_folder_path, metadata)
-
     page_path = _get_page_path(page_folder_path, metadata)
-    page_text = _get_page_text(page_folder_path, page_path, metadata)
 
-    page_metadata = _get_page_metadata(page_folder_path)
+    page_info, page_markdown = _read_page_source(page_folder_path)
+    page_text = _get_page_text(page_markdown, page_path, metadata)
+    page_metadata = _get_page_metadata(page_info)
 
     page_attachments = _get_page_attachments(page_folder_path)
 
@@ -107,6 +88,15 @@ def get_page(page_folder_path: str, metadata: metadata_reader.BlogMetadata) -> B
         page_metadata,
         page_attachments,
     )
+
+
+def _read_page_source(folder_path: str) -> tuple[dict[str, Any], str]:
+    """
+    Reads page markdown and extracts frontmatter + body.
+    """
+
+    file_path = os.path.join(folder_path, constants.PAGE_TEXT_FILE_NAME)
+    return utils.read_markdown_with_frontmatter(file_path)
 
 
 def _get_page_folder_name(
@@ -154,7 +144,7 @@ def _get_page_attachments(folder_path: str) -> list[str]:
 
     predefined_file_names = [
         constants.PAGE_TEXT_FILE_NAME,
-        constants.PAGE_INFO_FILE_NAME,
+        constants.PAGE_INFO_FILE_NAME,  # можно потом удалить, если index.yaml больше нигде не останется
     ]
 
     file_names = os.listdir(folder_path)
@@ -170,24 +160,35 @@ def _get_page_attachments(folder_path: str) -> list[str]:
     return result
 
 
-def _get_page_metadata(folder_path: str) -> BlogPageMetadata:
+def _normalize_created(value: Any) -> datetime.datetime:
     """
-    Reads page's information.
+    Normalizes created field to datetime.
     """
 
-    file_path = os.path.join(folder_path, constants.PAGE_INFO_FILE_NAME)
-    page_info = utils.read_yaml_file(file_path)
+    if value is None:
+        return datetime.datetime(1, 1, 1)
 
+    if isinstance(value, datetime.datetime):
+        return value
+
+    if isinstance(value, datetime.date):
+        return datetime.datetime.combine(value, datetime.time.min)
+
+    raise AssertionError("created must be date or datetime")
+
+
+def _get_page_metadata(page_info: dict[str, Any]) -> BlogPageMetadata:
+    """
+    Reads page metadata from markdown frontmatter.
+    """
+   
     page_title = page_info.get("title")
     assert isinstance(page_title, str)
 
     page_description = page_info.get("description")
     assert isinstance(page_description, str)
 
-    page_created = page_info.get("created")
-    assert isinstance(page_created, datetime.datetime)
-    if page_created is None:
-        page_created = datetime.datetime(1, 1, 1)
+    page_created = _normalize_created(page_info.get("created"))
 
     page_options = page_info.get("options")
     if page_options is None:
@@ -212,15 +213,10 @@ def _get_page_metadata(folder_path: str) -> BlogPageMetadata:
 
 
 def _get_page_text(
-    folder_path: str, page_path: str, metadata: metadata_reader.BlogMetadata
+    page_markdown: str, page_path: str, metadata: metadata_reader.BlogMetadata
 ) -> str:
     """
     Reads & converts page's content.
     """
 
-    file_path = os.path.join(folder_path, constants.PAGE_TEXT_FILE_NAME)
-
-    with open(file_path, encoding=constants.ENCODING) as file:
-        result = file.read()
-
-    return content_parsing_utils.parse(result, page_path, metadata)
+    return content_parsing_utils.parse(page_markdown, page_path, metadata)

@@ -6,12 +6,20 @@ Implementation of methods intended to be used by various files.
 
 import logging
 import os
+import re
 import shutil
 import sys
+from typing import Any
 
 import yaml
 
 from bloget import constants
+
+
+_FRONTMATTER_RE = re.compile(
+    r"\A---\s*\r?\n(.*?)\r?\n---\s*\r?\n?",
+    re.DOTALL,
+)
 
 
 def raise_error(message: str) -> None:
@@ -84,3 +92,27 @@ def read_yaml_file(file_path: str) -> dict[str, str]:
         raise_error(f"Unable to read a file: {file_path}")
 
     return result
+
+
+def read_markdown_with_frontmatter(file_path: str) -> tuple[dict[str, Any], str]:
+    """
+    Reads a markdown file and returns (frontmatter, body).
+    If there is no frontmatter, returns ({}, full_content).
+    """
+
+    try:
+        with open(file=file_path, encoding=constants.ENCODING) as markdown_file:
+            content = markdown_file.read()
+    except IOError:
+        raise_error(f"Unable to read a file: {file_path}")
+
+    match = _FRONTMATTER_RE.match(content)
+
+    if match is None:
+        return {}, content
+
+    frontmatter_raw = match.group(1)
+    frontmatter = yaml.safe_load(frontmatter_raw) or {}
+    body = content[match.end():]
+
+    return frontmatter, body
