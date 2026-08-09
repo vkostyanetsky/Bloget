@@ -123,7 +123,7 @@ def _get_subparser_for_build_command() -> argparse.ArgumentParser:
         "--include-drafts",
         action="store_true",
         help="include pages with the 'draft' option",
-    )    
+    )
 
     return subparser
 

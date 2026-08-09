@@ -48,22 +48,42 @@ class BlogPage:
 
     @property
     def title(self) -> str:
+        """
+        Shortcut for the page's title.
+        """
+
         return self.metadata.title
 
     @property
     def description(self) -> str:
+        """
+        Shortcut for the page's description.
+        """
+
         return self.metadata.description
 
     @property
     def created(self) -> datetime.datetime:
+        """
+        Shortcut for the page's creation date.
+        """
+
         return self.metadata.created
 
     @property
     def options(self) -> list[str]:
+        """
+        Shortcut for the page's options.
+        """
+
         return self.metadata.options
 
     @property
     def tags(self) -> list[str]:
+        """
+        Shortcut for the page's tags.
+        """
+
         return self.metadata.tags
 
     def __repr__(self) -> str:
@@ -147,7 +167,8 @@ def _get_page_attachments(folder_path: str) -> list[str]:
 
     predefined_file_names = [
         constants.PAGE_TEXT_FILE_NAME,
-        constants.PAGE_INFO_FILE_NAME,  # можно потом удалить, если index.yaml больше нигде не останется
+        # можно потом удалить, если index.yaml больше нигде не останется:
+        constants.PAGE_INFO_FILE_NAME,
     ]
 
     file_names = os.listdir(folder_path)

@@ -15,7 +15,6 @@ import yaml
 
 from bloget import constants
 
-
 _FRONTMATTER_RE = re.compile(
     r"\A---\s*\r?\n(.*?)\r?\n---\s*\r?\n?",
     re.DOTALL,
@@ -113,6 +112,6 @@ def read_markdown_with_frontmatter(file_path: str) -> tuple[dict[str, Any], str]
 
     frontmatter_raw = match.group(1)
     frontmatter = yaml.safe_load(frontmatter_raw) or {}
-    body = content[match.end():]
+    body = content[match.end() :]
 
     return frontmatter, body

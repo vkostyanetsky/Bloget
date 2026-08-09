@@ -26,7 +26,9 @@ def _drop_drafts(pages: list[page_reader.BlogPage]) -> None:
     pages[:] = [p for p in pages if "draft" not in (p.metadata.options or [])]
 
 
-def get_pages(blog_metadata: metadata_reader.BlogMetadata, include_drafts: bool = False) -> BlogPages:
+def get_pages(
+    blog_metadata: metadata_reader.BlogMetadata, include_drafts: bool = False
+) -> BlogPages:
     """
     Returns a container with blog's pages (texts & notes) to build.
     """
