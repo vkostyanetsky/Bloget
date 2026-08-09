@@ -12,6 +12,8 @@ from bloget import constants, utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
 from bloget.writers.utils import page_writing_utils
 
+LIST_SIZE = 20
+
 
 def write_note_lists(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
@@ -23,31 +25,22 @@ def write_note_lists(
     logging.info("NOTE LISTS BUILIDNG...")
 
     notes = page_writing_utils.get_notes(pages.notes)
-    notes_left = len(notes)
 
-    list_number = 1
-    list_notes = []
-    list_size = 20
+    # Even when there are no notes at all, the first (empty) list has to be
+    # written: otherwise the blog gets no notes/index.html page.
 
-    page_count = (len(notes) + list_size - 1) // list_size
+    page_count = max(1, (len(notes) + LIST_SIZE - 1) // LIST_SIZE)
 
-    for note in notes:
-        list_notes.append(note)
-        notes_left -= 1
+    for list_number in range(1, page_count + 1):
+        first_note = (list_number - 1) * LIST_SIZE
 
-        if len(list_notes) == list_size or notes_left == 0:
-            list_is_last = notes_left == 0
-
-            _write_notes_list(
-                list_notes=list_notes,
-                list_number=list_number,
-                list_is_last=list_is_last,
-                page_count=page_count,
-                metadata=metadata,
-            )
-
-            list_number += 1
-            list_notes = []
+        _write_notes_list(
+            list_notes=notes[first_note : first_note + LIST_SIZE],
+            list_number=list_number,
+            list_is_last=list_number == page_count,
+            page_count=page_count,
+            metadata=metadata,
+        )
 
     logging.info("NOTE LISTS BUILIDNG DONE")
 

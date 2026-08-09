@@ -4,7 +4,9 @@
         <description>{{ language['site_description'] }}</description>
         <language>{{ settings['language_code'] }}</language>
         <link>{{ settings['url'] }}</link>
+        {% if items %}
         <lastBuildDate>{{ items[0]['pub_date'] }}</lastBuildDate>
+        {% endif %}
         {% for item in items %}
         <item>
             <title>{{ item['title'] }}</title>

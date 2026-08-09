@@ -13,6 +13,10 @@ from bloget import constants, utils
 from bloget.readers import metadata_reader
 from bloget.readers.utils import content_parsing_utils
 
+# A stub for pages whose frontmatter has no creation date.
+
+UNKNOWN_DATE = datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
+
 
 @dataclass
 class BlogPageMetadata:
@@ -76,7 +80,7 @@ def get_page(page_folder_path: str, metadata: metadata_reader.BlogMetadata) -> B
 
     page_info, page_markdown = _read_page_source(page_folder_path)
     page_text = _get_page_text(page_markdown, page_path, metadata)
-    page_metadata = _get_page_metadata(page_info)
+    page_metadata = _get_page_metadata(page_info, page_folder_path)
 
     page_attachments = _get_page_attachments(page_folder_path)
 
@@ -118,23 +122,22 @@ def _get_page_path(folder_path: str, metadata: metadata_reader.BlogMetadata) -> 
     For instance:
         pages here: D:\\Blog
         page here: D:\\Blog\\projects\\valhalla
-        the function returns: \\projects\\valhalla
+        the function returns: projects/valhalla
     """
 
-    pages_path = metadata.paths.get("pages")
-    page_path = folder_path
+    pages_path = metadata.paths["pages"]
 
-    folders = []
+    try:
+        page_path = os.path.relpath(folder_path, pages_path)
+    except ValueError:  # different drives on Windows
+        page_path = ".."
 
-    while page_path != pages_path:
-        page_path_split = os.path.split(page_path)
-        page_path = page_path_split[0] if page_path_split else ""
+    if page_path.startswith(".."):
+        utils.raise_error(
+            f'Page folder "{folder_path}" is outside of the pages one: {pages_path}'
+        )
 
-        folders.append(page_path_split[1])
-
-    folders = list(reversed(folders))
-
-    return "/".join(folders)
+    return "" if page_path == os.curdir else page_path.replace(os.sep, "/")
 
 
 def _get_page_attachments(folder_path: str) -> list[str]:
@@ -160,35 +163,65 @@ def _get_page_attachments(folder_path: str) -> list[str]:
     return result
 
 
-def _normalize_created(value: Any) -> datetime.datetime:
+def _normalize_created(value: Any, folder_path: str) -> datetime.datetime:
     """
-    Normalizes created field to datetime.
+    Normalizes created field to a time zone aware datetime.
+
+    A date without an offset is considered to be an UTC one. Keeping every date
+    aware makes pages comparable to each other, no matter how their authors
+    wrote the dates down.
     """
 
     if value is None:
-        return datetime.datetime(1, 1, 1)
+        return UNKNOWN_DATE
 
     if isinstance(value, datetime.datetime):
-        return value
+        created = value
 
-    if isinstance(value, datetime.date):
-        return datetime.datetime.combine(value, datetime.time.min)
+    elif isinstance(value, datetime.date):
+        created = datetime.datetime.combine(value, datetime.time.min)
 
-    raise AssertionError("created must be date or datetime")
+    else:
+        utils.raise_error(
+            f'Frontmatter of the page "{folder_path}" has a "created" field '
+            f"which is neither a date nor a date & time: {value!r}"
+        )
+
+        return UNKNOWN_DATE
+
+    if created.tzinfo is None:
+        created = created.replace(tzinfo=datetime.timezone.utc)
+
+    return created
 
 
-def _get_page_metadata(page_info: dict[str, Any]) -> BlogPageMetadata:
+def _get_string_field(
+    page_info: dict[str, Any], field_name: str, folder_path: str
+) -> str:
+    """
+    Reads a mandatory string field of a page's frontmatter.
+    """
+
+    value = page_info.get(field_name)
+
+    if not isinstance(value, str):
+        utils.raise_error(
+            f'Frontmatter of the page "{folder_path}" has no '
+            f'"{field_name}" field, or it is not a text one.'
+        )
+
+    return str(value)
+
+
+def _get_page_metadata(page_info: dict[str, Any], folder_path: str) -> BlogPageMetadata:
     """
     Reads page metadata from markdown frontmatter.
     """
-   
-    page_title = page_info.get("title")
-    assert isinstance(page_title, str)
 
-    page_description = page_info.get("description")
-    assert isinstance(page_description, str)
+    page_title = _get_string_field(page_info, "title", folder_path)
+    page_description = _get_string_field(page_info, "description", folder_path)
 
-    page_created = _normalize_created(page_info.get("created"))
+    page_created = _normalize_created(page_info.get("created"), folder_path)
 
     page_options = page_info.get("options")
     if page_options is None:

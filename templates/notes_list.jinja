@@ -103,7 +103,7 @@
   // ------------------------------------------------------------
 
   const metaEl = document.getElementById("pageMeta");
-  const notesJsonUrl = "{{ settings.get('url') }}/notes.json";
+  const notesJsonUrl = {{ (settings.get('url') ~ "/notes.json") | tojson }};
 
   const page = Number(metaEl.getAttribute("data-page") || "1");
   const totalPages = Number(metaEl.getAttribute("data-total-pages") || "1");

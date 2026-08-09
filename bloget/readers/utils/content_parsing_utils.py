@@ -4,6 +4,9 @@
 Content parser for texts & notes.
 """
 
+import html
+import logging
+
 from bs4 import BeautifulSoup
 from markdown import markdown
 
@@ -37,20 +40,40 @@ def _replace_links_to_social_networks(content: str) -> str:
     return "\n".join(lines)
 
 
+def _get_link_tail(line: str, marker: str) -> str:
+    """
+    Returns a part of a link which follows a marker given, without query & fragment.
+    """
+
+    tail = line.strip()[len(marker) :]
+
+    for separator in ("?", "&", "#"):
+        tail = tail.partition(separator)[0]
+
+    return tail
+
+
 def _replace_youtube_link(lines: list[str], index: int, line: str, marker: str) -> None:
     """
     Replaces a link to YouTube by its iframe.
     """
 
-    if line.startswith(marker):
-        video_id = line.strip().replace(marker, "")
-        template = (
-            '<iframe width="560" height="315" src="https://www.youtube.com/embed/{0}" '
-            'frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; '
-            'picture-in-picture" allowfullscreen></iframe> '
-        )
+    if not line.startswith(marker):
+        return
 
-        lines[index] = template.format(video_id)
+    video_id = _get_link_tail(line, marker)
+
+    if not video_id:
+        logging.warning("Unable to get a video ID from the link: %s", line.strip())
+        return
+
+    template = (
+        '<iframe width="560" height="315" src="https://www.youtube.com/embed/{0}" '
+        'frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; '
+        'picture-in-picture" allowfullscreen></iframe> '
+    )
+
+    lines[index] = template.format(html.escape(video_id))
 
 
 def _replace_github_gist_link(lines: list[str], index: int, line: str) -> None:
@@ -60,15 +83,24 @@ def _replace_github_gist_link(lines: list[str], index: int, line: str) -> None:
 
     marker = "https://gist.github.com/"
 
-    if line.startswith(marker):
-        gist = line.strip().replace(marker, "").split("/")
+    if not line.startswith(marker):
+        return
 
-        gist_owner = gist[0]
-        gist_id = gist[1]
+    gist = _get_link_tail(line, marker).split("/")
 
-        template = '<script src="https://gist.github.com/{0}/{1}.js">{2}</script>'
+    if len(gist) < 2 or not gist[0] or not gist[1]:
+        logging.warning(
+            "Unable to get an owner & an ID of a gist from the link: %s", line.strip()
+        )
+        return
 
-        lines[index] = template.format(gist_owner, gist_id, "Gist")
+    gist_owner, gist_id = gist[0], gist[1]
+
+    template = '<script src="https://gist.github.com/{0}/{1}.js">{2}</script>'
+
+    lines[index] = template.format(
+        html.escape(gist_owner), html.escape(gist_id), "Gist"
+    )
 
 
 def get_internal_link(
@@ -111,10 +143,15 @@ def _update_internal_links(
     soup = BeautifulSoup(content, features="html.parser")
 
     for tag in soup.find_all("img"):
-        tag["src"] = get_internal_link(tag["src"], page_path, metadata)
+        if tag.get("src"):
+            tag["src"] = get_internal_link(tag["src"], page_path, metadata)
 
     for tag in soup.find_all("a"):
+        if not tag.get("href"):
+            continue
+
         tag["target"] = "_blank"
+        tag["rel"] = "noopener noreferrer"
         tag["href"] = get_internal_link(tag["href"], page_path, metadata)
 
     return str(soup)

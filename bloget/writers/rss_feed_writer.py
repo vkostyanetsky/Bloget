@@ -2,12 +2,15 @@
 Implementation of RSS feed building functionality.
 """
 
-import html
+import datetime
+import email.utils
 import logging
 import os
 
 from bloget import utils
 from bloget.readers import metadata_reader, pages_reader
+
+RSS_ITEMS_LIMIT = 10
 
 
 def write_rss_feed(
@@ -44,6 +47,17 @@ def _get_file_text(
     return metadata.templates.get_template("rss_feed.jinja").render(template_parameters)
 
 
+def _get_pub_date(created: datetime.datetime) -> str:
+    """
+    Formats a date as RFC 822 requires, regardless of the current locale.
+
+    A note's date is an UTC one unless its frontmatter specifies an offset
+    (for instance, 2024-01-15 10:00:00+04:00).
+    """
+
+    return email.utils.format_datetime(created)
+
+
 def _get_rss_items(
     pages: pages_reader.BlogPages, metadata: metadata_reader.BlogMetadata
 ) -> list[dict[str, str]]:
@@ -56,16 +70,16 @@ def _get_rss_items(
 
         if in_feed:
             item = {
-                "title": html.escape(note.title),
+                "title": note.title,
                 "link": f"{metadata.settings['url']}/{note.path}",
                 "guid": f"note-{note.folder_name}",
-                "pub_date": note.created.strftime("%a, %d %b %Y %H:%M:%S +0700"),
+                "pub_date": _get_pub_date(note.created),
                 "description": note.text,
             }
 
             items.append(item)
 
-            if len(items) == 10:
+            if len(items) == RSS_ITEMS_LIMIT:
                 break
 
     return items

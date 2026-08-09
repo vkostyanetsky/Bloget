@@ -39,8 +39,8 @@
     <!-- Blog -->
 
     <script>
-        let ctrlLeftUrl     = '{{ hotkey_ctrl_left_url }}';
-        let ctrlRightUrl    = '{{ hotkey_ctrl_right_url }}';
+        let ctrlLeftUrl     = {{ hotkey_ctrl_left_url | default('') | tojson }};
+        let ctrlRightUrl    = {{ hotkey_ctrl_right_url | default('') | tojson }};
     </script>
     
     <script src="{{ settings['url'] }}/assets/js/hotkeys.js"></script>    

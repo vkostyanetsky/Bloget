@@ -88,20 +88,20 @@
       const projects = [
         {% for project in projects %}
         {
-          title: "{{ project.title }}",
-          description: "{{ project.description }}",
-          image: "{{ settings.get('url') }}/projects/{{ project.folder_name }}/thumbnail.png",
+          title: {{ project.title | tojson }},
+          description: {{ project.description | tojson }},
+          image: {{ (settings.get('url') ~ "/projects/" ~ project.folder_name ~ "/thumbnail.png") | tojson }},
           badges: [
             {% for stack in project.metadata.stacks %}
-            "{{ stacks[stack] }}",
-            {% endfor %}
-          ],          
-          stacks: [
-            {% for stack in project.metadata.stacks %}
-            "{{ stack }}",
+            {{ stacks[stack] | default('') | tojson }},
             {% endfor %}
           ],
-          href: "{{ project.folder_name }}",
+          stacks: [
+            {% for stack in project.metadata.stacks %}
+            {{ stack | tojson }},
+            {% endfor %}
+          ],
+          href: {{ project.folder_name | tojson }},
         },
         {% endfor %}
       ];

@@ -60,6 +60,29 @@ def build_blog(arguments: argparse.Namespace) -> None:
         webserver.start(metadata)
 
 
+def _check_output_path(metadata: metadata_reader.BlogMetadata) -> None:
+    """
+    Makes sure the output directory can be cleared without losing a blog's source.
+    """
+
+    output_path = os.path.abspath(metadata.paths["output"])
+
+    if os.path.dirname(output_path) == output_path:
+        utils.raise_error(
+            f"Refusing to use a filesystem root as an output: {output_path}"
+        )
+
+    for name in ("pages", "metadata", "public", "templates"):
+        source_path = os.path.abspath(metadata.paths[name])
+
+        if source_path == output_path or source_path.startswith(output_path + os.sep):
+            utils.raise_error(
+                f"Output directory ({output_path}) contains the {name} one "
+                f"({source_path}), so clearing it would destroy the source. "
+                f"Please choose another output directory."
+            )
+
+
 def _clear_output(metadata: metadata_reader.BlogMetadata) -> None:
     """
     Removes all blog's files and directories which were previously generated.
@@ -67,8 +90,9 @@ def _clear_output(metadata: metadata_reader.BlogMetadata) -> None:
 
     logging.info("Clearing output directory")
 
-    output_path = metadata.paths.get("output")
-    assert isinstance(output_path, str)
+    _check_output_path(metadata)
+
+    output_path = metadata.paths["output"]
 
     try:
         for item in os.listdir(output_path):
@@ -93,11 +117,8 @@ def _copy_public(metadata: metadata_reader.BlogMetadata) -> None:
 
     logging.info("Copying public folder content to the output folder")
 
-    public_path = metadata.paths.get("public")
-    assert isinstance(public_path, str)
-
-    output_path = metadata.paths.get("output")
-    assert isinstance(output_path, str)
+    public_path = metadata.paths["public"]
+    output_path = metadata.paths["output"]
 
     for item in os.listdir(public_path):
         source_path = os.path.join(public_path, item)

@@ -35,8 +35,7 @@ def get_pages(blog_metadata: metadata_reader.BlogMetadata, include_drafts: bool 
     notes: list[page_reader.BlogPage] = []
     projects: list[page_reader.BlogPage] = []
 
-    pages_path = blog_metadata.paths.get("pages")
-    assert isinstance(pages_path, str)
+    pages_path = blog_metadata.paths["pages"]
 
     notes_path = _notes_path(pages_path)
     projects_path = _projects_path(pages_path)
@@ -67,14 +66,8 @@ def get_pages(blog_metadata: metadata_reader.BlogMetadata, include_drafts: bool 
 
 
 def _notes_path(pages_path: str) -> str:
-    notes_folder_name = constants.NOTES_FOLDER_NAME
-    assert isinstance(notes_folder_name, str)
-
-    return os.path.join(pages_path, notes_folder_name)
+    return os.path.join(pages_path, constants.NOTES_FOLDER_NAME)
 
 
 def _projects_path(pages_path: str) -> str:
-    projects_folder_name = constants.PROJECTS_FOLDER_NAME
-    assert isinstance(projects_folder_name, str)
-
-    return os.path.join(pages_path, projects_folder_name)
+    return os.path.join(pages_path, constants.PROJECTS_FOLDER_NAME)

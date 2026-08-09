@@ -9,7 +9,6 @@ import argparse
 import os
 from collections import Counter
 from dataclasses import dataclass
-from typing import Optional
 
 import jinja2
 
@@ -94,24 +93,36 @@ def _get_templates(paths: dict[str, str]) -> jinja2.Environment:
     Returns template of a blog.
     """
 
-    templates_path = paths.get("templates")
-    assert isinstance(templates_path, str)
+    # Escaping is on for every template, including the XML ones. A template
+    # which needs a value as is (a page's HTML, for instance) has to ask for
+    # it explicitly, by the "safe" filter.
 
-    return jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath=templates_path))
+    return jinja2.Environment(
+        loader=jinja2.FileSystemLoader(searchpath=paths["templates"]),
+        autoescape=True,
+    )
 
 
-def _get_paths(arguments: argparse.Namespace) -> dict[str, Optional[str]]:
+def _get_paths(arguments: argparse.Namespace) -> dict[str, str]:
     """
     Returns paths to various directories required to generate.
     """
 
-    return {
-        "metadata": getattr(arguments, "metadata", ""),
-        "pages": getattr(arguments, "pages", ""),
-        "public": getattr(arguments, "public", ""),
-        "templates": getattr(arguments, "templates", ""),
-        "output": getattr(arguments, "output", ""),
+    paths = {
+        "metadata": getattr(arguments, "metadata", None),
+        "pages": getattr(arguments, "pages", None),
+        "public": getattr(arguments, "public", None),
+        "templates": getattr(arguments, "templates", None),
+        "output": getattr(arguments, "output", None),
     }
+
+    missing = sorted(name for name, path in paths.items() if not path)
+
+    if missing:
+        arguments_list = ", ".join(f"--{name}" for name in missing)
+        utils.raise_error(f"Path arguments are not specified: {arguments_list}")
+
+    return {name: str(path) for name, path in paths.items()}
 
 
 def _get_settings(
@@ -172,7 +183,4 @@ def _get_metadata_path(paths: dict[str, str]) -> str:
     Returns the path to a folder with metadata.
     """
 
-    metadata_path = paths.get("metadata")
-    assert isinstance(metadata_path, str)
-
-    return metadata_path
+    return paths["metadata"]
