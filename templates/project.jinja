@@ -12,15 +12,27 @@
             {% endif %}
 
             {% if stacks %}
+            {% set stack_chip_class = "inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-700" %}
+            {% set stack_chip_class_clickable = stack_chip_class ~ " cursor-pointer transition hover:bg-slate-100" %}
             <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-600">
 
                 <div class="flex flex-wrap gap-2">
                 {% for page_stack in page_stacks %}
+                    {# A stack the blog's metadata knows nothing about has no page to open. #}
+                    {% if page_stack in stacks %}
+                    <a
+                    href="{{ stack_urls[page_stack] }}"
+                    class="{{ stack_chip_class_clickable }}"
+                    >
+                    {{ stacks[page_stack] }}
+                    </a>
+                    {% else %}
                     <span
-                    class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-700"
+                    class="{{ stack_chip_class }}"
                     >
                     {{ stacks[page_stack] }}
                     </span>
+                    {% endif %}
                 {% endfor %}
                 </div>
             </div>

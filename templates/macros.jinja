@@ -1,4 +1,15 @@
-{% macro note(note, tags, settings, language, show_title=false) %}
+{#
+  A tag chip is clickable, unless the blog's metadata knows nothing about the
+  tag (there is neither a name to show, nor a page to open).
+
+  In a note list a chip filters the list (tag_urls is not passed), on a note
+  page it leads to a pre-generated list of the tag (tag_urls is a mapping of
+  a tag to an URL of its list).
+#}
+{% macro note(note, tags, settings, language, show_title=false, tag_urls=none) %}
+
+{% set tag_chip_class = "inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-700" %}
+{% set tag_chip_class_clickable = tag_chip_class ~ " cursor-pointer transition hover:bg-slate-100" %}
 
         <article class="rounded-2xl bg-white">
 
@@ -19,7 +30,13 @@
                 <span class="text-slate-300">·</span>
                 {% for tag in note.tags %}
                 <div class="flex flex-wrap gap-2">
-                    <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-700">{{ tags[tag] }}</span>
+                    {% if tag not in tags %}
+                    <span class="{{ tag_chip_class }}">{{ tags[tag] }}</span>
+                    {% elif tag_urls %}
+                    <a href="{{ tag_urls[tag] }}" class="{{ tag_chip_class_clickable }}">{{ tags[tag] }}</a>
+                    {% else %}
+                    <button type="button" data-chip="{{ tag }}" class="{{ tag_chip_class_clickable }}">{{ tags[tag] }}</button>
+                    {% endif %}
                 </div>
                 {% endfor %}
               {% endif %}

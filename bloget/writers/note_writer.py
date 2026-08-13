@@ -10,7 +10,7 @@ import typing
 
 from bloget import constants, utils
 from bloget.readers import metadata_reader, page_reader, pages_reader
-from bloget.writers.utils import page_writing_utils
+from bloget.writers.utils import page_writing_utils, taxonomy_utils
 
 
 def write_notes(
@@ -23,20 +23,41 @@ def write_notes(
     logging.info("NOTES BUILDING...")
 
     notes = page_writing_utils.get_notes(pages.notes)
+    tag_urls = _get_tag_urls(notes, metadata)
 
     for index, note in enumerate(notes):
         next_note = None if index == 0 else notes[index - 1]
         previous_note = None if index == len(notes) - 1 else notes[index + 1]
 
-        _write_note(note, previous_note, next_note, metadata)
+        _write_note(note, previous_note, next_note, tag_urls, metadata)
 
     logging.info("NOTES BUILDING DONE")
+
+
+def _get_tag_urls(
+    notes: list[page_reader.BlogPage], metadata: metadata_reader.BlogMetadata
+) -> dict[str, str]:
+    """
+    Returns URLs of pre-generated note lists by their tags.
+
+    Every tag a note has is here, since notes_list_writer writes a list for
+    each of them.
+    """
+
+    tags = taxonomy_utils.get_used_terms(
+        notes, metadata.tags, taxonomy_utils.get_note_tags
+    )
+
+    return taxonomy_utils.get_term_page_urls(
+        metadata, constants.NOTES_FOLDER_NAME, constants.TAGS_FOLDER_NAME, tags
+    )
 
 
 def _write_note(
     note: page_reader.BlogPage,
     previous_note: page_reader.BlogPage | None,
     next_note: page_reader.BlogPage | None,
+    tag_urls: dict[str, str],
     metadata: metadata_reader.BlogMetadata,
 ) -> None:
     """
@@ -47,7 +68,7 @@ def _write_note(
 
     folder_path = _get_output_folder_path(note, metadata)
 
-    file_text = _get_file_text(note, previous_note, next_note, metadata)
+    file_text = _get_file_text(note, previous_note, next_note, tag_urls, metadata)
     file_path = os.path.join(folder_path, "index.html")
 
     utils.make_folder(folder_path)
@@ -60,6 +81,7 @@ def _get_file_text(
     note: page_reader.BlogPage,
     previous_note: page_reader.BlogPage | None,
     next_note: page_reader.BlogPage | None,
+    tag_urls: dict[str, str],
     metadata: metadata_reader.BlogMetadata,
 ) -> str:
     """
@@ -67,7 +89,7 @@ def _get_file_text(
     """
 
     template_parameters = _get_template_parameters(
-        note, previous_note, next_note, metadata
+        note, previous_note, next_note, tag_urls, metadata
     )
 
     return metadata.templates.get_template("note.jinja").render(template_parameters)
@@ -77,6 +99,7 @@ def _get_template_parameters(
     note: page_reader.BlogPage,
     previous_note: page_reader.BlogPage | None,
     next_note: page_reader.BlogPage | None,
+    tag_urls: dict[str, str],
     metadata: metadata_reader.BlogMetadata,
 ) -> dict[str, typing.Any]:
     result = page_writing_utils.get_html_template_parameters(
@@ -109,6 +132,7 @@ def _get_template_parameters(
 
     result["note"] = note
     result["tags"] = metadata.tags
+    result["tag_urls"] = tag_urls
 
     return result
 

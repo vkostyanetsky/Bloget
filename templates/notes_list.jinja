@@ -39,7 +39,7 @@
       
         <button
           data-chip="all"
-          class="chip rounded-full border border-slate-200 bg-slate-100 px-3 py-1.5 text-xs text-slate-900 hover:bg-slate-200"
+          class="chip rounded-full border border-slate-200 bg-slate-100 px-3 py-1.5 text-xs text-slate-900 cursor-pointer hover:bg-slate-200"
         >
           {{ language['all'] }}
         </button>
@@ -47,7 +47,7 @@
         {% for tag in tags %}
         <button
           data-chip="{{ tag }}"
-          class="chip rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50"
+          class="chip rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 cursor-pointer hover:bg-slate-50"
         >
           {{ tags[tag] }}
         </button>
@@ -105,6 +105,11 @@
   const metaEl = document.getElementById("pageMeta");
   const notesJsonUrl = {{ (settings.get('url') ~ "/notes.json") | tojson }};
 
+  // A tag of a pre-generated list (notes/tags/<tag>), empty for a common one.
+
+  const pageTag = {{ active_tag | default('') | tojson }};
+  const notesListUrl = {{ (settings.get('url') ~ "/" ~ notes_folder ~ "/") | tojson }};
+
   const page = Number(metaEl.getAttribute("data-page") || "1");
   const totalPages = Number(metaEl.getAttribute("data-total-pages") || "1");
   const totalNotes = Number(metaEl.getAttribute("data-total-notes") || "0");
@@ -122,21 +127,26 @@
   let notesLoadPromise = null;
 
   // Tag filter state (chip)
-  let activeTag = "all";
+  let activeTag = pageTag || "all";
 
   const TAG_SESSION_KEY = "notesActiveTag";
 
-  try {
-    const saved = sessionStorage.getItem(TAG_SESSION_KEY);
-    if (saved) activeTag = saved;
-  } catch (e) {
-    // no sessionStorage :|
+  // A pre-generated list is filtered by its own tag, so a saved one has to be
+  // ignored: an URL wins over a state of a previously visited page.
+
+  if (!pageTag) {
+    try {
+      const saved = sessionStorage.getItem(TAG_SESSION_KEY);
+      if (saved) activeTag = saved;
+    } catch (e) {
+      // no sessionStorage :|
+    }
   }
 
   const CHIP_CLASS_DEFAULT =
-    "chip rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50";
+    "chip rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 cursor-pointer hover:bg-slate-50";
   const CHIP_CLASS_ACTIVE =
-    "chip rounded-full border border-slate-200 bg-slate-100 px-3 py-1.5 text-xs text-slate-900 hover:bg-slate-200";
+    "chip rounded-full border border-slate-200 bg-slate-100 px-3 py-1.5 text-xs text-slate-900 cursor-pointer hover:bg-slate-200";
 
   function debounce(fn, ms = 200) {
     let t;
@@ -246,7 +256,22 @@
     const hasQ = q.length > 0;
     const hasTag = activeTag && activeTag !== "all";
 
-    if (!hasQ && !hasTag) {
+    if (pageTag) {
+      // Notes of a pre-generated list are filtered by its tag already, so the
+      // static mode is the untouched state of such a page. Dropping the tag
+      // means leaving the page for the common list.
+
+      if (!hasTag) {
+        try { sessionStorage.removeItem(TAG_SESSION_KEY); } catch (e) {}
+        window.location.href = notesListUrl;
+        return;
+      }
+
+      if (activeTag === pageTag && !hasQ) {
+        showStaticMode();
+        return;
+      }
+    } else if (!hasQ && !hasTag) {
       try { sessionStorage.removeItem(TAG_SESSION_KEY); } catch (e) {}
       showStaticMode();
       return;
@@ -277,17 +302,23 @@
   // Text search handler
   searchEl.addEventListener("input", debounce(runSearch, 200));
 
-  // Tag chips handler
-  document.querySelectorAll(".chip").forEach((b) => {
-    b.addEventListener("click", () => {
-      activeTag = b.dataset.chip || "all";
-        try {
-        if (activeTag === "all") sessionStorage.removeItem(TAG_SESSION_KEY);
-        else sessionStorage.setItem(TAG_SESSION_KEY, activeTag);
-        } catch (e) {}      
-      setActiveChipUI(activeTag);
-      runSearch();
-    });
+  // Tag chips handler.
+  //
+  // It is a delegated one, since tag chips of a note are rendered dynamically
+  // as well: both the chips above and the ones of a note filter the list.
+
+  document.addEventListener("click", (event) => {
+    const chip = event.target.closest("[data-chip]");
+
+    if (!chip) return;
+
+    activeTag = chip.dataset.chip || "all";
+      try {
+      if (activeTag === "all") sessionStorage.removeItem(TAG_SESSION_KEY);
+      else sessionStorage.setItem(TAG_SESSION_KEY, activeTag);
+      } catch (e) {}
+    setActiveChipUI(activeTag);
+    runSearch();
   });
 
   // Search autorun in case search string is set (refresh / back-forward cache)

@@ -9,10 +9,11 @@
             {{ note.title }}
           </header>
 
+          {# The macro wraps a note's text into "prose-like" by itself, so one
+             more wrapper here would only style the note's tag chips as links
+             of a text: underlined & colored. #}
           <div class="mt-5">
-            <div class="prose-like">
-                {{ macros.note(note, tags, settings, language) }}
-            </div>
+            {{ macros.note(note, tags, settings, language, false, tag_urls) }}
           </div>
 
         </article>
