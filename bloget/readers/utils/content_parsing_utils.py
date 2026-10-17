@@ -19,7 +19,7 @@ def parse(content: str, page_path: str, metadata: metadata_reader.BlogMetadata) 
     """
 
     content = _replace_links_to_social_networks(content)
-    content = markdown(content)
+    content = markdown(content, extensions=["fenced_code"])
 
     return _update_internal_links(content, page_path, metadata)
 
