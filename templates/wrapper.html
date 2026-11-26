@@ -69,13 +69,16 @@
                     <a class="{{ link_blue }}" href="{{ settings['url'] }}/">{{ language['site_title'] }}</a>
                     {% endif %}
 
-                    {# projects #}
+                    {# projects: temporarily hidden from the menu; set to true to bring it back #}
+                    {% set show_projects_link = false %}
+                    {% if show_projects_link %}
                     {% if page_path == 'projects' %}
                     <span class="{{ item_active }}">{{ language.get('projects') }}</span>
                     {% elif page_path.startswith('projects') %}
                     <a class="{{ link_orange }}" href="{{ settings['url'] }}/projects/">{{ language['projects'] }}</a>
                     {% else %}
                     <a class="{{ link_blue }}" href="{{ settings['url'] }}/projects/">{{ language['projects'] }}</a>
+                    {% endif %}
                     {% endif %}
 
                     {# notes #}
